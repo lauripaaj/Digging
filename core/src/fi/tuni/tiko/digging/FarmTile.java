@@ -58,5 +58,7 @@ public class FarmTile extends GameTile implements Poolable {
     public void reset () {
         setTexture(farmTexture);
 
+        setOccupied(false);
+
     }
 }

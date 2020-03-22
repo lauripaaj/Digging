@@ -102,6 +102,10 @@ public class MainGame extends ApplicationAdapter implements GestureDetector.Gest
 
 	private TileAnimationPools tileAnimationPools;
 
+	//creating static graphics here, because adding textures in this didnt work in DirtTile classes body.
+	// This could probably be replaced with asset manager if needed
+	public static GameTexture[] dirtTextureTileset = new GameTexture[48];
+
 
 
 
@@ -137,6 +141,12 @@ public class MainGame extends ApplicationAdapter implements GestureDetector.Gest
 
 
 		//UNDIGGABLE_MARGIN_WIDTH = (Gdx.graphics.getWidth() % 7) / 2;
+
+
+		//initalizing dirtTileTextureset using static GameTexture[] dirtTextureTileset array. 0-index will be left empty for convienience.
+		for (int i=1; i < dirtTextureTileset.length; i++) {
+			dirtTextureTileset[i]=new GameTexture(new Texture("tilesets/dirt/dirtTile-"+i+".png"));
+		}
 
 
 		batch = new SpriteBatch();

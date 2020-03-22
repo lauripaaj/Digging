@@ -148,6 +148,11 @@ public class Stage {
         return id;
     }
 
+    public boolean hasConnectingTexture(int y, int x) {
+        if (y >= 0 && y < tiles.length && x >= 0 && x < tiles[y].length) return tiles[y][x].connectingTexture;
+        else return true;
+    }
+
 
 
     public int getCondition() {
@@ -223,6 +228,13 @@ public class Stage {
 
 
 
+        for (int i = 0; i < tiles.length; i++) {
+            for (int k = 0; k < tiles[i].length; k++) {
+                if (tiles[i][k].tiling) {
+                    tiles[i][k].updateTile(this);
+                }
+            }
+        }
 
 
         //spike = new Spike(3,3);

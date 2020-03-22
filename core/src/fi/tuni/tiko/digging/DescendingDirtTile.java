@@ -121,6 +121,7 @@ public class DescendingDirtTile extends GameTile implements Poolable {
         setY(-24);
         descending=false;
         descendingTimeLeft=maxDescendingTimeLeft;
+        setOccupied(false);
     }
 
 

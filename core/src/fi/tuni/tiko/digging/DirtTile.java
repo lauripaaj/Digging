@@ -5,12 +5,24 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pool.Poolable;
 
+import static fi.tuni.tiko.digging.MainGame.dirtTextureTileset;
+
 
 //muiden kuin animaatioiden ja perustekstuurien flippaaminen ei oikein onnistu tässä 0.04v. eli näiden tilejen ei vielä näillä yrityksillä
 
 public class DirtTile extends GameTile implements Poolable {
 
-    static GameTexture dirtTexture = new GameTexture(new Texture("dirtTile.png"));
+
+
+
+
+
+
+
+    //static GameTexture dirtTexture = new GameTexture(new Texture("tilesets/dirt/dirtTile-46.png"));;
+
+    GameTexture dirtTexture = dirtTextureTileset[46];
+
     static GameTexture brokenTexture = new GameTexture(new Texture ("dirtTileBroken.png"));
     //static GameTexture dirtTexture ;
     //static GameTexture brokenTexture;
@@ -23,11 +35,15 @@ public class DirtTile extends GameTile implements Poolable {
 
 
 
+
+
         super(locY, locX);
 
         //vissiin oikeasti positionjutut heitetään abstractin GameTilen constructorin kautta mutta en oo varma vielä
 
         diggable=true;
+        connectingTexture = true;
+        tiling = true;
 
         //VAIN TESTIMIELESSÄ, EHDOTTOMASTI TÄMÄ MYÖHEMMIN TRUE
         setConcrete(true);
@@ -49,6 +65,10 @@ public class DirtTile extends GameTile implements Poolable {
         super.startVanishing(currentStage);
 
         setTexture(brokenTexture);
+        tiling = false;
+        connectingTexture = false;
+
+        updateTiles(locationY, locationX, currentStage);
 
     }
 
@@ -74,10 +94,19 @@ public class DirtTile extends GameTile implements Poolable {
         //rectangle out of sight too
         setX(-24);
         setY(-24);
+        setOccupied(false);
 
 
 
 
 
+
+    }
+
+    @Override
+    public void updateTexture(int tileNumber) {
+        //dirtTexture = new GameTexture(new Texture("tilesets/dirt/dirtTile-"+tileNumber+".png"));
+        dirtTexture=dirtTextureTileset[tileNumber];
+        setTexture(dirtTexture);
     }
 }
