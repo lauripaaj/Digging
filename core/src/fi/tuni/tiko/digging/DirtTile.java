@@ -96,6 +96,9 @@ public class DirtTile extends GameTile implements Poolable {
         setY(-24);
         setOccupied(false);
 
+        connectingTexture = true;
+        tiling = true;
+
 
 
 

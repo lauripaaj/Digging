@@ -8,7 +8,7 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 
-		config.title="Digging Game pre-pre-release beta omega v 0.12";
+		config.title="Digging Game pre-pre-release beta omega v 0.13";
 		config.pauseWhenBackground=true;
 		config.pauseWhenMinimized=true;
 		config.height=1024;
