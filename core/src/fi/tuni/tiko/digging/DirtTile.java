@@ -88,7 +88,7 @@ public class DirtTile extends GameTile implements Poolable {
         setLocationX(-1);
         diggable=true;
         setConcrete(true);
-        setTexture(dirtTexture);
+
         getVanishAnimation().resetAnimation();
         setVanishing(false);
         //rectangle out of sight too
@@ -96,6 +96,8 @@ public class DirtTile extends GameTile implements Poolable {
         setY(-24);
         setOccupied(false);
 
+        dirtTexture = dirtTextureTileset[46];
+        setTexture(dirtTexture);
         connectingTexture = true;
         tiling = true;
 

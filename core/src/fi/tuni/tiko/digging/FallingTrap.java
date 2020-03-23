@@ -17,6 +17,10 @@ public class FallingTrap extends HazardousWalker implements Poolable {
 
     private boolean noticed = false;
 
+    //strength related to other hazards: 2 will get destroy strength 1 hazards without getting destroyed from that impact alone
+    //they will get destroyed in contact with other strength 2:s (spikes, other falling traps)
+    int hazardStrength=2;
+
 
 
 
@@ -145,6 +149,11 @@ public class FallingTrap extends HazardousWalker implements Poolable {
     @Override
     public boolean getGetsDestroyedByFallingPlayer () {
         return true;
+    }
+
+    @Override
+    public int getHazardStrength () {
+        return hazardStrength;
     }
 
     public boolean isNoticed () {

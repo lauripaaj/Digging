@@ -15,6 +15,9 @@ public class Goblin extends HazardousWalker implements Poolable {
 
     static Texture goblinZapTexture = new Texture("GoblinZapAnimate.png");
 
+    //strength related to other hazards: 1 will get destroyed by stronger hazards and they will remain
+    int hazardStrength=1;
+
 
 //standTexture = new GameTexture(new Texture("GoblinStand.png"));
 
@@ -36,6 +39,12 @@ public class Goblin extends HazardousWalker implements Poolable {
     rectangle=new Rectangle(1.00f,1.00f, 0.80f, 0.60f);
     putInTilePos(tilePosY, tilePosX);
     }
+
+    @Override
+    public int getHazardStrength () {
+        return hazardStrength;
+    }
+
 
     @Override
     public boolean getGetsDestroyedByFallingPlayer () {

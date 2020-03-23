@@ -11,6 +11,11 @@ public class Spike extends ImmobileHazard implements Poolable {
     boolean getsDestroyedByFallingPlayer = false;
 
     static GameTexture spikeTexture = new GameTexture(new Texture("spike.png"));
+    static Texture spikeVanishingTexture = new Texture("spikeVanishing.png");
+
+    //strength related to other hazards: 2 will destroy strength 1 hazards without getting destroyed
+    //they will get destroyed in contact with other strength 2:s (fallingTraps)
+    int hazardStrength=2;
 
 
 
@@ -18,7 +23,7 @@ public class Spike extends ImmobileHazard implements Poolable {
         setConcrete(true);
         setTexture(spikeTexture);
 
-        setVanishAnimation(new SheetAnimation(new Texture("SpikeVanishing.png"), 1, 8, 5, 60));
+        setVanishAnimation(new SheetAnimation(spikeVanishingTexture, 1, 8, 5, 60));
 
 
         rectangle=new Rectangle(1.00f,1.00f, 0.8f, 1.00f);
@@ -26,9 +31,10 @@ public class Spike extends ImmobileHazard implements Poolable {
 
     }
 
-
-
-
+    @Override
+    public int getHazardStrength () {
+        return hazardStrength;
+    }
 
     @Override
     public boolean getGetsDestroyedByFallingPlayer () {

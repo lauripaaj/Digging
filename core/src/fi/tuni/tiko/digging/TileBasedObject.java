@@ -77,6 +77,12 @@ public abstract class TileBasedObject extends GameObject {
         this.targetTilePosX = targetTilePosX;
     }
 
+    //this shortcut is most likely not best practice but it will make working with hazards much easier
+    //should never be used with any other TileBasedObject but those that implement Hazard
+    public int getHazardStrength() {
+        return -5555;
+    }
+
     public void confirmChangeInTilePosition() {
 
         tilePosX=targetTilePosX;

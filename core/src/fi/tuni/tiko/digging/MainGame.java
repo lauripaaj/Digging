@@ -14,7 +14,10 @@ import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import java.util.ArrayList;
+
 import java.util.Iterator;
+
+
 
 import static com.badlogic.gdx.Application.ApplicationType.Android;
 import static fi.tuni.tiko.digging.Player.ATTACKING;
@@ -304,6 +307,7 @@ public class MainGame extends ApplicationAdapter implements GestureDetector.Gest
 
 		checkDeadHazards();
 		checkPlayerHazardCollision();
+		checkHazardHazardCollision();
 
 		checkIfHazardsGetTriggeredOrNoticed();
 
@@ -531,6 +535,55 @@ public class MainGame extends ApplicationAdapter implements GestureDetector.Gest
 		//player.setGravityPull(currentStage.getGravity());
 
 
+
+	}
+
+	public void checkHazardHazardCollision() {
+		for (int i=0; i<currentStage.hazardList.size(); i++) {
+			for (int j=i+1; j<currentStage.hazardList.size(); j++) {
+				TileBasedObject hazard1 = currentStage.hazardList.get(i);
+				TileBasedObject hazard2 = currentStage.hazardList.get(j);
+
+				if (!hazard1.isVanishing() && !hazard2.isVanishing()) {
+					if (hazard1.getRectangle().overlaps(hazard2.getRectangle())) {
+
+
+						if (hazard1.getHazardStrength() > hazard2.getHazardStrength() ) {
+							vanishThisHazard(hazard2);
+						} else if (hazard2.getHazardStrength() > hazard1.getHazardStrength() ) {
+							vanishThisHazard(hazard1);
+							//in case of 2 strenght 1, goblins in each other, or spike+fallingTrap or each other
+						} else {
+							vanishThisHazard(hazard1);
+							vanishThisHazard(hazard2);
+						}
+
+				}
+
+
+
+
+
+
+
+
+
+				}
+			}
+		}
+
+
+	}
+
+	public void vanishThisHazard(TileBasedObject hazard) {
+
+		if (hazard instanceof Goblin) {
+			((Goblin) hazard).vanish();
+		} else if (hazard instanceof Spike) {
+			((Spike) hazard).vanish();
+		} else if (hazard instanceof FallingTrap) {
+			((FallingTrap) hazard).vanish();
+		}
 
 	}
 
