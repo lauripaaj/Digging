@@ -5,6 +5,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Pool.Poolable;
 
+import fi.tuni.tiko.digging.util.AnimTools;
+
 public class Goblin extends HazardousWalker implements Poolable {
 
     boolean getsDestroyedByFallingPlayer = true;
@@ -57,6 +59,24 @@ public class Goblin extends HazardousWalker implements Poolable {
         setConcrete(false);
         setVanishTimeLeft(0.6f);
         setStatus(VANISHING);
+    }
+
+    //will be called in MainGames checkHazardHazard-method, related to which hazard:s position
+    public void turnAroundAndChangeWalkingDirection(TileBasedObject relatedObject) {
+        if (getDirection() == RIGHT) {
+            setDirection(LEFT);
+            //setTargetTilePosX(relatedObject.getTilePosX()-1);
+            setTargetTilePosX(getTilePosX());
+        } else {
+
+            setDirection(RIGHT);
+            //setTargetTilePosX(relatedObject.getTilePosX()+1);
+            setTargetTilePosX(getTilePosX());
+
+
+        }
+        getWalkAnimation().flipMirror();
+
     }
 
 

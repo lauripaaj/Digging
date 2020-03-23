@@ -554,8 +554,40 @@ public class MainGame extends ApplicationAdapter implements GestureDetector.Gest
 							vanishThisHazard(hazard1);
 							//in case of 2 strenght 1, goblins in each other, or spike+fallingTrap or each other
 						} else {
-							vanishThisHazard(hazard1);
-							vanishThisHazard(hazard2);
+
+							//in case of goblins; one falling onto another, the bottom one will vanish
+							if (hazard1 instanceof Goblin && hazard2 instanceof Goblin) {
+
+								if (hazard1.getY() > hazard2.getY()) {
+									vanishThisHazard(hazard2);
+								} else if (hazard2.getY() > hazard1.getY()) {
+									vanishThisHazard(hazard1);
+								//2 goblins walking into each other (y-position same in both)
+								} else {
+									Goblin goblin1 = (Goblin)hazard1;
+									Goblin goblin2 = (Goblin)hazard2;
+
+									//case if one Goblin is walking on a tile where another goblin already is standing, the walking
+									//one will walk back, even if it means they will fall down if the previous tile has been digged/dug?
+
+									//POSSIBLE BUG PLACE
+									//there might be a small chance of bugs, since other statuses are not counted, falling that is just ending right then? we'll see
+									if (goblin1.getStatus()==WALKING && goblin2.getStatus()==READY) {
+										goblin1.turnAroundAndChangeWalkingDirection(goblin2);
+									} else if (goblin1.getStatus()==READY && goblin2.getStatus()==WALKING)  {
+										goblin2.turnAroundAndChangeWalkingDirection(goblin1);
+									}
+								}
+
+
+
+							} else {
+
+								vanishThisHazard(hazard1);
+								vanishThisHazard(hazard2);
+
+							}
+
 						}
 
 				}

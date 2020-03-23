@@ -87,6 +87,7 @@ public class TilePools {
     public void putAllTilesIntoPools (GameTile[][] tiles) {
 
         for (int x=0; x<tiles[0].length; x++) {
+            //bug saying blank tile cant be put in the farm pool is caused by using "a"cheat (gets rid of lots of tiles), will not be in the final game
             farmPool.free((FarmTile)tiles[0][x]);
         }
 
