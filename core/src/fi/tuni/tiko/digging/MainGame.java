@@ -641,7 +641,7 @@ public class MainGame extends ApplicationAdapter implements GestureDetector.Gest
 
 									if (hazard1.getY() > hazard2.getY()) {
 										vanishThisHazard(hazard2);
-									} else if (hazard2.getHeightAdjustedY() > hazard1.getHeightAdjustedY()) {
+									} else if (hazard2.getY() > hazard1.getY()) {
 										vanishThisHazard(hazard1);
 										//2 goblins walking into each other (y-position same in both)
 									} else {
