@@ -64,18 +64,34 @@ public class Goblin extends HazardousWalker implements Poolable {
     //will be called in MainGames checkHazardHazard-method, related to which hazard:s position
     public void turnAroundAndChangeWalkingDirection(TileBasedObject relatedObject) {
         if (getDirection() == RIGHT) {
-            setDirection(LEFT);
-            //setTargetTilePosX(relatedObject.getTilePosX()-1);
-            setTargetTilePosX(getTilePosX());
-        } else {
 
-            setDirection(RIGHT);
+            setTargetTilePosX(Math.round(getX()));
+            if (getTargetTilePosX()==Math.round(relatedObject.getX()) ) {
+                setTargetTilePosX(getTilePosX()-1);
+            }
+            confirmChangeInTilePosition();
+            setStatus(READY);
+            //setX(getX()-0.01f);
+            //startWalking(LEFT);
+            //setDirection(LEFT);
+            //setTargetTilePosX(relatedObject.getTilePosX()-1);
+            //setTargetTilePosX(getTilePosX());
+
+        } else {
+            setTargetTilePosX(Math.round(getX()));
+            if (getTargetTilePosX()==Math.round(relatedObject.getX()) ) {
+                setTargetTilePosX(getTilePosX()+1);
+            }
+            confirmChangeInTilePosition();
+            setStatus(READY);
+            //setX(getX()+0.01f);
+            //startWalking(RIGHT);
             //setTargetTilePosX(relatedObject.getTilePosX()+1);
-            setTargetTilePosX(getTilePosX());
+            //setTargetTilePosX(getTilePosX());
 
 
         }
-        getWalkAnimation().flipMirror();
+        //getWalkAnimation().flipMirror();
 
     }
 

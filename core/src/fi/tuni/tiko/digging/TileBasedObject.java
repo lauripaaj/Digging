@@ -29,6 +29,10 @@ public abstract class TileBasedObject extends GameObject {
 
     }
 
+    public float getHeightAdjustedY() {
+        return getY()-(1f - getHeight());
+    }
+
     public float getVanishTimeLeft () {
         return vanishTimeLeft;
     }

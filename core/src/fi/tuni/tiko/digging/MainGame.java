@@ -537,7 +537,7 @@ public class MainGame extends ApplicationAdapter implements GestureDetector.Gest
 
 
 	}
-
+/*
 	public void checkHazardHazardCollision() {
 		for (int i=0; i<currentStage.hazardList.size(); i++) {
 			for (int j=i+1; j<currentStage.hazardList.size(); j++) {
@@ -545,7 +545,7 @@ public class MainGame extends ApplicationAdapter implements GestureDetector.Gest
 				TileBasedObject hazard2 = currentStage.hazardList.get(j);
 
 				if (!hazard1.isVanishing() && !hazard2.isVanishing()) {
-					if (hazard1.getRectangle().overlaps(hazard2.getRectangle())) {
+					if (hazard1.getRectangle().overlaps(hazard2.getRectangle())  ) {
 
 
 						if (hazard1.getHazardStrength() > hazard2.getHazardStrength() ) {
@@ -592,17 +592,90 @@ public class MainGame extends ApplicationAdapter implements GestureDetector.Gest
 
 				}
 
-
-
-
-
-
-
-
-
 				}
 			}
 		}
+
+
+	}
+
+ */
+
+	public void checkHazardHazardCollision() {
+		for (int i = 0; i < currentStage.hazardList.size(); i++) {
+			for (int j = i + 1; j < currentStage.hazardList.size(); j++) {
+				TileBasedObject hazard1 = currentStage.hazardList.get(i);
+				TileBasedObject hazard2 = currentStage.hazardList.get(j);
+
+				if (!hazard1.isVanishing() && !hazard2.isVanishing()) {
+					if (hazard1.getRectangle().overlaps(hazard2.getRectangle())) {
+
+						//some really bad code coming up, but it should suffice for now
+						if (hazard1.getHazardStrength() > hazard2.getHazardStrength()) {
+							if (hazard1.getY() != hazard2.getY()) {
+								vanishThisHazard(hazard2);
+							} else {
+								if (hazard2 instanceof Goblin) {
+									Goblin goblin = (Goblin) hazard2;
+									goblin.turnAroundAndChangeWalkingDirection(hazard1);
+								}
+							}
+
+						} else if (hazard2.getHazardStrength() > hazard1.getHazardStrength()) {
+
+							if (hazard1.getHeightAdjustedY() != hazard2.getHeightAdjustedY()) {
+								vanishThisHazard(hazard1);
+							} else {
+								if (hazard1 instanceof Goblin) {
+									Goblin goblin = (Goblin) hazard1;
+									goblin.turnAroundAndChangeWalkingDirection(hazard2);
+								}
+
+
+							}
+								//in case of 2 strenght 1, goblins in each other, or spike+fallingTrap or each other
+							} else {
+
+								//in case of goblins; one falling onto another, the bottom one will vanish
+								if (hazard1 instanceof Goblin && hazard2 instanceof Goblin) {
+
+									if (hazard1.getY() > hazard2.getY()) {
+										vanishThisHazard(hazard2);
+									} else if (hazard2.getHeightAdjustedY() > hazard1.getHeightAdjustedY()) {
+										vanishThisHazard(hazard1);
+										//2 goblins walking into each other (y-position same in both)
+									} else {
+										Goblin goblin1 = (Goblin) hazard1;
+										Goblin goblin2 = (Goblin) hazard2;
+
+										//case if one Goblin is walking on a tile where another goblin already is standing, the walking
+										//one will walk back, even if it means they will fall down if the previous tile has been digged/dug?
+
+										//POSSIBLE BUG PLACE
+										//there might be a small chance of bugs, since other statuses are not counted, falling that is just ending right then? we'll see
+										if (goblin1.getStatus() == WALKING && goblin2.getStatus() == READY) {
+											goblin1.turnAroundAndChangeWalkingDirection(goblin2);
+										} else if (goblin1.getStatus() == READY && goblin2.getStatus() == WALKING) {
+											goblin2.turnAroundAndChangeWalkingDirection(goblin1);
+										}
+									}
+
+
+								} else {
+
+									vanishThisHazard(hazard1);
+									vanishThisHazard(hazard2);
+
+								}
+
+							}
+
+						}
+
+					}
+				}
+			}
+
 
 
 	}
