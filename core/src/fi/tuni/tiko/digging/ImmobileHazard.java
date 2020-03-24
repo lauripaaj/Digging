@@ -37,6 +37,17 @@ public abstract class ImmobileHazard extends TileBasedObject implements Hazard {
     }
 
     @Override
+    public void occupyTile (Stage currentStage) {
+        currentStage.tiles[getRawTileY()][getRawTileX()].setOccupied(true);
+    }
+
+    @Override
+    public void unOccupyTile (Stage currentStage) {
+        currentStage.tiles[getRawTileY()][getRawTileX()].setOccupied(false);
+
+    }
+
+    @Override
     public void draw(SpriteBatch batch) {
         if (!isVanishing()) {
             batch.draw(gameTextureRegion, getX(), getY(), getWidth(), getHeight());

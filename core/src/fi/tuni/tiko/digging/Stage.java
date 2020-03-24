@@ -340,6 +340,8 @@ public class Stage {
         return tiles[y][x];
     }
 
+
+
     /*
     //get tile from the position (y, x), note starts from 0, not 1
     //ehkä turha metodi jos ei mappi oma classinsa pitää miettiä

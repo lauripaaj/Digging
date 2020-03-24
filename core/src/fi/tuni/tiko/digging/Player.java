@@ -179,6 +179,15 @@ public class Player extends Creature {
 
     }
 
+    public void testXandY() {
+        System.out.println("Current ObjectPosX, ObjectPosY: "+getX()+", "+getY());
+        System.out.println("Current TilePosX, TilePosY: "+getTilePosX()+", "+getTilePosY());
+        //System.out.println("Test the heightbased thing x y: "+Math.round(getHeightAdjustedY()));
+        System.out.println("Current RawX, RawY: "+getRawTileX()+", "+getRawTileY());
+
+        //System.out.println(TableTools.getRealTileX(this));
+    }
+
 
 
 
@@ -390,6 +399,8 @@ public class Player extends Creature {
     }
     //delta ei nyt sittenkään vielä käytössä?
     public void startWalking(boolean direction) {
+
+        testXandY();
 
         walkingSpeed=maximumWalkingSpeed;
 

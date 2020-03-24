@@ -6,6 +6,9 @@ public interface Hazard {
 
     void vanish();
 
+    void occupyTile(Stage currentStage);
+    void unOccupyTile(Stage currentStage);
+
 
     //hazardStrentgths: 1=Goblin (gets destroyed in contact with spike and fallingTile)
     //                  2=Spike & FallingTile (destroying each other)

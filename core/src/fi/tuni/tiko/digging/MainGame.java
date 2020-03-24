@@ -304,7 +304,7 @@ public class MainGame extends ApplicationAdapter implements GestureDetector.Gest
 
 		//Not sure if this is the right class to hold checkPlayersUnwantedMovemement()-method or would it be better to be in player?
 
-
+        updateHazardOccupations();
 		checkDeadHazards();
 		checkPlayerHazardCollision();
 		checkHazardHazardCollision();
@@ -600,6 +600,37 @@ public class MainGame extends ApplicationAdapter implements GestureDetector.Gest
 	}
 
  */
+    //IMPORTANT ABOUT PERFORMANCE
+    //this will prevent goblins trying to even start to walk towards already occupied tiles, this is something
+    //that might be able to take away from game completely if it becomes too heavy to perform smoothly but it
+    //would cause a bit of jökeltäminen in goblin moves :D
+    public void updateHazardOccupations() {
+        for (int i = 0; i < currentStage.hazardList.size(); i++) {
+            TileBasedObject hazard = currentStage.hazardList.get(i);
+            if (hazard.isVanishing()) {
+                if (hazard instanceof HazardousWalker) {
+                    ((HazardousWalker) hazard).unOccupyTile(currentStage);
+                } else {
+                    ((ImmobileHazard) hazard).unOccupyTile(currentStage);
+                }
+            // hazard is not vanishing so the tile will become occupied
+            } else {
+                if (hazard instanceof HazardousWalker) {
+                	if (((HazardousWalker) hazard).getStatus()==WALKING || ((HazardousWalker) hazard).getStatus()==FALLING ) {
+						((HazardousWalker) hazard).unOccupyTile(currentStage);
+					} else {
+						((HazardousWalker) hazard).occupyTile(currentStage);
+					}
+
+                } else {
+                    ((ImmobileHazard) hazard).occupyTile(currentStage);
+
+                }
+
+
+            }
+        }
+    }
 
 	public void checkHazardHazardCollision() {
 		for (int i = 0; i < currentStage.hazardList.size(); i++) {

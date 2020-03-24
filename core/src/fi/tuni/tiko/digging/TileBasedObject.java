@@ -65,6 +65,19 @@ public abstract class TileBasedObject extends GameObject {
         this.tilePosX = tilePosX;
     }
 
+    //will return nearest position Y where the object currently is based on its rectangles location
+    public int getRawTileY() {
+
+        return Math.round(getHeightAdjustedY());
+
+    }
+    //will return nearest position X where the object currently is based on its rectangles location
+    public int getRawTileX() {
+
+        return Math.round(getX());
+
+    }
+
     public int getTargetTilePosY () {
         return targetTilePosY;
     }

@@ -55,6 +55,7 @@ public class Goblin extends HazardousWalker implements Poolable {
 
     @Override
     public void vanish () {
+
         setVanishing(true);
         setConcrete(false);
         setVanishTimeLeft(0.6f);
@@ -130,7 +131,7 @@ public class Goblin extends HazardousWalker implements Poolable {
             }
             //getStatus might have changed so this must be in a new loop even though it's the same condition
             if (getStatus() == READY) {
-                if ((tiles[getTilePosY()][getTilePosX()-1].isConcrete() == false) && tiles[getTilePosY()+1][getTilePosX()-1].isConcrete() == true) {
+                if ((tiles[getTilePosY()][getTilePosX()-1].isConcrete() == false) && (tiles[getTilePosY()][getTilePosX()-1].isOccupied() == false) && tiles[getTilePosY()+1][getTilePosX()-1].isConcrete() == true) {
                     int randomResult = MathUtils.random(1,160);
                     if (randomResult <= 1) {
                         startWalking(LEFT);
@@ -140,7 +141,7 @@ public class Goblin extends HazardousWalker implements Poolable {
 
             }
             if (getStatus() == READY) {
-                if ((tiles[getTilePosY()][getTilePosX()+1].isConcrete() == false) && tiles[getTilePosY()+1][getTilePosX()+1].isConcrete() == true) {
+                if ((tiles[getTilePosY()][getTilePosX()+1].isConcrete() == false) && (tiles[getTilePosY()][getTilePosX()+1].isOccupied() == false) && tiles[getTilePosY()+1][getTilePosX()+1].isConcrete() == true) {
                     int randomResult = MathUtils.random(1,160);
                     if (randomResult <= 1) {
                         startWalking(RIGHT);
@@ -179,7 +180,7 @@ public class Goblin extends HazardousWalker implements Poolable {
                 boolean actionContinues=true;
 
                 if (getDirection() == RIGHT && getTargetGameObjectPosX() <= getX() ) {
-                    if ( (tiles[getTilePosY()][getTargetTilePosX()+1].isConcrete() == false) &&
+                    if ( (tiles[getTilePosY()][getTargetTilePosX()+1].isConcrete() == false) && (tiles[getTilePosY()][getTargetTilePosX()+1].isOccupied() == false) &&
                     tiles[getTilePosY()+1][getTargetTilePosX()+1].isConcrete() == true) {
 
                         putInTilePos(getTargetTilePosY(), getTargetTilePosX());
@@ -192,7 +193,7 @@ public class Goblin extends HazardousWalker implements Poolable {
 
                 }
                 if (getDirection() == LEFT && getTargetGameObjectPosX() >= getX() ) {
-                    if ((tiles[getTilePosY()][getTargetTilePosX() - 1].isConcrete() == false) &&
+                    if ((tiles[getTilePosY()][getTargetTilePosX() - 1].isConcrete() == false) && (tiles[getTilePosY()][getTargetTilePosX() - 1].isOccupied() == false) &&
                             tiles[getTilePosY() + 1][getTargetTilePosX() - 1].isConcrete() == true) {
 
                         putInTilePos(getTargetTilePosY(), getTargetTilePosX());

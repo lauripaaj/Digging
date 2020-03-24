@@ -108,8 +108,14 @@ public abstract class GameTile extends TileBasedObject {
 
     }
 
+    public void unoccupyCurrentTile(Stage currentStage) {
+
+    }
 
     public void startVanishing (Stage currentStage) {
+
+        unoccupyCurrentTile(currentStage);
+
         setVanishing(true);
         //setConcrete(false);
         setVanishTimeLeft(0.3f);
