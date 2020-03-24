@@ -14,7 +14,6 @@ public class BlankTile extends GameTile implements Poolable {
     public BlankTile(int locY, int locX) {
 
 
-
         super(locY, locX);
 
         //vissiin oikeasti positionjutut heitetään abstractin GameTilen constructorin kautta mutta en oo varma vielä

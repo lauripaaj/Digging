@@ -11,7 +11,7 @@ public class Spike extends ImmobileHazard implements Poolable {
     boolean getsDestroyedByFallingPlayer = false;
 
     static GameTexture spikeTexture = new GameTexture(new Texture("spike.png"));
-    static Texture spikeVanishingTexture = new Texture("spikeVanishing.png");
+    static Texture spikeVanishingTexture = new Texture("SpikeVanishing.png");
 
     //strength related to other hazards: 2 will destroy strength 1 hazards without getting destroyed
     //they will get destroyed in contact with other strength 2:s (fallingTraps)

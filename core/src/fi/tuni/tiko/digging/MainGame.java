@@ -304,7 +304,8 @@ public class MainGame extends ApplicationAdapter implements GestureDetector.Gest
 
 		//Not sure if this is the right class to hold checkPlayersUnwantedMovemement()-method or would it be better to be in player?
 
-        updateHazardOccupations();
+		//updateHazardOccupations is too resource heavy for phone
+		//updateHazardOccupations();
 		checkDeadHazards();
 		checkPlayerHazardCollision();
 		checkHazardHazardCollision();
