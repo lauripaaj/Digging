@@ -23,6 +23,10 @@ public class GameTexture extends TextureRegion {
     }
     */
 
+    //public Texture getGameTexture() {
+    //    return super.getTexture();
+    //}
+
 
 
 

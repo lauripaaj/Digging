@@ -1,6 +1,7 @@
 package fi.tuni.tiko.digging;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
@@ -33,7 +34,7 @@ import static fi.tuni.tiko.digging.PlayerControls.TRYUP;
 import static fi.tuni.tiko.digging.WalkingCreature.DEAD;
 import static fi.tuni.tiko.digging.WalkingCreature.FALLING;
 
-public class MainGame extends ApplicationAdapter implements GestureDetector.GestureListener {
+public class MainGame extends Game  {
 
 	//näitä finaleja sun muita tullaan ehkä myöhemmin muuttamaan, testataan nyt näillä
 
@@ -71,7 +72,7 @@ public class MainGame extends ApplicationAdapter implements GestureDetector.Gest
 	float TIDEWIDTH;
 	float TIDEHEIGHT;
 
-	GestureDetector gestureDetector;
+	//GestureDetector gestureDetector;
 
 
 
@@ -126,7 +127,13 @@ public class MainGame extends ApplicationAdapter implements GestureDetector.Gest
 	//int targetY;
 
 	//to be added later
-	//Menu menu
+
+	ScreenHelper screenHelper;
+	MainMenu mainMenu;
+	SettingsMenu settingsMenu;
+
+
+
 
 	//Settings settings
 
@@ -139,8 +146,17 @@ public class MainGame extends ApplicationAdapter implements GestureDetector.Gest
 
 	boolean didThisAlready = false;
 
+	//these will be used in other screens:
+	float resoWidthTweaked;
+	float resoHeightTweaked;
+
+	PlayScreen playScreen;
+	PlayScreenHelper playScreenHelper;
+
 	@Override
 	public void create () {
+
+
 
 
 		//UNDIGGABLE_MARGIN_WIDTH = (Gdx.graphics.getWidth() % 7) / 2;
@@ -154,15 +170,60 @@ public class MainGame extends ApplicationAdapter implements GestureDetector.Gest
 
 		batch = new SpriteBatch();
 
+
+
+
+
+		camera = new OrthographicCamera((TILES_IN_ROWS_WITHOUT_EDGES)+2*UNDIGGABLE_MARGIN, 12.8f);
+
+
+
+
+		switch (Gdx.app.getType()) {
+			case Android:
+
+				resoWidthTweaked = TILES_IN_ROWS_WITHOUT_EDGES + 2 * UNDIGGABLE_MARGIN;
+
+
+				float aspectRatio = Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
+				System.out.println("Resolution: " + aspectRatio);
+
+
+
+				resoHeightTweaked = aspectRatio * resoWidthTweaked;
+				//camera.setToOrtho(true, (TILES_IN_ROWS_WITHOUT_EDGES)+2*UNDIGGABLE_MARGIN, 12.8f);
+
+
+				camera.setToOrtho(true, (TILES_IN_ROWS_WITHOUT_EDGES) + 2 * UNDIGGABLE_MARGIN, resoHeightTweaked);
+
+
+
+				break;
+
+			case Desktop:
+
+				resoHeightTweaked=12.8f;
+
+				resoWidthTweaked = TILES_IN_ROWS_WITHOUT_EDGES + 2 * UNDIGGABLE_MARGIN;
+
+				camera.setToOrtho(true, (TILES_IN_ROWS_WITHOUT_EDGES)+2*UNDIGGABLE_MARGIN, resoHeightTweaked);
+
+
+
+				break;
+		}
+
 		farm = new GameTexture(new Texture ("farm.jpg"));
 
 
 		player = new Player();
 
+
+
 		playerControls = new PlayerControls();
 
-		gestureDetector = new GestureDetector(this);
-		Gdx.input.setInputProcessor(gestureDetector);
+
+
 
 		//nämä voisi laittaa tulemaan jo valikkojen aikana/niitä ennen, jolloin itse pelin generoiminen ei vie niin paljoa aikaa
 		dirtPool = new DirtPool(200, 500);
@@ -211,7 +272,7 @@ public class MainGame extends ApplicationAdapter implements GestureDetector.Gest
 		//camera = new OrthographicCamera(TILES_IN_ROWS+2*UNDIGGABLE_MARGIN, 7.44f);
 
 		//camera = new OrthographicCamera((TILES_IN_ROWS-2)+2*UNDIGGABLE_MARGIN, 7.44f);
-		camera = new OrthographicCamera((TILES_IN_ROWS_WITHOUT_EDGES)+2*UNDIGGABLE_MARGIN, 12.8f);
+
 
 
 
@@ -220,28 +281,7 @@ public class MainGame extends ApplicationAdapter implements GestureDetector.Gest
 
 		//camera.setToOrtho(true, (TILES_IN_ROWS_WITHOUT_EDGES)+2*UNDIGGABLE_MARGIN, Gdx.graphics.getHeight()/TILE_HEIGHT_PIXELS);
 
-		switch (Gdx.app.getType()) {
-			case Android:
 
-				float resoWidthTweaked = TILES_IN_ROWS_WITHOUT_EDGES + 2 * UNDIGGABLE_MARGIN;
-
-
-				float aspectRatio = Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
-				System.out.println("Resolution: " + aspectRatio);
-
-
-				//camera.setToOrtho(true, (TILES_IN_ROWS_WITHOUT_EDGES)+2*UNDIGGABLE_MARGIN, 12.8f);
-
-
-				camera.setToOrtho(true, (TILES_IN_ROWS_WITHOUT_EDGES) + 2 * UNDIGGABLE_MARGIN, aspectRatio * resoWidthTweaked);
-
-				break;
-
-			case Desktop:
-				camera.setToOrtho(true, (TILES_IN_ROWS_WITHOUT_EDGES)+2*UNDIGGABLE_MARGIN, 12.8f);
-
-				break;
-		}
 
 
 
@@ -268,6 +308,10 @@ public class MainGame extends ApplicationAdapter implements GestureDetector.Gest
 
 		//äh ei jaksa säätää just nyt tästä saattaa tulla ongelmia
 		//camera.position.x=3.5f;
+
+
+
+
 		camera.position.x=1.03f+(float)(TILES_IN_ROWS_WITHOUT_EDGES)/2;
 
 
@@ -275,8 +319,34 @@ public class MainGame extends ApplicationAdapter implements GestureDetector.Gest
 
 		//cameraplacer=new Cameraplacer();
 
+		playScreenHelper= new PlayScreenHelper(playerControls, allStages, allLevelsStats);
+
+		screenHelper = new ScreenHelper(camera, player, resoWidthTweaked, resoHeightTweaked);
+		mainMenu = new MainMenu(this, screenHelper);
+		settingsMenu = new SettingsMenu(this, screenHelper);
+		playScreen = new PlayScreen(this, screenHelper, playScreenHelper);
+
+		setScreen(mainMenu);
 
 
+
+
+	}
+
+	public PlayScreen getPlayScreen () {
+		return playScreen;
+	}
+
+	public GameTexture getFarm () {
+		return farm;
+	}
+
+	public MainMenu getMainMenu () {
+		return mainMenu;
+	}
+
+	public SettingsMenu getSettingsMenu () {
+		return settingsMenu;
 	}
 
 	@Override
@@ -284,6 +354,9 @@ public class MainGame extends ApplicationAdapter implements GestureDetector.Gest
 
 		//System.out.println("player tile pos y: "+player.getTilePosY()+", pl tile pos x: "+player.getTilePosX());
 
+		super.render();
+
+		/*
 
 		float delta = Gdx.graphics.getDeltaTime();
 
@@ -346,22 +419,6 @@ public class MainGame extends ApplicationAdapter implements GestureDetector.Gest
 
 
 
-		if (!didThisAlready) {
-			//this is to test tile positions in different ways
-
-			/*
-			for (int y=0; y<3; y++) {
-				for (int x=0; x<currentStage.tiles[0].length; x++) {
-					GameTile t = currentStage.tiles[y][x];
-					System.out.print("y: "+y+", x: "+x+" ; Width "+t.getWidth()+", Height "+t.getHeight() +", GameobjectGetY "+t.getY()+ ", GameobjectGetX "+t.getX());
-					System.out.println(", getTileLocationY() "+t.getLocationY()+ ", getTileLocationX() "+t.getLocationX()+"") ;
-
-
-				}
-
-			}*/
-		didThisAlready = true;
-		}
 
 
 
@@ -370,6 +427,9 @@ public class MainGame extends ApplicationAdapter implements GestureDetector.Gest
 
 
 
+
+		*/
+		/*
 
 
 
@@ -388,105 +448,15 @@ public class MainGame extends ApplicationAdapter implements GestureDetector.Gest
 		batch.end();
 
 		moveCamera();
+
+		*/
 	}
 
-	@Override
-	public boolean touchDown (float x, float y, int pointer, int button) {
-		//Gdx.app.log("touchDown", "Touchdown: x: "+x+", y: "+y);
-		return false;
+	public SpriteBatch getBatch () {
+		return batch;
 	}
 
-	@Override
-	public boolean tap (float x, float y, int count, int button) {
-		return false;
-	}
 
-	@Override
-	public boolean longPress (float x, float y) {
-
-		if (player.getStatus()==READY) {
-			for (int yyy = player.getTilePosY(); yyy<player.getTilePosY()+7; yyy++) {
-				currentStage.tiles[yyy][player.getTilePosX()]=new BlankTile(yyy, player.getTilePosX() );
-			}
-			return true;
-
-		}
-		return false;
-	}
-
-	@Override
-	public boolean fling (float velocityX, float velocityY, int button) {
-
-		if (player.getStatus()==READY) {
-
-			if ((velocityX > Math.abs(velocityY)) ) {
-
-				playerControls.tryRight(player, currentStage);
-				return true;
-
-
-			} else if ( (velocityX < 0) && Math.abs(velocityX) > Math.abs(velocityY) ) {
-
-				playerControls.tryLeft(player, currentStage);
-				return true;
-
-			} else if ((velocityY > Math.abs(velocityX)) ) {
-
-				playerControls.tryDown(player, currentStage);
-				return true;
-			} else  {
-				playerControls.tryUp(player, currentStage);
-				return true;
-			}
-
-
-		} else {
-			if ((velocityX > Math.abs(velocityY)) ) {
-
-				playerControls.setQueu(TRYRIGHT);
-			} else if ( (velocityX < 0) && Math.abs(velocityX) > Math.abs(velocityY) ) {
-
-				playerControls.setQueu(TRYLEFT);
-
-			}  else if ((velocityY > Math.abs(velocityX)) ) {
-
-				playerControls.setQueu(TRYDOWN);
-			}  else  {
-				playerControls.setQueu(TRYUP);
-			}
-
-			return true;
-		}
-
-
-
-
-	}
-
-	@Override
-	public boolean pan (float x, float y, float deltaX, float deltaY) {
-		return false;
-	}
-
-	@Override
-	public boolean panStop (float x, float y, int pointer, int button) {
-		return false;
-	}
-
-	@Override
-	public boolean zoom (float initialDistance, float distance) {
-		return false;
-	}
-
-	@Override
-	public boolean pinch (Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
-		return false;
-	}
-
-	@Override
-	public void pinchStop () {
-
-	}
 
 	@Override
 	public void dispose () {
@@ -495,21 +465,18 @@ public class MainGame extends ApplicationAdapter implements GestureDetector.Gest
 	}
 
 
-	private void clearScreen() {
-		Gdx.gl.glClearColor(0.39f, 0.39f, 0.39f, 0.19f);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-	}
+
 
 	//camera will follow player's y-position
-	public void moveCamera() {
+	//public void moveCamera() {
 
-		camera.position.y = player.getY()+3f;
+	//	camera.position.y = player.getY()+3f;
 		//camera.position.y++;
 
 		//Gdx.app.log("Location", "Location: y: "+camera.position.y+", x: "+camera.position.x);
 
-		camera.update();
-	}
+	//	camera.update();
+	//}
 
 	//starts and generates a level.
 	public void startStage(int idOfStage) {
@@ -990,6 +957,8 @@ while (it.hasNext()) {
 	public void tryPlayerRight() {
 
 	}
+
+
 
 	public void controlPlayer() {
 

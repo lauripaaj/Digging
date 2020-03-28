@@ -79,7 +79,7 @@ public abstract class GameTile extends TileBasedObject {
 
     //public GameTile() {
     //}
-
+    @Override
     public void draw (SpriteBatch batch) {
 
 
