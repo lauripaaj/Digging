@@ -58,6 +58,8 @@ public class DescendingDirtTile extends GameTile implements Poolable {
 
         setTexture(descendingDirtTexture);
 
+        connectingTexture=true;
+
         //hmm locX ja locY pitänee muuttaa tuosta en tiä vielä
         rectangle=new Rectangle(locX, locY, 1.00f, 1.00f);
 
@@ -122,6 +124,7 @@ public class DescendingDirtTile extends GameTile implements Poolable {
         descending=false;
         descendingTimeLeft=maxDescendingTimeLeft;
         setOccupied(false);
+        connectingTexture=true;
     }
 
 
