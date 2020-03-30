@@ -53,7 +53,7 @@ public class Player extends Creature {
     private float maximumAttackForthAndBackMove = 0.80f;
     private float attackForthAndBackMoveRemaining;
     private float attackWidth=1.0f;
-    private float normalWidth=1.0f;
+    private float normalWidth=0.98f;
 
 
     //private float gravityPull = 1.0f;

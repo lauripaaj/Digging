@@ -73,6 +73,10 @@ public class DescendingDirtTile extends GameTile implements Poolable {
         setTexture(descendingBrokenTexture);
         //continueVanishing(0.000001f);
 
+        connectingTexture = false;
+
+        updateTiles(locationY, locationX, currentStage);
+
 
         System.out.println("vanished sescending");
     }
