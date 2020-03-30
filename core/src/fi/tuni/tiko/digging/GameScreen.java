@@ -40,6 +40,7 @@ public abstract class GameScreen implements Screen, GestureDetector.GestureListe
 
 
 
+
     int actionToPerform = NONE;
 
 
@@ -53,7 +54,7 @@ public abstract class GameScreen implements Screen, GestureDetector.GestureListe
 
     float screenHeight= Gdx.graphics.getHeight();
     float screenWidth=Gdx.graphics.getWidth();
-    float pressedAreaSize = 0.9f;
+    float pressedAreaSize = 0.5f;
 
     public void performAction() {
         if (actionToPerform == SETTINGS_MENU) {

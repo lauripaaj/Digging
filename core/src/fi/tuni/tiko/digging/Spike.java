@@ -26,10 +26,12 @@ public class Spike extends ImmobileHazard implements Poolable {
         setVanishAnimation(new SheetAnimation(spikeVanishingTexture, 1, 8, 5, 60));
 
 
-        rectangle=new Rectangle(1.00f,1.00f, 0.8f, 1.00f);
+        rectangle=new Rectangle(1.00f,1.00f, 1.0f, 1.00f);
         putInTilePos(tilePosY, tilePosX);
 
     }
+
+
 
     @Override
     public int getHazardStrength () {
@@ -39,6 +41,13 @@ public class Spike extends ImmobileHazard implements Poolable {
     @Override
     public boolean getGetsDestroyedByFallingPlayer () {
         return getsDestroyedByFallingPlayer;
+    }
+
+    @Override
+    public void putInTilePos(int posY, int posX) {
+        super.putInTilePos(posY, posX);
+        setY( (1.27f-getHeight() )+posY);
+
     }
 
 

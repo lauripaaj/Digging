@@ -3,11 +3,15 @@ package fi.tuni.tiko.digging;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
 
+import static fi.tuni.tiko.digging.Player.DIGGING;
 import static fi.tuni.tiko.digging.Player.READY;
 import static fi.tuni.tiko.digging.PlayerControls.NOQUEU;
 import static fi.tuni.tiko.digging.PlayerControls.TRYDOWN;
@@ -19,6 +23,8 @@ public class PlayScreen extends GameScreen {
 
     private GestureDetector playScreenDetector;
 
+    private ArrayList<MenuButton> buttons;
+
     private Player player;
     private PlayerControls playerControls;
 
@@ -27,15 +33,29 @@ public class PlayScreen extends GameScreen {
     private ArrayList<Stage> allStages;
     private ArrayList<LevelStats> allLevelStats;
 
+    //private SpriteBatch hudBatch;
+
     TilePools tilePools;
     HazardPools hazardPools;
 
     TileAnimationPools tileAnimationPools;
 
+    MenuButton pauseButton;
+    //MenuButton pauseButton2;
+
+    GameTexture pauseButtonTexture = new GameTexture(new Texture("menus/buttonPause.png"));
+    GameTexture pauseButtonPressedTexture = new GameTexture(new Texture("menus/buttonPausePressed.png"));
+
+
 
 
     public PlayScreen(MainGame mainGame, ScreenHelper screenHelper, PlayScreenHelper playScreenHelper) {
         super(mainGame, screenHelper);
+
+        //hudBatch = new SpriteBatch();
+
+        buttons = new ArrayList<>();
+
         player = screenHelper.player;
         playerControls=playScreenHelper.playerControls;
         allStages = playScreenHelper.allStages;
@@ -45,6 +65,23 @@ public class PlayScreen extends GameScreen {
         tilePools = currentStage.tilePools;
         hazardPools = currentStage.hazardPools;
         tileAnimationPools = currentStage.tileAnimationPools;
+
+        pauseButton = new MenuButton(pauseButtonTexture, pauseButtonPressedTexture, 1.34f, 1.34f, MAIN_MENU);
+        pauseButton.setX(1.0f);
+        pauseButton.setY(0.5f);
+
+       // pauseButton2 = new MenuButton(pauseButtonTexture, pauseButtonPressedTexture, 5.34f, 5.34f, MAIN_MENU);
+
+        //System.out.println("pausebutton2getx: "+pauseButton2.getX()+", pausebutton2gety: "+pauseButton2.getY());
+
+        //pauseButton2.setX(3.0f);
+        //pauseButton2.setY(-32f);
+
+        buttons.add(pauseButton);
+
+
+        pressedArea = new Rectangle(-1f, -1f, pressedAreaSize, pressedAreaSize);
+
 
 
         playScreenDetector = new GestureDetector(this);
@@ -136,7 +173,12 @@ public class PlayScreen extends GameScreen {
 
 
 
+        if (actionActivated) {
+            continueActionCountdown(Gdx.graphics.getDeltaTime(), buttons);
 
+            System.out.println("this worked");
+
+        }
 
 
 
@@ -144,19 +186,61 @@ public class PlayScreen extends GameScreen {
 
 		batch.begin();
 
+
+
 		batch.draw(mainGame.getFarm(),+0.9f,-4f, 7.4f, 5f);
-		currentStage.draw(batch);
+        currentStage.draw(batch);
 
 		tileAnimationPools.draw(batch);
 
 
 
+
+
 		player.draw(batch);
 
+        //drawPlayScreenElements();
 
+
+        //drawPlayScreenElements();
+        //screenHelper.switchCameraToUi();
+
+        drawPlayScreenElements();
 		batch.end();
 
 		screenHelper.moveCamera();
+
+		//hudBatch.begin();
+		//hudBatch.setProjectionMatrix(camera.combined);
+		//camera.position.y=-35f;
+		//camera.update();
+        //pauseButton.draw(hudBatch);
+		//hudBatch.end();
+
+        //screenHelper.moveCamera();
+
+    }
+
+    public void drawPlayScreenElements() {
+
+            //pauseButton.setY(player.getY()-3.3f);
+            //pauseButton.draw(batch);
+
+        if (!pauseButton.isPressed()) {
+            batch.draw(pauseButtonTexture, pauseButton.getX()-0f, player.getY()-3.3f, pauseButton.getWidth(), pauseButton.getHeight());
+        } else {
+
+            batch.draw(pauseButtonPressedTexture, pauseButton.getX()-0f, player.getY()-3.3f, pauseButton.getWidth(), pauseButton.getHeight());
+
+        }
+
+
+
+            //pauseButton.setY(player.getY()-3.2f);
+            //if (player.getStatus()==READY) {
+            //    pauseButton.draw(batch);
+            //}
+
 
     }
 
@@ -193,8 +277,49 @@ public class PlayScreen extends GameScreen {
 
     @Override
     public boolean tap (float x, float y, int count, int button) {
-        return false;
-    }
+
+        pressedArea.setPosition(screenHelper.menuAdjustedX(x), screenHelper.menuAdjustedY(y));
+
+        System.out.println("pressedAreaY: "+pressedArea.y);
+        System.out.println("pressedAreaX: "+pressedArea.x);
+
+        System.out.println("pauseButtonGetY: "+pauseButton.getY());
+        System.out.println("pauseButton.getX: "+pauseButton.getX());
+
+        for (int i=0; i<buttons.size(); i++) {
+            MenuButton menuButton = buttons.get(i);
+            if (pressedArea.overlaps(menuButton.getRectangle())) {
+                menuButton.setPressed(true);
+
+                activateAction(menuButton.getActionToPerform());
+            }
+        }
+
+        return true;
+        }
+        /*
+        if (pressedArea.overlaps(settingsButton.getRectangle())) {
+            System.out.println("settings pressed");
+            settingsButton.setPressed(true);
+
+            activateAction(SETTINGS_MENU);
+
+
+
+        } else if (pressedArea.overlaps(playButton.getRectangle())) {
+            System.out.println("play pressed");
+            playPressed=true;
+        }*/
+
+
+
+
+        //System.out.print("x: "+x);
+        //System.out.println("y: "+y);
+
+        //System.out.println("Hey hey yea");
+
+
 
     @Override
     public boolean longPress (float x, float y) {

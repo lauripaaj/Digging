@@ -12,7 +12,7 @@ public class ScreenHelper {
     private OrthographicCamera camera;
     Player player;
 
-    //amount of pixels to help adjust the screen touching
+    //coordinates of game
     private float resoY;
     private float resoX;
 
@@ -64,9 +64,19 @@ public class ScreenHelper {
 
     }
 
+    public void switchCameraToUi() {
+        camera.position.y = -30f;
+        camera.update();
+    }
 
+    public void switchCameraToMenu() {
+        camera.position.y = -52f;
+        camera.update();
+    }
 
     public void drawButtons(ArrayList<MenuButton> buttons, SpriteBatch batch) {
+
+
 
         for (int i=0; i<buttons.size(); i++) {
             MenuButton button = buttons.get(i);
@@ -117,4 +127,32 @@ public class ScreenHelper {
 
         return newY;
     }
+
+    public float menuAdjustedX (float x) {
+
+
+        float xPercentage = x / Gdx.graphics.getWidth();
+
+        return xPercentage * resoX;
+
+
+    }
+
+    public float menuAdjustedY (float y) {
+
+        float yPercentage = y / Gdx.graphics.getHeight();
+        return yPercentage * resoY;
+    }
+
+    public float getResoY () {
+        return resoY;
+    }
+
+
+
+    public float getResoX () {
+        return resoX;
+    }
+
+
 }

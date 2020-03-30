@@ -71,6 +71,8 @@ public class Stage {
     private int resourcesCollectedThisRun;
     private int totalResourcesCollected;
 
+    private GameTexture backGroundTexture;
+
 
     GameTile[][] tiles;
 
@@ -114,7 +116,7 @@ public class Stage {
     }
 
 
-    public Stage(int id, int noOfAreas, int condition, int resourceTemplate, TilePools tilePools, HazardPools hazardPools, LevelStats levelStats, TileAnimationPools tileAnimationPools, int totalResourcesCollected) {
+    public Stage(int id, int noOfAreas, int condition, int resourceTemplate, TilePools tilePools, HazardPools hazardPools, LevelStats levelStats, TileAnimationPools tileAnimationPools, int totalResourcesCollected, GameTexture backGroundTexture) {
 
         this.tilePools = tilePools;
         this.hazardPools = hazardPools;
@@ -127,6 +129,8 @@ public class Stage {
         firstTimeVisit = true;
 
         tiles = new GameTile[0][0];
+
+        this.backGroundTexture=backGroundTexture;
 
 
 
@@ -360,6 +364,17 @@ public class Stage {
     */
 
     public void draw(SpriteBatch batch) {
+
+        for (int y=1; y<tiles.length+8; y=y+8) {
+            for (int x=-2; x < 10; x=x+4)
+            batch.draw(backGroundTexture, (float)x, (float)y, 4f, 8f);
+        }
+
+        for (int i=0; i<hazardList.size(); i++) {
+            TileBasedObject hazard = hazardList.get(i);
+            hazard.draw(batch);
+        }
+
         for (int y = 0; y < tiles.length; y++) {
             for (int x = 0; x < tiles[0].length; x++) {
                 tiles[y][x].draw(batch);
@@ -373,10 +388,7 @@ public class Stage {
             }
         }
 
-        for (int i=0; i<hazardList.size(); i++) {
-            TileBasedObject hazard = hazardList.get(i);
-            hazard.draw(batch);
-        }
+
 
     }
 

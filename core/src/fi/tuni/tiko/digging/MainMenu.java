@@ -70,11 +70,11 @@ public class MainMenu extends MenuScreen {
 
 
         settingsButton.setX(2.45f);
-        settingsButton.setY(screenHelper.player.getY()+3.8f);
+        settingsButton.setY(-50.8f);
 
         buttons.add(settingsButton);
 
-        pressedArea = new Rectangle(-1f, -1f, pressedAreaSize, pressedAreaSize);
+        pressedArea = new Rectangle(-24f, -0.5f, pressedAreaSize, pressedAreaSize*3);
 
 
     }
@@ -83,6 +83,13 @@ public class MainMenu extends MenuScreen {
     public void show () {
 
         Gdx.input.setInputProcessor(mainMenuDetector);
+
+        //settingsButton.setY(screenHelper.player.getY()+3.8f);
+        //playButton.setY(screenHelper.player.getY()+3.8f);
+
+        screenHelper.switchCameraToMenu();
+
+        System.out.println("switched to main menu");
 
     }
 
@@ -115,7 +122,8 @@ public class MainMenu extends MenuScreen {
 
         batch.end();
 
-        screenHelper.moveCamera();
+        screenHelper.switchCameraToMenu();
+        //camera.update();
 
     }
 
@@ -152,18 +160,29 @@ public class MainMenu extends MenuScreen {
     @Override
     public boolean tap (float x, float y, int count, int button) {
 
-        float adjustedX = screenHelper.screenAdjustedX(x);
-        float adjustedY = screenHelper.screenAdjustedY(y);
+        System.out.print("x: "+x);
+        System.out.println(", y: "+y);
 
-        System.out.println("AdjustedX: "+ adjustedX+", AdjustedY: "+ adjustedY);
+        System.out.println(screenHelper.menuAdjustedX(x));
+        System.out.println(screenHelper.menuAdjustedY(y));
+
+
+
+        //float adjustedX = screenHelper.screenAdjustedX(x);
+        //float adjustedY = screenHelper.screenAdjustedY(y);
+
+        //System.out.println("AdjustedX: "+ adjustedX+", AdjustedY: "+ adjustedY);
 
 
 
         //adjustedY = screenHelper.flipY(adjustedY);
-        adjustedY = screenHelper.adjustToYPosition(adjustedY);
-        adjustedX = screenHelper.adjustToXPosition(adjustedX);
+        //adjustedY = screenHelper.adjustToYPosition(adjustedY);
+        //adjustedX = screenHelper.adjustToXPosition(adjustedX);
 
-        pressedArea.setPosition(adjustedX - pressedAreaSize, adjustedY - pressedAreaSize);
+        //pressedArea.setPosition(adjustedX - pressedAreaSize, adjustedY - pressedAreaSize);
+
+        //pressedArea.setPosition(screenHelper.menuAdjustedX(x), screenHelper.menuAdjustedY(y)-60f+(0.057f*screenHelper.getResoY()));
+        pressedArea.setPosition(screenHelper.menuAdjustedX(x), screenHelper.menuAdjustedY(y)-60f);
 
         for (int i=0; i<buttons.size(); i++) {
             MenuButton menuButton = buttons.get(i);
@@ -190,8 +209,7 @@ public class MainMenu extends MenuScreen {
 
 
 
-        //System.out.print("x: "+x);
-        //System.out.println("y: "+y);
+
 
         //System.out.println("Hey hey yea");
         return true;

@@ -34,7 +34,7 @@ public class SettingsMenu extends MenuScreen {
 
         buttons.add(backButton);
 
-        pressedArea = new Rectangle(-1f, -1f, pressedAreaSize, pressedAreaSize);
+        pressedArea = new Rectangle(-1f, -1f, pressedAreaSize, pressedAreaSize*3);
 
 
 
@@ -46,6 +46,7 @@ public class SettingsMenu extends MenuScreen {
     public void show () {
 
         Gdx.input.setInputProcessor(settingsMenuDetector);
+        screenHelper.switchCameraToMenu();
 
     }
 
@@ -75,7 +76,8 @@ public class SettingsMenu extends MenuScreen {
 
         batch.end();
 
-        screenHelper.moveCamera();
+        //screenHelper.moveCamera();
+        camera.update();
 
     }
 
@@ -111,18 +113,7 @@ public class SettingsMenu extends MenuScreen {
 
     @Override
     public boolean tap (float x, float y, int count, int button) {
-        float adjustedX = screenHelper.screenAdjustedX(x);
-        float adjustedY = screenHelper.screenAdjustedY(y);
-
-        System.out.println("AdjustedX: "+ adjustedX+", AdjustedY: "+ adjustedY);
-
-
-
-        //adjustedY = screenHelper.flipY(adjustedY);
-        adjustedY = screenHelper.adjustToYPosition(adjustedY);
-        adjustedX = screenHelper.adjustToXPosition(adjustedX);
-
-        pressedArea.setPosition(adjustedX, adjustedY+pressedAreaSize/2.7f-0.1f);
+        pressedArea.setPosition(screenHelper.menuAdjustedX(x), screenHelper.menuAdjustedY(y)-60f);
 
         for (int i=0; i<buttons.size(); i++) {
             MenuButton menuButton = buttons.get(i);

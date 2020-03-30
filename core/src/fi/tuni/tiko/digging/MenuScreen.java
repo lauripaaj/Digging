@@ -26,11 +26,11 @@ public abstract class MenuScreen extends GameScreen {
         playButton = new MenuButton(screenHelper.getPlayButtonTexture(), screenHelper.getPlayButtonTexturePressed(), 1.24f, 1.24f, PLAY);
 
         playButton.setX(6.17f);
-        playButton.setY(screenHelper.player.getY()-1f);
+        playButton.setY(-56f);
 
-        backButton = new MenuButton(backButtonTexture, backButtonTexturePressed, 2.0f, 2.0f, MAIN_MENU);
+        backButton = new MenuButton(backButtonTexture, backButtonTexturePressed, 1.8f, 1.8f, MAIN_MENU);
         backButton.setX(2.0f);
-        backButton.setY(screenHelper.player.getY()+4.8f);
+        backButton.setY(-49.6f);
 
 
 
@@ -56,8 +56,8 @@ public abstract class MenuScreen extends GameScreen {
 
 
     public void drawBackgroundAssets() {
-        batch.draw(officialBack, 0, screenHelper.player.getY()-5f, TILES_IN_ROWS_INCLUDING_EDGES, 15f);
-        batch.draw(screenHelper.getMenuBack(), 1.6f, screenHelper.player.getY()-1.2f, TILES_IN_ROWS_WITHOUT_EDGES-1.2f, 9f);
+        batch.draw(officialBack, 0, -60f, TILES_IN_ROWS_INCLUDING_EDGES, 15f);
+        batch.draw(screenHelper.getMenuBack(), 1.6f, -56f, TILES_IN_ROWS_WITHOUT_EDGES-1.2f, 9f);
     }
 
 

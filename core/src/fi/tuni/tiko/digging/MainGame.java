@@ -78,6 +78,8 @@ public class MainGame extends Game  {
 
 			//myöhemmin joku oma luokkansa farmi tietysti
 
+	private GameTexture backGroundTexture;
+
 	private GameTexture farm;
 
 	private SpriteBatch batch;
@@ -164,7 +166,7 @@ public class MainGame extends Game  {
 
 		//initalizing dirtTileTextureset using static GameTexture[] dirtTextureTileset array. 0-index will be left empty for convienience.
 		for (int i=1; i < dirtTextureTileset.length; i++) {
-			dirtTextureTileset[i]=new GameTexture(new Texture("tilesets/dirt/dirtTile-"+i+".png"));
+			dirtTextureTileset[i]=new GameTexture(new Texture("tilesets/dirt/dirtTile"+i+".png"));
 		}
 
 
@@ -194,7 +196,7 @@ public class MainGame extends Game  {
 				//camera.setToOrtho(true, (TILES_IN_ROWS_WITHOUT_EDGES)+2*UNDIGGABLE_MARGIN, 12.8f);
 
 
-				camera.setToOrtho(true, (TILES_IN_ROWS_WITHOUT_EDGES) + 2 * UNDIGGABLE_MARGIN, resoHeightTweaked);
+				camera.setToOrtho(true, resoWidthTweaked, resoHeightTweaked);
 
 
 
@@ -206,7 +208,7 @@ public class MainGame extends Game  {
 
 				resoWidthTweaked = TILES_IN_ROWS_WITHOUT_EDGES + 2 * UNDIGGABLE_MARGIN;
 
-				camera.setToOrtho(true, (TILES_IN_ROWS_WITHOUT_EDGES)+2*UNDIGGABLE_MARGIN, resoHeightTweaked);
+				camera.setToOrtho(true, resoWidthTweaked , resoHeightTweaked);
 
 
 
@@ -217,6 +219,8 @@ public class MainGame extends Game  {
 
 
 		player = new Player();
+
+		backGroundTexture = new GameTexture(new Texture("Background.png"));
 
 
 
@@ -259,7 +263,7 @@ public class MainGame extends Game  {
 
 		//pitää muuttaa tätä kaikilla ei voi olla omaa tiles arrayta
 		allStages = new ArrayList<Stage>();
-		allStages.add(new Stage(allStages.size(), 2,3,4, tilePools, hazardPools, allLevelsStats.get(0), tileAnimationPools, totalResourcesCollected )); // id 0 farm?
+		allStages.add(new Stage(allStages.size(), 2,3,4, tilePools, hazardPools, allLevelsStats.get(0), tileAnimationPools, totalResourcesCollected, backGroundTexture )); // id 0 farm?
 		//allStages.add(new Stage(allStages.size(), 2,3,4)); // id 1? stage1
 
 		//oikeasti myöhemmin saatetaan aloittaa 0:sta tms.
