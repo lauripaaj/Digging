@@ -34,12 +34,50 @@ public class MapTemplate {
     public void setTerrainTemplate (TerrainTemplate terrainTemplate) {
         this.terrainTemplate = terrainTemplate;
     }
-
+    /*
     //this method could use premade templates instead of randoming like in default constructor
-    public MapTemplate(int number) {
+    public MapTemplate(int episode, int level) {
+
+        areaTemplates = new ArrayList<AreaTemplate>();
+
+        int chanceOfDesc = 0;
+        int chanceOfStone = 0;
+        int number = 0;
+
+        if (level >= 2 && level <= 3) {
+            number = 2;
+        }
 
 
-    }
+
+
+        if (number == 2) {
+
+            chanceOfDesc = 10;
+            chanceOfStone = 5;
+
+        } else if (number == 3) {
+            chanceOfDesc = 80;
+            chanceOfStone = 0;
+        }
+
+        else if (number == 4) {
+            chanceOfDesc = 28;
+            chanceOfStone = 6;
+        } else if (number == 10) {
+            chanceOfStone = 100;
+        } else throw new IllegalArgumentException("invalid mapTemplate number");
+
+        int randomRoll = MathUtils.random(1,100);
+        if (randomRoll <= chanceOfDesc) {
+            terrainTemplate = new TerrainTemplate(1);
+        } else if (randomRoll <= chanceOfStone+chanceOfDesc) {
+            terrainTemplate = new TerrainTemplate(2);
+
+        } else {
+            terrainTemplate = new TerrainTemplate();
+        }
+    }*/
 
     //constructor that makes (somewhat random number number of) ONLY areas as random as possible
     //AND uses default hazardTemplate
@@ -53,7 +91,13 @@ public class MapTemplate {
 
         // laitoin vaan 3,6 testin vuoksi, myöhemmin vähän enemmän
 
-        int numberOfAreas = MathUtils.random(5,7);
+        generateAreaTemplates(5,7);
+
+
+    }
+
+    public void generateAreaTemplates(int min, int max) {
+        int numberOfAreas = MathUtils.random(min, max);
         for (int i=0; i < numberOfAreas; i++) {
             AreaTemplate generalTemplate = new AreaTemplate();
             areaTemplates.add(generalTemplate);
@@ -63,9 +107,10 @@ public class MapTemplate {
 
 
 
+/*
     public MapTemplate getAreaTemplate(int number) {
         return new MapTemplate(number);
-    }
+    }*/
 
 
     //en tiä onko paras nimi
