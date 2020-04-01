@@ -227,10 +227,10 @@ public class PlayScreen extends GameScreen {
             //pauseButton.draw(batch);
 
         if (!pauseButton.isPressed()) {
-            batch.draw(pauseButtonTexture, pauseButton.getX()-0f, player.getY()-3.3f, pauseButton.getWidth(), pauseButton.getHeight());
+            batch.draw(pauseButtonTexture, pauseButton.getX()-0f, camera.position.y-6.4f, pauseButton.getWidth(), pauseButton.getHeight());
         } else {
 
-            batch.draw(pauseButtonPressedTexture, pauseButton.getX()-0f, player.getY()-3.3f, pauseButton.getWidth(), pauseButton.getHeight());
+            batch.draw(pauseButtonPressedTexture, pauseButton.getX()-0f, camera.position.y-6.4f, pauseButton.getWidth(), pauseButton.getHeight());
 
         }
 
