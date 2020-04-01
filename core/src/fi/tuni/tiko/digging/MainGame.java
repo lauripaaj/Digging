@@ -92,6 +92,7 @@ public class MainGame extends Game  {
 	private DescendingPool descendingPool;
 	private PermanentPool permanentPool;
 	private FarmPool farmPool;
+	private RootPool rootPool;
 
 	private TilePools tilePools;
 
@@ -239,10 +240,12 @@ public class MainGame extends Game  {
 
 		resourcePool = new ResourcePool(12,48);
 
+		rootPool = new RootPool(100, 400);
 
 
 
-		tilePools=new TilePools(dirtPool, stonePool, blankPool, descendingPool, permanentPool, farmPool, resourcePool);
+
+		tilePools=new TilePools(dirtPool, stonePool, blankPool, descendingPool, permanentPool, farmPool, resourcePool, rootPool);
 
 		resourceAnimationPool = new ResourceAnimationPool(3, 6);
 
@@ -954,6 +957,7 @@ while (it.hasNext()) {
 		currentStage.specialTileList.clear();
 		currentStage.vanishingTileList.clear();
 		currentStage.resourceTileList.clear();
+		resourceAnimationPool.putAllBackToPool(resourceAnimationList);
 
 		startStage(player.getStageCurrentlyIn());
 	}

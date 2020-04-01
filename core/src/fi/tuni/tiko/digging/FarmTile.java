@@ -59,6 +59,6 @@ public class FarmTile extends GameTile implements Poolable {
         setTexture(farmTexture);
 
         setOccupied(false);
-
+        root=null;
     }
 }

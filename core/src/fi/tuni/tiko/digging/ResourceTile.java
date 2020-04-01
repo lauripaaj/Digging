@@ -105,6 +105,7 @@ public class ResourceTile extends GameTile implements Poolable {
         setY(-24);
 
         setOccupied(false);
+        root=null;
 
     }
 

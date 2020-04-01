@@ -13,6 +13,14 @@ public class GameTexture extends TextureRegion {
         flip(false, true);
     }
 
+    public GameTexture(Texture texture, boolean flippedX) {
+        super(texture);
+        flip (false, true);
+        if (flippedX) {
+            flip(true, false);
+        }
+    }
+
     /*
     public float getWidth() {
         return getWidth();

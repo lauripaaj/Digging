@@ -100,7 +100,7 @@ public class DirtTile extends GameTile implements Poolable {
         setTexture(dirtTexture);
         connectingTexture = true;
         tiling = true;
-
+        root = null;
 
 
 

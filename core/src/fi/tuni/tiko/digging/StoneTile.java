@@ -37,7 +37,7 @@ public class StoneTile extends PermanentTile implements Poolable {
         //rectangle out of sight too
         setX(-24);
         setY(-24);
-
+        root=null;
 
 
 

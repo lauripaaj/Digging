@@ -122,11 +122,21 @@ public class HazardAndResourceRandomizer {
 
                     dirtCounter++;
                     if (chosenTiles[i] == dirtCounter-1) {
+                        //we will do this to make resourceTile have root that was earlier in dirtTile that is to be replaced
+                        Root temp = null;
+                        if (tiles[y][x].getRoot() != null) {
+                            temp=tiles[y][x].getRoot();
+                        }
+
                         dirtPool.free((DirtTile)tiles[y][x]);
 
                         ResourceTile resourceTile = resourceTileList.get(i);
                         tiles[y][x] = resourceTile;
                         resourceTile.setInPlace(y,x);
+
+                        if (temp != null) {
+                            tiles[y][x].setRoot(temp);
+                        }
 
                         System.out.println("Added "+i);
 
@@ -134,6 +144,10 @@ public class HazardAndResourceRandomizer {
                         if (i==chosenTiles.length) {
                             continues=false;
                         }
+
+
+
+
                     }
 
                 }

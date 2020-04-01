@@ -199,6 +199,8 @@ public class Stage {
         // IMPORTANT: NOT SURE IF THIS SHOULD BE CREATED AGAIN EVERY TIME
         StageRandomizer stageRandomizer = new StageRandomizer(tilePools);
 
+
+
         tiles = stageRandomizer.areas(new MapTemplate());
         //nää 57,9 myöhemmin varmaan generate newMapin argumenttinä paitsi ei 9, ehkä amount of areas saa nähdä
         //tiles = new GameTile[57][9];
@@ -210,6 +212,8 @@ public class Stage {
 
         //toistaiseksi ainakin FarmTilet tulee nyt aina uusiksi
         fillFarmTiles();
+
+        tiles = stageRandomizer.addRoots(tiles);
 
 
         HazardAndResourceRandomizer hazardAndResourceRandomizer = new HazardAndResourceRandomizer(hazardPools);

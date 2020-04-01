@@ -10,8 +10,9 @@ public class TilePools {
     private PermanentPool permanentPool;
     private FarmPool farmPool;
     private ResourcePool resourcePool;
+    private RootPool rootPool;
 
-    public TilePools(DirtPool dirtPool, StonePool stonePool, BlankPool blankPool, DescendingPool descendingPool, PermanentPool permanentPool, FarmPool farmPool, ResourcePool resourcePool) {
+    public TilePools(DirtPool dirtPool, StonePool stonePool, BlankPool blankPool, DescendingPool descendingPool, PermanentPool permanentPool, FarmPool farmPool, ResourcePool resourcePool, RootPool rootPool) {
         this.dirtPool = dirtPool;
         this.stonePool = stonePool;
         this.blankPool = blankPool;
@@ -19,6 +20,7 @@ public class TilePools {
         this.permanentPool = permanentPool;
         this.farmPool = farmPool;
         this.resourcePool = resourcePool;
+        this.rootPool = rootPool;
     }
 
     public DirtPool getDirtPool () {
@@ -61,6 +63,14 @@ public class TilePools {
         this.permanentPool = permanentPool;
     }
 
+    public RootPool getRootPool () {
+        return rootPool;
+    }
+
+    public void setRootPool (RootPool rootPool) {
+        this.rootPool = rootPool;
+    }
+
     public FarmPool getFarmPool () {
         return farmPool;
     }
@@ -91,6 +101,16 @@ public class TilePools {
             farmPool.free((FarmTile)tiles[0][x]);
         }
 
+        //putting all roots in pool BEFORE any tiles are put there, so they can be freed normally
+        for (int y=1; y<tiles.length-1; y++) {
+            for (int x=0; x<tiles[0].length; x++) {
+                if (tiles[y][x].getRoot() != null) {
+                    rootPool.free(tiles[y][x].getRoot());
+                }
+            }
+        }
+
+
         for(int y=1; y<tiles.length; y++) {
             for (int x = 0; x < tiles[0].length; x++) {
                 if (x == 0 || x==tiles[0].length-1 || y==tiles.length-1) {
@@ -118,5 +138,7 @@ public class TilePools {
                 tiles[y][x]=null;
             }
         }
+
+        //TÄHÄN TARVITAAN ROOTIT
     }
 }

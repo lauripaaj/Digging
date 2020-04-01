@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import static fi.tuni.tiko.digging.MainGame.TILES_IN_ROWS_INCLUDING_EDGES;
 import static fi.tuni.tiko.digging.MainGame.TILES_IN_ROWS_WITHOUT_EDGES;
+import static fi.tuni.tiko.digging.Root.CLOSES;
 
 public class StageRandomizer {
 
@@ -21,6 +22,9 @@ public class StageRandomizer {
     DescendingPool descendingPool;
     */
     TilePools tilePools;
+
+    private static final boolean LEFTROOT = false;
+    private static final boolean RIGHTROOT = true;
 
 
 
@@ -227,6 +231,115 @@ public class StageRandomizer {
 
 
         return at;
+    }
+
+    public GameTile[][] addRoots (GameTile[][] tiles) {
+
+        //these can be measured later according to stage/area that is played (early game=more roots, middle game=least roots)
+        int leftRootChance=30;
+        int rightRootChance=30;
+
+        for (int y=1; y<tiles.length-1; y++) {
+            int leftRandomResult=MathUtils.random(1, 100);
+            int rightRandomResult=MathUtils.random(1,100);
+
+            if (leftRandomResult <= leftRootChance) {
+                tiles = addRoot(tiles, LEFTROOT, y);
+            }
+            if (rightRandomResult <= rightRootChance) {
+                tiles = addRoot(tiles, RIGHTROOT, y);
+            }
+        }
+
+        return tiles;
+    }
+
+    public GameTile[][] addRoot (GameTile[][] tiles, boolean side, int y) {
+
+        boolean reachedClosing=false;
+        boolean continues = true;
+
+        //default values are for LEFTROOT
+        int modifier = 1;
+
+        int startingX=0;
+
+
+        if (side == RIGHTROOT) {
+            modifier = -1;
+
+            startingX = TILES_IN_ROWS_INCLUDING_EDGES-1;
+
+        }
+
+
+        for (int x=startingX; continues; x = x+modifier) {
+            Root root = tilePools.getRootPool().obtain();
+
+            if (tiles[y][x] instanceof PermanentTile || tiles[y][x] instanceof StoneTile) {
+                //not sure if XOR should be used here, nothing is needed now in this loop
+            } else {
+                root.setStatus(CLOSES);
+                reachedClosing=true;
+            }
+
+            if (side == LEFTROOT) {
+                //System.out.println("trying to flip");
+                root.flipDirection();
+                root.updateTexture();
+            }
+
+            root.updateTexture();
+            //tiles[y][x].setRoot(root);
+
+            if (reachedClosing) {
+
+                boolean abortionNeeded = false;
+
+
+                //we will do an abortion to this root, if there is already rootClosing from the other side
+
+                if (tiles[y][x].getRoot() == null) {
+                    tiles[y][x].setRoot(root);
+
+                } else {
+                    abortionNeeded = true;
+                }
+
+
+                if (abortionNeeded) {
+                    tilePools.getRootPool().free(root);
+                    boolean abortionContinues = true;
+                    int endingX = 0;
+                    int abortionModifier = -1;
+                    if (side == RIGHTROOT) {
+                        endingX = TILES_IN_ROWS_INCLUDING_EDGES - 1;
+                        abortionModifier = +1;
+                    }
+                    for (int newX = x + abortionModifier; abortionContinues; newX = newX + abortionModifier) {
+                        tilePools.getRootPool().free(tiles[y][newX].getRoot());
+                        if (newX == endingX) {
+                            abortionContinues = false;
+                        }
+                    }
+
+
+                }
+                continues = false;
+            //in case the root is not closing yet, we will just add ordinary continous root
+            } else {
+                tiles[y][x].setRoot(root);
+            }
+
+
+
+
+
+
+        }
+
+
+        return tiles;
     }
     /*
     public void randomizeTiles(int startingY, int startingX, int yAmount, int xAmount, GameTile[][] tiles) {

@@ -125,8 +125,7 @@ public abstract class TileBasedObject extends GameObject {
 
     public void putInTilePos(int posY, int posX) {
 
-        //these 4 rows are mostly unnecceasry, but these positions should be confirmed in constructor or something
-        //probably constructor of tileBasedObject should force put these first
+
         setTilePosX(posX);
         setTilePosY(posY);
         targetTilePosX=posX;

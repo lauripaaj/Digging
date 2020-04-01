@@ -29,6 +29,9 @@ public abstract class GameTile extends TileBasedObject {
     int locationY;
     int locationX;
 
+    //this will be something else than null, if there is root in this tile
+    Root root;
+
     //public boolean isConcrete() {
     //    return concrete;
     //}
@@ -37,6 +40,14 @@ public abstract class GameTile extends TileBasedObject {
     //    this.concrete = concrete;
     //}
 
+
+    public Root getRoot () {
+        return root;
+    }
+
+    public void setRoot (Root root) {
+        this.root = root;
+    }
 
     public boolean isOccupied () {
         return occupied;
@@ -92,6 +103,10 @@ public abstract class GameTile extends TileBasedObject {
 
             batch.draw(getVanishAnimation().getCurrentFrame(), (float) getLocationX(), (float) getLocationY(), getWidth(), getHeight());
 
+        }
+
+        if (root != null) {
+            batch.draw(root.getGameTextureRegion(), (float) getLocationX(), (float) getLocationY(), getWidth(), getHeight());
         }
 
     }
