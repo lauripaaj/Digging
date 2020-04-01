@@ -45,7 +45,7 @@ public class TerrainTemplate {
         if (customNumber==1) {
             setChanceOfDirtTileBeingBlank(20);
             setChanceOfDirtTileBeingStone(5);
-            setChanceOfDirtTileBeingDescending(25);
+            setChanceOfDirtTileBeingDescending(48);
         } else if (customNumber==2) {
             //stone place
             setChanceOfDirtTileBeingBlank(15);

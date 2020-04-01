@@ -8,6 +8,8 @@ import static fi.tuni.tiko.digging.MainGame.TILES_IN_ROWS_INCLUDING_EDGES;
 
 public class Stage {
 
+    public StageSettings stageSettings;
+
     //Spike spike;
 
     //it accepts any tileBasedObjects but it should only contain those that implement Hazard
@@ -115,6 +117,22 @@ public class Stage {
         //generateNewMap();
     }
 
+    public Stage (TilePools tilePools, HazardPools hazardPools, LevelStats levelStats, TileAnimationPools tileAnimationPools, int totalResourcesCollected, GameTexture backGroundTexture) {
+        this.tilePools = tilePools;
+        this.hazardPools = hazardPools;
+        this.levelStats=levelStats;
+        this.tileAnimationPools=tileAnimationPools;
+
+        this.totalResourcesCollected=totalResourcesCollected;
+
+
+        firstTimeVisit = true;
+
+        tiles = new GameTile[0][0];
+
+        this.backGroundTexture=backGroundTexture;
+    }
+
 
     public Stage(int id, int noOfAreas, int condition, int resourceTemplate, TilePools tilePools, HazardPools hazardPools, LevelStats levelStats, TileAnimationPools tileAnimationPools, int totalResourcesCollected, GameTexture backGroundTexture) {
 
@@ -201,7 +219,7 @@ public class Stage {
 
 
 
-        tiles = stageRandomizer.areas(new MapTemplate());
+        tiles = stageRandomizer.areas(stageSettings.getMapTemplate());
         //nää 57,9 myöhemmin varmaan generate newMapin argumenttinä paitsi ei 9, ehkä amount of areas saa nähdä
         //tiles = new GameTile[57][9];
 
@@ -222,7 +240,7 @@ public class Stage {
 
 
         //hazardList.clear();
-        hazardList = hazardAndResourceRandomizer.addHazards(hazardList, tiles, new HazardTemplate() );
+        hazardList = hazardAndResourceRandomizer.addHazards(hazardList, tiles, stageSettings.getMapTemplate().getHazardTemplate() );
 
 
         //specialTileList.clear();

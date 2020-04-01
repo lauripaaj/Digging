@@ -21,14 +21,38 @@ public class StageSettings {
             this.level=level+10;
         } else throw new IllegalArgumentException("wrong must be 1-6 episode");
     //createMapTemplate(episode, level);
+
+        createMapTemplate(episode, level);
     }
-/*
+
     public void createMapTemplate(int episode, int level) {
         if (level == 1) {
             //basic template with farm and very random
             mapTemplate = new MapTemplate();
         } else mapTemplate = new MapTemplate(episode, level);
     }
-*/
 
+    public int getEpisode () {
+        return episode;
+    }
+
+    public void setEpisode (int episode) {
+        this.episode = episode;
+    }
+
+    public int getLevel () {
+        return level;
+    }
+
+    public void setLevel (int level) {
+        this.level = level;
+    }
+
+    public MapTemplate getMapTemplate () {
+        return mapTemplate;
+    }
+
+    public void setMapTemplate (MapTemplate mapTemplate) {
+        this.mapTemplate = mapTemplate;
+    }
 }

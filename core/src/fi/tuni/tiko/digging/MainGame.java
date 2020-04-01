@@ -266,7 +266,18 @@ public class MainGame extends Game  {
 
 		//pitää muuttaa tätä kaikilla ei voi olla omaa tiles arrayta
 		allStages = new ArrayList<Stage>();
-		allStages.add(new Stage(allStages.size(), 2,3,4, tilePools, hazardPools, allLevelsStats.get(0), tileAnimationPools, totalResourcesCollected, backGroundTexture )); // id 0 farm?
+
+		//allStages.add(new Stage(allStages.size(), 2,3,4, tilePools, hazardPools, allLevelsStats.get(0), tileAnimationPools, totalResourcesCollected, backGroundTexture )); // id 0 farm?
+
+
+		Stage currentStage = new Stage(tilePools, hazardPools, allLevelsStats.get(0), tileAnimationPools, totalResourcesCollected, backGroundTexture);
+		currentStage.stageSettings = new StageSettings(4,5);
+		allStages.add(currentStage);
+
+
+
+
+
 		//allStages.add(new Stage(allStages.size(), 2,3,4)); // id 1? stage1
 
 		//oikeasti myöhemmin saatetaan aloittaa 0:sta tms.
@@ -498,6 +509,8 @@ public class MainGame extends Game  {
 		player.setStageCurrentlyIn(idOfStage);
 
 		currentStage.generateNewMap();
+
+
 		//player.setY(1f-player.getHeight());
 		//player.setX(0.5f);
 

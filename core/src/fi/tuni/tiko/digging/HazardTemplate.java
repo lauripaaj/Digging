@@ -18,9 +18,42 @@ public class HazardTemplate {
 
     //default constructor
     public HazardTemplate() {
-        setChanceOfSpike(20);
-        setChanceOfGoblin(20);
-        setChanceOfFallingTrapOnRoof(50);
+        setChanceOfSpike(15);
+        setChanceOfGoblin(15);
+        setChanceOfFallingTrapOnRoof(33);
+    }
+
+    public HazardTemplate(int episode, int level) {
+
+        float episodeMultiplier;
+        if (episode == 1) {
+            episodeMultiplier =1;
+        } else if (episode ==2) {
+            episodeMultiplier = 1.5f;
+        } else if (episode ==3) {
+            episodeMultiplier = 2f;
+        } else if (episode ==4) {
+            episodeMultiplier = 2.88f;
+        } else if (episode ==5) {
+            episodeMultiplier = 2.55f;
+        } else if (episode ==6) {
+            episodeMultiplier = 2.22f;
+        } else throw new IllegalArgumentException("episode should be 1-6");
+
+        float levelMultiplier = 1;
+
+        for (int i=0; i<level; i++) {
+            levelMultiplier=levelMultiplier+0.05f;
+        }
+
+        setChanceOfSpike(15 * (int) (levelMultiplier*episodeMultiplier));
+        setChanceOfGoblin(15 * (int) (levelMultiplier*episodeMultiplier));
+        setChanceOfFallingTrapOnRoof(33 * (int) (levelMultiplier*episodeMultiplier));
+
+
+
+
+
     }
 
     public int getChanceOfFallingTrapOnRoof () {

@@ -34,7 +34,7 @@ public class MapTemplate {
     public void setTerrainTemplate (TerrainTemplate terrainTemplate) {
         this.terrainTemplate = terrainTemplate;
     }
-    /*
+
     //this method could use premade templates instead of randoming like in default constructor
     public MapTemplate(int episode, int level) {
 
@@ -44,11 +44,19 @@ public class MapTemplate {
         int chanceOfStone = 0;
         int number = 0;
 
-        if (level >= 2 && level <= 3) {
-            number = 2;
+        if (level >= 12) {
+            level = level - 10;
         }
 
-
+        if (level >= 2 && level <= 4) {
+            number = 2;
+        } else if (level == 5) {
+            number = 3;
+        } else if (level >= 6 && level <= 9) {
+            number = 4;
+        } else if (level == 10) {
+            number = 10;
+        }
 
 
         if (number == 2) {
@@ -59,25 +67,33 @@ public class MapTemplate {
         } else if (number == 3) {
             chanceOfDesc = 80;
             chanceOfStone = 0;
-        }
-
-        else if (number == 4) {
+        } else if (number == 4) {
             chanceOfDesc = 28;
             chanceOfStone = 6;
         } else if (number == 10) {
             chanceOfStone = 100;
         } else throw new IllegalArgumentException("invalid mapTemplate number");
 
-        int randomRoll = MathUtils.random(1,100);
+        int randomRoll = MathUtils.random(1, 100);
         if (randomRoll <= chanceOfDesc) {
             terrainTemplate = new TerrainTemplate(1);
-        } else if (randomRoll <= chanceOfStone+chanceOfDesc) {
+        } else if (randomRoll <= chanceOfStone + chanceOfDesc) {
             terrainTemplate = new TerrainTemplate(2);
 
         } else {
             terrainTemplate = new TerrainTemplate();
         }
-    }*/
+
+        if (number == 10) {
+            generateAreaTemplates(9,15);
+
+        } else {
+            generateAreaTemplates(7,11);
+        }
+
+        hazardTemplate = new HazardTemplate(episode, level);
+    }
+
 
     //constructor that makes (somewhat random number number of) ONLY areas as random as possible
     //AND uses default hazardTemplate
@@ -96,7 +112,7 @@ public class MapTemplate {
 
     }
 
-    public void generateAreaTemplates(int min, int max) {
+    public void generateAreaTemplates (int min, int max) {
         int numberOfAreas = MathUtils.random(min, max);
         for (int i=0; i < numberOfAreas; i++) {
             AreaTemplate generalTemplate = new AreaTemplate();
@@ -107,7 +123,7 @@ public class MapTemplate {
 
 
 
-/*
+    /*
     public MapTemplate getAreaTemplate(int number) {
         return new MapTemplate(number);
     }*/
