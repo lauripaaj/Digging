@@ -39,4 +39,20 @@ public class TerrainTemplate {
         setChanceOfDirtTileBeingDescending(10);
 
     }
+
+    public TerrainTemplate(int customNumber) {
+        //descending dirt place
+        if (customNumber==1) {
+            setChanceOfDirtTileBeingBlank(20);
+            setChanceOfDirtTileBeingStone(5);
+            setChanceOfDirtTileBeingDescending(25);
+        } else if (customNumber==2) {
+            //stone place
+            setChanceOfDirtTileBeingBlank(15);
+            setChanceOfDirtTileBeingStone(25);
+            setChanceOfDirtTileBeingDescending(8);
+
+        }
+
+    }
 }

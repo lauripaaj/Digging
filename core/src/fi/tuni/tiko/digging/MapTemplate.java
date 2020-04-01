@@ -61,6 +61,8 @@ public class MapTemplate {
 
     }
 
+
+
     public MapTemplate getAreaTemplate(int number) {
         return new MapTemplate(number);
     }
