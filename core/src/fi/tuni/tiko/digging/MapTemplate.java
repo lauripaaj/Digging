@@ -85,10 +85,12 @@ public class MapTemplate {
         }
 
         if (number == 10) {
-            generateAreaTemplates(9,15);
+            //it would be fun to have more areas but the phone starts to slow down easier
+            generateAreaTemplates(5,7);
 
         } else {
-            generateAreaTemplates(7,11);
+
+            generateAreaTemplates(5,7);
         }
 
         hazardTemplate = new HazardTemplate(episode, level);

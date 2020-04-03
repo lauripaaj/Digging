@@ -12,6 +12,8 @@ import java.util.ArrayList;
 public abstract class GameScreen implements Screen, GestureDetector.GestureListener {
 
     public GameScreen(MainGame mainGame, ScreenHelper screenHelper) {
+
+
         this.screenHelper = screenHelper;
 
         this.mainGame = mainGame;
@@ -19,6 +21,10 @@ public abstract class GameScreen implements Screen, GestureDetector.GestureListe
         batch=mainGame.getBatch();
         camera = screenHelper.getCamera();
     }
+
+
+
+    ArrayList<MenuButton> buttons;
 
     Rectangle pressedArea;
 
@@ -30,10 +36,16 @@ public abstract class GameScreen implements Screen, GestureDetector.GestureListe
 
     SpriteBatch batch;
 
+    boolean isThisTutorialScreen=false;
+
     public static final int NONE = 0;
     public static final int PLAY = 1;
     public static final int MAIN_MENU = 2;
     public static final int SETTINGS_MENU = 3;
+    public static final int HELP_TUTORIAL = 4;
+    public static final int HELP_CONTROLS = 5;
+
+
 
 
 
@@ -64,6 +76,14 @@ public abstract class GameScreen implements Screen, GestureDetector.GestureListe
             mainGame.setScreen(mainGame.getMainMenu());
         } else if (actionToPerform == PLAY) {
             mainGame.setScreen(mainGame.getPlayScreen());
+        } else if (actionToPerform == HELP_TUTORIAL) {
+            //mainGame.getTutorialScreen().getInfoMessageBox().currentSlide=0;
+            screenHelper.setFullTutorial(true);
+            mainGame.setScreen(mainGame.getTutorialScreen());
+
+        } else if (actionToPerform == HELP_CONTROLS) {
+            screenHelper.setFullTutorial(false);
+            mainGame.setScreen(mainGame.getTutorialScreen());
         }
 
         actionToPerform=NONE;

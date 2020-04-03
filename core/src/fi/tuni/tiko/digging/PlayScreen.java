@@ -8,9 +8,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
 
+import static fi.tuni.tiko.digging.MainGame.TILES_IN_ROWS_WITHOUT_EDGES;
+import static fi.tuni.tiko.digging.MainGame.UNDIGGABLE_MARGIN;
 import static fi.tuni.tiko.digging.Player.DIGGING;
 import static fi.tuni.tiko.digging.Player.READY;
 import static fi.tuni.tiko.digging.PlayerControls.NOQUEU;
@@ -45,6 +52,8 @@ public class PlayScreen extends GameScreen {
 
     GameTexture pauseButtonTexture = new GameTexture(new Texture("menus/buttonPause.png"));
     GameTexture pauseButtonPressedTexture = new GameTexture(new Texture("menus/buttonPausePressed.png"));
+
+    Viewport gameport;
 
 
 
@@ -86,6 +95,11 @@ public class PlayScreen extends GameScreen {
 
         playScreenDetector = new GestureDetector(this);
 
+        gameport = new FillViewport(TILES_IN_ROWS_WITHOUT_EDGES+2*UNDIGGABLE_MARGIN, 14.8f, camera);
+        //gameport.setScreenSize(222, 554);
+        //gameport.apply();
+
+
 
 
 
@@ -97,6 +111,11 @@ public class PlayScreen extends GameScreen {
     public void show () {
 
         Gdx.input.setInputProcessor(playScreenDetector);
+        //gameport.apply();
+
+        //gameport.update(466,12, true);
+        //gameport.update(233, 245);
+
 
     }
 
@@ -246,6 +265,8 @@ public class PlayScreen extends GameScreen {
 
     @Override
     public void resize (int width, int height) {
+
+        gameport.update(width, height);
 
     }
 

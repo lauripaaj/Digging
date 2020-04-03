@@ -114,7 +114,7 @@ public class MainGame extends Game  {
 	public static GameTexture[] dirtTextureTileset = new GameTexture[48];
 
 
-
+	InfoMessageBox infoMessageBox;
 
 
 	private int totalResourcesCollected;
@@ -134,6 +134,7 @@ public class MainGame extends Game  {
 	ScreenHelper screenHelper;
 	MainMenu mainMenu;
 	SettingsMenu settingsMenu;
+	TutorialScreen tutorialScreen;
 
 
 
@@ -271,7 +272,7 @@ public class MainGame extends Game  {
 
 
 		Stage currentStage = new Stage(tilePools, hazardPools, allLevelsStats.get(0), tileAnimationPools, totalResourcesCollected, backGroundTexture);
-		currentStage.stageSettings = new StageSettings(4,5);
+		currentStage.stageSettings = new StageSettings(3,7);
 		allStages.add(currentStage);
 
 
@@ -337,12 +338,15 @@ public class MainGame extends Game  {
 
 		//cameraplacer=new Cameraplacer();
 
+		infoMessageBox = new InfoMessageBox(camera, getBatch());
+
 		playScreenHelper= new PlayScreenHelper(playerControls, allStages, allLevelsStats);
 
 		screenHelper = new ScreenHelper(camera, player, resoWidthTweaked, resoHeightTweaked);
 		mainMenu = new MainMenu(this, screenHelper);
 		settingsMenu = new SettingsMenu(this, screenHelper);
 		playScreen = new PlayScreen(this, screenHelper, playScreenHelper);
+		tutorialScreen = new TutorialScreen(this, screenHelper, infoMessageBox);
 
 		setScreen(mainMenu);
 
@@ -468,6 +472,14 @@ public class MainGame extends Game  {
 		moveCamera();
 
 		*/
+	}
+
+	public TutorialScreen getTutorialScreen () {
+		return tutorialScreen;
+	}
+
+	public void setTutorialScreen (TutorialScreen tutorialScreen) {
+		this.tutorialScreen = tutorialScreen;
 	}
 
 	public SpriteBatch getBatch () {

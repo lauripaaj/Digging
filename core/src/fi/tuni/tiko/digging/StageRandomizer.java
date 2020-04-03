@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import static fi.tuni.tiko.digging.MainGame.TILES_IN_ROWS_INCLUDING_EDGES;
 import static fi.tuni.tiko.digging.MainGame.TILES_IN_ROWS_WITHOUT_EDGES;
 import static fi.tuni.tiko.digging.Root.CLOSES;
+import static fi.tuni.tiko.digging.Root.CONTINUES;
 
 public class StageRandomizer {
 
@@ -236,8 +237,8 @@ public class StageRandomizer {
     public GameTile[][] addRoots (GameTile[][] tiles) {
 
         //these can be measured later according to stage/area that is played (early game=more roots, middle game=least roots)
-        int leftRootChance=30;
-        int rightRootChance=30;
+        int leftRootChance=15;
+        int rightRootChance=15;
 
         for (int y=1; y<tiles.length-1; y++) {
             int leftRandomResult=MathUtils.random(1, 100);
@@ -275,60 +276,80 @@ public class StageRandomizer {
 
         for (int x=startingX; continues; x = x+modifier) {
             Root root = tilePools.getRootPool().obtain();
+            root.setStatus(CONTINUES);
+            //to prevent index out of bound hmm
 
-            if (tiles[y][x] instanceof PermanentTile || tiles[y][x] instanceof StoneTile) {
-                //not sure if XOR should be used here, nothing is needed now in this loop
-            } else {
-                root.setStatus(CLOSES);
-                reachedClosing=true;
-            }
-
-            if (side == LEFTROOT) {
-                //System.out.println("trying to flip");
-                root.flipDirection();
-                root.updateTexture();
-            }
-
-            root.updateTexture();
-            //tiles[y][x].setRoot(root);
-
-            if (reachedClosing) {
-
-                boolean abortionNeeded = false;
+            //AINIIN TÄMÄ EHKÄ KORJAANTUU SILLÄ KUN LAITTAA ETTEI VOI OLLA PELKKIÄ STONE
+            //JUTTUJA niin voi tämän koko loopin ottaa pois
+            if (x >= 0 && x <= TILES_IN_ROWS_INCLUDING_EDGES-1) {
 
 
-                //we will do an abortion to this root, if there is already rootClosing from the other side
-
-                if (tiles[y][x].getRoot() == null) {
-                    tiles[y][x].setRoot(root);
-
+                if (tiles[y][x] instanceof PermanentTile || tiles[y][x] instanceof StoneTile) {
+                    //not sure if XOR should be used here, nothing is needed now in this loop
                 } else {
-                    abortionNeeded = true;
+                    root.setStatus(CLOSES);
+                    reachedClosing=true;
                 }
 
+                if (side == LEFTROOT) {
+                    //System.out.println("trying to flip");
+                    root.flipDirection();
+                    root.updateTexture();
+                }
 
-                if (abortionNeeded) {
-                    tilePools.getRootPool().free(root);
-                    boolean abortionContinues = true;
-                    int endingX = 0;
-                    int abortionModifier = -1;
-                    if (side == RIGHTROOT) {
-                        endingX = TILES_IN_ROWS_INCLUDING_EDGES - 1;
-                        abortionModifier = +1;
+                root.updateTexture();
+                //tiles[y][x].setRoot(root);
+
+                if (reachedClosing) {
+
+                    boolean abortionNeeded = false;
+
+
+                    //we will do an abortion to this root, if there is already rootClosing from the other side
+
+                    if (tiles[y][x].getRoot() == null) {
+                        tiles[y][x].setRoot(root);
+
+                    } else {
+                        abortionNeeded = true;
                     }
-                    for (int newX = x + abortionModifier; abortionContinues; newX = newX + abortionModifier) {
-                        tilePools.getRootPool().free(tiles[y][newX].getRoot());
-                        if (newX == endingX) {
-                            abortionContinues = false;
+
+
+                    if (abortionNeeded) {
+                        tilePools.getRootPool().free(root);
+                        boolean abortionContinues = true;
+                        int endingX = 0;
+                        int abortionModifier = -1;
+                        if (side == RIGHTROOT) {
+                            endingX = TILES_IN_ROWS_INCLUDING_EDGES - 1;
+                            abortionModifier = +1;
                         }
+                        for (int newX = x + abortionModifier; abortionContinues; newX = newX + abortionModifier) {
+                            tilePools.getRootPool().free(tiles[y][newX].getRoot());
+                            if (newX == endingX) {
+                                abortionContinues = false;
+                            }
+                        }
+
+
                     }
-
-
+                    continues = false;
+                    //in case the root is not closing yet, we will just add ordinary continous root
+                } else {
+                    tiles[y][x].setRoot(root);
                 }
-                continues = false;
-            //in case the root is not closing yet, we will just add ordinary continous root
+
+
+
+
+
+
             } else {
-                tiles[y][x].setRoot(root);
+                //AINIIN TÄMÄ EHKÄ KORJAANTUU SILLÄ KUN LAITTAA ETTEI VOI OLLA PELKKIÄ STONE
+                //JUTTUJA
+                System.out.println("probably bug gonna happen now");
+
+                continues=false;
             }
 
 
@@ -336,7 +357,8 @@ public class StageRandomizer {
 
 
 
-        }
+            }
+
 
 
         return tiles;

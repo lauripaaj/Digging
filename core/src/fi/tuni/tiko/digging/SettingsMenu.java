@@ -14,6 +14,8 @@ import static fi.tuni.tiko.digging.MainGame.TILES_IN_ROWS_WITHOUT_EDGES;
 public class SettingsMenu extends MenuScreen {
 
 
+    GameTexture controlsButtonTexture = new GameTexture(new Texture("menus/buttonControls.png"));
+    GameTexture controlsButtonPressedTexture = new GameTexture(new Texture("menus/buttonControlsPressed.png"));
 
     ArrayList<MenuButton> buttons;
 
@@ -27,12 +29,19 @@ public class SettingsMenu extends MenuScreen {
 
         settingsMenuDetector = new GestureDetector(this);
 
+
         buttons = new ArrayList<>();
 
         buttons.add(playButton);
 
 
         buttons.add(backButton);
+
+        MenuButton buttonControls = new MenuButton(controlsButtonTexture, controlsButtonPressedTexture, 1.34f, 1.34f, HELP_CONTROLS);
+        buttonControls.setX(5.2f);
+        buttonControls.setY(-49.4f);
+
+        buttons.add(buttonControls);
 
         pressedArea = new Rectangle(-1f, -1f, pressedAreaSize, pressedAreaSize*3);
 

@@ -102,7 +102,7 @@ public class TilePools {
         }
 
         //putting all roots in pool BEFORE any tiles are put there, so they can be freed normally
-        for (int y=1; y<tiles.length-1; y++) {
+        for (int y=1; y<tiles.length; y++) {
             for (int x=0; x<tiles[0].length; x++) {
                 if (tiles[y][x].getRoot() != null) {
                     rootPool.free(tiles[y][x].getRoot());

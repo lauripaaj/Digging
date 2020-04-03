@@ -25,13 +25,13 @@ public class MainMenu extends MenuScreen {
 
 
 
-    private ArrayList<MenuButton> buttons;
+
     private GestureDetector mainMenuDetector;
 
 
 
     //boolean settingsPressed = false;
-    boolean playPressed=false;
+    //boolean playPressed=false;
 
 
 
@@ -39,6 +39,7 @@ public class MainMenu extends MenuScreen {
 
 
     private MenuButton settingsButton;
+    private MenuButton helpButton;
 
 
 
@@ -74,7 +75,15 @@ public class MainMenu extends MenuScreen {
 
         buttons.add(settingsButton);
 
-        pressedArea = new Rectangle(-24f, -0.5f, pressedAreaSize, pressedAreaSize*3);
+        helpButton = new MenuButton(screenHelper.getHelpButtonTexture(), screenHelper.getHelpButtonTexturePressed(), 1.65f, 1.65f, HELP_TUTORIAL);
+
+        helpButton.setX(5.2f);
+        helpButton.setY(-49.4f);
+        buttons.add(helpButton);
+
+
+
+        pressedArea = new Rectangle(-24f, -0.5f, pressedAreaSize, pressedAreaSize*2.5f);
 
 
     }
@@ -160,59 +169,9 @@ public class MainMenu extends MenuScreen {
     @Override
     public boolean tap (float x, float y, int count, int button) {
 
-        System.out.print("x: "+x);
-        System.out.println(", y: "+y);
-
-        System.out.println(screenHelper.menuAdjustedX(x));
-        System.out.println(screenHelper.menuAdjustedY(y));
+        return screenHelper.customTap(x, y, count, button, this);
 
 
-
-        //float adjustedX = screenHelper.screenAdjustedX(x);
-        //float adjustedY = screenHelper.screenAdjustedY(y);
-
-        //System.out.println("AdjustedX: "+ adjustedX+", AdjustedY: "+ adjustedY);
-
-
-
-        //adjustedY = screenHelper.flipY(adjustedY);
-        //adjustedY = screenHelper.adjustToYPosition(adjustedY);
-        //adjustedX = screenHelper.adjustToXPosition(adjustedX);
-
-        //pressedArea.setPosition(adjustedX - pressedAreaSize, adjustedY - pressedAreaSize);
-
-        //pressedArea.setPosition(screenHelper.menuAdjustedX(x), screenHelper.menuAdjustedY(y)-60f+(0.057f*screenHelper.getResoY()));
-        pressedArea.setPosition(screenHelper.menuAdjustedX(x), screenHelper.menuAdjustedY(y)-60f);
-
-        for (int i=0; i<buttons.size(); i++) {
-            MenuButton menuButton = buttons.get(i);
-            if (pressedArea.overlaps(menuButton.getRectangle())) {
-                menuButton.setPressed(true);
-
-                activateAction(menuButton.getActionToPerform());
-            }
-        }
-        /*
-        if (pressedArea.overlaps(settingsButton.getRectangle())) {
-            System.out.println("settings pressed");
-            settingsButton.setPressed(true);
-
-            activateAction(SETTINGS_MENU);
-
-
-
-        } else if (pressedArea.overlaps(playButton.getRectangle())) {
-            System.out.println("play pressed");
-            playPressed=true;
-        }*/
-
-
-
-
-
-
-        //System.out.println("Hey hey yea");
-        return true;
     }
 
     @Override
