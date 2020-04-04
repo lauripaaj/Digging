@@ -136,8 +136,8 @@ public class PlayScreen extends GameScreen {
 
         //float delta = Gdx.graphics.getDeltaTime();
 
-        System.out.println(helperHeight);
-        System.out.println(helperWidth);
+        //System.out.println(helperHeight);
+        //System.out.println(helperWidth);
 
 
         //System.out.println(camera.position.x);
@@ -146,7 +146,7 @@ public class PlayScreen extends GameScreen {
         //cameraplacer.updateCameraPosition(camera, delta, currentStage, player);
 
         batch.setProjectionMatrix(camera.combined);
-        screenHelper.updateCameraPosition(currentStage, gameport, 4, helperWidth, helperHeight);
+        screenHelper.updateCameraPosition(currentStage, gameport, 5, helperWidth, helperHeight);
 
 
         clearScreen();

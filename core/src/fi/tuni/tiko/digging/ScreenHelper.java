@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import static fi.tuni.tiko.digging.MainGame.TILES_IN_ROWS_WITHOUT_EDGES;
 import static fi.tuni.tiko.digging.MainGame.UNDIGGABLE_MARGIN;
 
-//Huom!!! 12.8f 14.2f tuolla pitää ratkaista.. ja counter siinä aiemmin olisi hyvä myös
+
 
 public class ScreenHelper {
 
@@ -305,8 +305,11 @@ public class ScreenHelper {
 
             //int endingX = 0;
 
-            int finalStartingX=66;
+            int finalStartingX=TILES_IN_ROWS_WITHOUT_EDGES+3;
             int finalEndingX=0;
+
+            int counterOfCounter =0;
+
 
             boolean continues = true;
 
@@ -316,9 +319,11 @@ public class ScreenHelper {
                     if (!(tiles[yToCheck][x] instanceof StoneTile || tiles[yToCheck][x] instanceof PermanentTile) ) {
 
                         //we're interested in finding the lowest startingX
-                        if (x < finalStartingX) {
+                        if (x <= finalStartingX) {
                             finalStartingX=x;
+
                         }
+
                         continues=false;
                     }
 
@@ -337,11 +342,21 @@ public class ScreenHelper {
                     }
                 }
 
+                if (counter <= (finalEndingX-finalStartingX+1)) {
+                    counter = finalEndingX-finalStartingX+1;
+                    counterOfCounter++;
+                }
+
             }
             //tässä tulee vissiin se virhe, jos on yksikin joka sotkee niin sitten sotkee
-            counter = finalEndingX-finalStartingX+1;
 
-            useOnFour(currentStage, gameport, finalStartingX, finalEndingX, counter, helperWidth, helperHeight);
+
+            if (counterOfCounter > 1) {
+                useOnFour(currentStage, gameport, finalStartingX, finalEndingX, counter, helperWidth, helperHeight);
+
+            }
+
+
             System.out.println(finalStartingX);
 
         }
@@ -365,7 +380,7 @@ public class ScreenHelper {
 
 
         GameTile[][] tiles = currentStage.tiles;
-        int y = player.getTilePosY();
+        int y = player.getTilePosY()-1;
         int counter = 0;
         int startingX = 0;
         int endingX = 0;
@@ -433,11 +448,15 @@ public class ScreenHelper {
 
             //gameport.setWorldHeight((float)helperHeight/TILES_IN_ROWS_WITHOUT_EDGES*5);
 
-            if ((helperHeight) / helperWidth == 2) {
-                gameport.setWorldHeight(14.2f/TILES_IN_ROWS_WITHOUT_EDGES*5);
-            } else {
-                gameport.setWorldHeight(12.8f/TILES_IN_ROWS_WITHOUT_EDGES*5);
-            }
+
+
+            float multiplier = (float)helperHeight / (float) helperWidth;
+
+
+
+
+            gameport.setWorldHeight(((TILES_IN_ROWS_WITHOUT_EDGES+2*UNDIGGABLE_MARGIN)*multiplier)/TILES_IN_ROWS_WITHOUT_EDGES*5);
+
 
             //gameport.setWorldHeight()
 
