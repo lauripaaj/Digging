@@ -1024,6 +1024,11 @@ while (it.hasNext()) {
 
 				//this is the case when player is attacking
 				if (player.getStatus() == ATTACKING) {
+
+					if (player.getAttackDirection()==LEFT) {
+						player.rectangle.x = player.rectangle.x-0.3f;
+					}
+
 					for (int i = 0; i < currentStage.hazardList.size(); i++) {
 						TileBasedObject hazard = currentStage.hazardList.get(i);
 						if ((hazard.isVanishing() == false) && (hazard.getRectangle().overlaps(player.getRectangle()))) {
@@ -1037,6 +1042,10 @@ while (it.hasNext()) {
 							}
 
 						}
+					}
+
+					if (player.getAttackDirection()==LEFT) {
+						player.rectangle.x = player.rectangle.x+0.3f;
 					}
 				}
 
