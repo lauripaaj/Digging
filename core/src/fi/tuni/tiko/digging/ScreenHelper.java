@@ -5,10 +5,20 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
 
+import static fi.tuni.tiko.digging.MainGame.TILES_IN_ROWS_WITHOUT_EDGES;
+import static fi.tuni.tiko.digging.MainGame.UNDIGGABLE_MARGIN;
+
+//Huom!!! 12.8f 14.2f tuolla pitää ratkaista.. ja counter siinä aiemmin olisi hyvä myös
+
 public class ScreenHelper {
+
+    public static float CAMERACENTER=4.5299997f;
 
     // will be used only in tutorialScreen
     private boolean fullTutorial=true;
@@ -276,6 +286,180 @@ public class ScreenHelper {
 
         //System.out.println("Hey hey yea");
         return true;
+
+    }
+    public void updateCameraPosition(Stage currentStage, Viewport gameport, int basedOnThisManyTiles, int helperWidth, int helperHeight) {
+        //if basedOnThisManyTiles is 1 or less, it will base it only on player position
+        if (basedOnThisManyTiles < 1) {
+            basedOnThisManyTiles = 1;
+        }
+
+        int y = player.getTilePosY();
+        GameTile[][] tiles = currentStage.tiles;
+
+        if (y+basedOnThisManyTiles < tiles.length) {
+            int counter = 0;
+            //int startingX = 0;
+
+
+
+            //int endingX = 0;
+
+            int finalStartingX=66;
+            int finalEndingX=0;
+
+            boolean continues = true;
+
+            for (int yToCheck=y; yToCheck<basedOnThisManyTiles+y; yToCheck++) {
+
+                for (int x = 1; continues ; x++) {
+                    if (!(tiles[yToCheck][x] instanceof StoneTile || tiles[yToCheck][x] instanceof PermanentTile) ) {
+
+                        //we're interested in finding the lowest startingX
+                        if (x < finalStartingX) {
+                            finalStartingX=x;
+                        }
+                        continues=false;
+                    }
+
+                }
+
+                continues = true;
+
+                for (int x=TILES_IN_ROWS_WITHOUT_EDGES; continues; x--) {
+                    if (!(tiles[yToCheck][x] instanceof StoneTile || tiles[yToCheck][x] instanceof PermanentTile) ) {
+                        if (x > finalEndingX) {
+                            finalEndingX=x;
+                        }
+                        continues=false;
+                        //endingX = x;
+                        //System.out.println(endingX);
+                    }
+                }
+
+            }
+            //tässä tulee vissiin se virhe, jos on yksikin joka sotkee niin sitten sotkee
+            counter = finalEndingX-finalStartingX+1;
+
+            useOnFour(currentStage, gameport, finalStartingX, finalEndingX, counter, helperWidth, helperHeight);
+            System.out.println(finalStartingX);
+
+        }
+
+
+
+
+
+
+
+
+
+
+    }
+
+
+
+    public void updateCameraPosition(Stage currentStage, Viewport gameport) {
+
+
+
+
+        GameTile[][] tiles = currentStage.tiles;
+        int y = player.getTilePosY();
+        int counter = 0;
+        int startingX = 0;
+        int endingX = 0;
+
+        for (int x = 1; startingX == 0 ; x++) {
+            if (!(tiles[y][x] instanceof StoneTile || tiles[y][x] instanceof PermanentTile) ) {
+                startingX=x;
+                //System.out.println(x);
+            }
+
+        }
+
+        for (int x=TILES_IN_ROWS_WITHOUT_EDGES; endingX == 0; x--) {
+            if (!(tiles[y][x] instanceof StoneTile || tiles[y][x] instanceof PermanentTile) ) {
+                endingX = x;
+                //System.out.println(endingX);
+            }
+        }
+
+        counter = endingX-startingX+1;
+        System.out.println(counter);
+
+        //useAllTheTime(currentStage, gameport, startingX, endingX, counter);
+        //useOnFour(currentStage, gameport, startingX, endingX, counter);
+
+
+
+
+        /*
+        if (player.getTilePosY()>=5 && player.getTilePosY() <=12) {
+            gameport.setWorldWidth(3.3f);
+            gameport.setWorldHeight(5.5f);
+            gameport.apply();
+        } else {
+            gameport.setWorldWidth(TILES_IN_ROWS_WITHOUT_EDGES+2*UNDIGGABLE_MARGIN);
+            gameport.setWorldHeight(12.8f);
+            gameport.apply();
+        }*/
+    }
+    /*
+    public void useAllTheTime(Stage currentStage, Viewport gameport, int startingX, int endingX, int counter) {
+        if (counter < 7) {
+            gameport.setWorldWidth(counter+2*UNDIGGABLE_MARGIN);
+            //gameport.setWorldHeight(10.9714f);
+            gameport.setWorldHeight(12.8f/TILES_IN_ROWS_WITHOUT_EDGES*counter);
+
+        } else {
+            gameport.setWorldWidth(TILES_IN_ROWS_WITHOUT_EDGES+2*UNDIGGABLE_MARGIN);
+            gameport.setWorldHeight(12.8f);
+            camera.position.x=CAMERACENTER;
+
+        }
+        gameport.apply();
+
+    }*/
+
+    //makes 5tiles+margins width camera
+    public void  useOnFour(Stage currentStage, Viewport gameport, int startingX, int endingX, int counter, int helperWidth, int helperHeight) {
+        if (counter <= 4) {
+
+
+
+            gameport.setWorldWidth(5+2*UNDIGGABLE_MARGIN);
+            //gameport.setWorldHeight(12.8f/TILES_IN_ROWS_WITHOUT_EDGES*5);
+
+            //gameport.setWorldHeight((float)helperHeight/TILES_IN_ROWS_WITHOUT_EDGES*5);
+
+            if ((helperHeight) / helperWidth == 2) {
+                gameport.setWorldHeight(14.2f/TILES_IN_ROWS_WITHOUT_EDGES*5);
+            } else {
+                gameport.setWorldHeight(12.8f/TILES_IN_ROWS_WITHOUT_EDGES*5);
+            }
+
+            //gameport.setWorldHeight()
+
+            if(startingX == 1 || startingX == 2) {
+                camera.position.x=CAMERACENTER-1f;
+            } else if (startingX == 4 || startingX == 5) {
+                camera.position.x=CAMERACENTER+1f;;
+            } else {
+                camera.position.x=CAMERACENTER;
+            }
+
+        } else {
+            gameport.setWorldWidth(TILES_IN_ROWS_WITHOUT_EDGES+2*UNDIGGABLE_MARGIN);
+            gameport.setWorldHeight(12.8f);
+            camera.position.x=CAMERACENTER;
+            gameport.update(helperWidth, helperHeight);
+
+        }
+        gameport.apply();
+
+
+
 
     }
 

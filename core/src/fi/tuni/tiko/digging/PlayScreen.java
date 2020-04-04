@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -55,6 +56,9 @@ public class PlayScreen extends GameScreen {
 
     Viewport gameport;
 
+    int helperWidth;
+    int helperHeight;
+
 
 
 
@@ -95,9 +99,17 @@ public class PlayScreen extends GameScreen {
 
         playScreenDetector = new GestureDetector(this);
 
-        gameport = new FillViewport(TILES_IN_ROWS_WITHOUT_EDGES+2*UNDIGGABLE_MARGIN, 14.8f, camera);
+        //gameport = new ExtendViewport(TILES_IN_ROWS_WITHOUT_EDGES+2*UNDIGGABLE_MARGIN, 155.8f, camera);
+        //gameport = new ExtendViewport(TILES_IN_ROWS_WITHOUT_EDGES+2*UNDIGGABLE_MARGIN, 155.8f, camera);
+        gameport = new ExtendViewport(TILES_IN_ROWS_WITHOUT_EDGES+2*UNDIGGABLE_MARGIN, 12.8f, camera);
+
         //gameport.setScreenSize(222, 554);
         //gameport.apply();
+
+
+        //camera.position.x is starting from 4.5299997
+
+        //camera.position.x--;
 
 
 
@@ -124,12 +136,18 @@ public class PlayScreen extends GameScreen {
 
         //float delta = Gdx.graphics.getDeltaTime();
 
+        System.out.println(helperHeight);
+        System.out.println(helperWidth);
 
+
+        //System.out.println(camera.position.x);
 
         //huom tätä ei ehkä kannata joka renderillä aina
         //cameraplacer.updateCameraPosition(camera, delta, currentStage, player);
 
         batch.setProjectionMatrix(camera.combined);
+        screenHelper.updateCameraPosition(currentStage, gameport, 4, helperWidth, helperHeight);
+
 
         clearScreen();
 
@@ -267,6 +285,8 @@ public class PlayScreen extends GameScreen {
     public void resize (int width, int height) {
 
         gameport.update(width, height);
+        helperWidth=width;
+        helperHeight=height;
 
     }
 
