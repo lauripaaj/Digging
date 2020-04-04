@@ -17,7 +17,7 @@ public class SettingsMenu extends MenuScreen {
     GameTexture controlsButtonTexture = new GameTexture(new Texture("menus/buttonControls.png"));
     GameTexture controlsButtonPressedTexture = new GameTexture(new Texture("menus/buttonControlsPressed.png"));
 
-    ArrayList<MenuButton> buttons;
+    //ArrayList<MenuButton> buttons;
 
 
 
@@ -43,7 +43,14 @@ public class SettingsMenu extends MenuScreen {
 
         buttons.add(buttonControls);
 
-        pressedArea = new Rectangle(-1f, -1f, pressedAreaSize, pressedAreaSize*3);
+        pressedArea = new Rectangle(-1f, -1f, pressedAreaSize, pressedAreaSize);
+
+        pressedArea.setX(2f);
+        pressedArea.setY(-15f);
+
+        //pressedArea.setHeight(1.0f);
+        //pressedArea.setWidth(1.0f);
+
 
 
 
@@ -86,12 +93,15 @@ public class SettingsMenu extends MenuScreen {
         batch.end();
 
         //screenHelper.moveCamera();
-        camera.update();
+        screenHelper.switchCameraToMenu();
+        //camera.update();
 
     }
 
     @Override
     public void resize (int width, int height) {
+
+        gameport.update(width, height);
 
     }
 
@@ -122,6 +132,8 @@ public class SettingsMenu extends MenuScreen {
 
     @Override
     public boolean tap (float x, float y, int count, int button) {
+
+        /*
         pressedArea.setPosition(screenHelper.menuAdjustedX(x), screenHelper.menuAdjustedY(y)-60f);
 
         for (int i=0; i<buttons.size(); i++) {
@@ -134,6 +146,8 @@ public class SettingsMenu extends MenuScreen {
         }
 
         return true;
+        */
+        return screenHelper.stretchedTap(x, y, count, button, this);
     }
 
     @Override

@@ -22,7 +22,6 @@ public class TutorialScreen extends GameScreen {
     private GestureDetector tutorialDetector;
     private InfoMessageBox infoMessageBox;
 
-    private Viewport gameport;
 
     public static final int TUTORIALBACK = 24;
     public static final int TUTORIALNEXT = 25;
@@ -42,8 +41,8 @@ public class TutorialScreen extends GameScreen {
         pressedArea.setX(2f);
         pressedArea.setY(-15f);
 
-        pressedArea.setHeight(1.0f);
-        pressedArea.setWidth(1.0f);
+        pressedArea.setHeight(pressedAreaSize*2.5f);
+        pressedArea.setWidth(pressedAreaSize*2.5f);
 
         isThisTutorialScreen=true;
 
@@ -133,6 +132,8 @@ public class TutorialScreen extends GameScreen {
 
     @Override
     public void performAction() {
+        if (actionToPerform==SETTINGS_MENU) {
+            mainGame.setScreen(mainGame.getSettingsMenu()); } else
         if (actionToPerform == TUTORIALNEXT) {
             if (infoMessageBox.currentSlide == infoMessageBox.getBoxSize()-1) {
                 activateAction(PLAY);
@@ -142,13 +143,18 @@ public class TutorialScreen extends GameScreen {
         } else if (actionToPerform == TUTORIALBACK) {
             if (infoMessageBox.currentSlide == 0) {
                 activateAction(MAIN_MENU);
+            } else if ((infoMessageBox.currentSlide==infoMessageBox.getBoxSize()-1) && !screenHelper.isFullTutorial()) {
+                activateAction(SETTINGS_MENU);
+            } else {
+                infoMessageBox.previousSlide();
             }
-            infoMessageBox.previousSlide();
+
         } else if (actionToPerform==PLAY) {
 
             mainGame.setScreen(mainGame.getPlayScreen());
         } else if (actionToPerform==MAIN_MENU) {
             mainGame.setScreen(mainGame.getMainMenu());
+
         }
 
     }
@@ -171,6 +177,7 @@ public class TutorialScreen extends GameScreen {
     @Override
     public void hide () {
 
+
     }
 
     @Override
@@ -185,6 +192,9 @@ public class TutorialScreen extends GameScreen {
 
     @Override
     public boolean tap (float x, float y, int count, int button) {
+
+
+        /*
 
         System.out.println("button Next X: "+buttonNext.getX()+", button Next, y: "+buttonNext.getY());
         System.out.print("x: "+x);
@@ -210,12 +220,14 @@ public class TutorialScreen extends GameScreen {
 
                 System.out.println("pitäisi olla nappi painettu!");
 
-                // activateAction(menuButton.getActionToPerform());
+
             }
         }
+        */
 
 
-        return true;
+
+        return screenHelper.stretchedTap(x, y, count, button, this);
 
         //return screenHelper.customTap(x, y, count, button, this);
     }

@@ -83,7 +83,7 @@ public class MainMenu extends MenuScreen {
 
 
 
-        pressedArea = new Rectangle(-24f, -0.5f, pressedAreaSize, pressedAreaSize*2.5f);
+        pressedArea = new Rectangle(-24f, -0.5f, pressedAreaSize, pressedAreaSize);
 
 
     }
@@ -138,6 +138,7 @@ public class MainMenu extends MenuScreen {
 
     @Override
     public void resize (int width, int height) {
+        gameport.update(width, height);
 
     }
 
@@ -169,7 +170,7 @@ public class MainMenu extends MenuScreen {
     @Override
     public boolean tap (float x, float y, int count, int button) {
 
-        return screenHelper.customTap(x, y, count, button, this);
+        return screenHelper.stretchedTap(x, y, count, button, this);
 
 
     }

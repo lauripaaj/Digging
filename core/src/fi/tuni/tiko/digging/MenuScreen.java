@@ -7,11 +7,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import java.util.ArrayList;
 
 import static fi.tuni.tiko.digging.MainGame.TILES_IN_ROWS_INCLUDING_EDGES;
 import static fi.tuni.tiko.digging.MainGame.TILES_IN_ROWS_WITHOUT_EDGES;
+import static fi.tuni.tiko.digging.MainGame.UNDIGGABLE_MARGIN;
 
 
 public abstract class MenuScreen extends GameScreen {
@@ -21,7 +23,7 @@ public abstract class MenuScreen extends GameScreen {
         super(mainGame, screenHelper);
 
 
-
+        gameport = new StretchViewport(TILES_IN_ROWS_WITHOUT_EDGES+2*UNDIGGABLE_MARGIN , 12.8f, camera);
 
         playButton = new MenuButton(screenHelper.getPlayButtonTexture(), screenHelper.getPlayButtonTexturePressed(), 1.24f, 1.24f, PLAY);
 

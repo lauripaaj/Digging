@@ -27,6 +27,7 @@ import static fi.tuni.tiko.digging.PlayerControls.TRYDOWN;
 import static fi.tuni.tiko.digging.PlayerControls.TRYLEFT;
 import static fi.tuni.tiko.digging.PlayerControls.TRYRIGHT;
 import static fi.tuni.tiko.digging.PlayerControls.TRYUP;
+import static fi.tuni.tiko.digging.ScreenHelper.CAMERACENTER;
 
 public class PlayScreen extends GameScreen {
 
@@ -56,7 +57,7 @@ public class PlayScreen extends GameScreen {
     GameTexture pauseButtonTexture = new GameTexture(new Texture("menus/buttonPause.png"));
     GameTexture pauseButtonPressedTexture = new GameTexture(new Texture("menus/buttonPausePressed.png"));
 
-    Viewport gameport;
+    //Viewport gameport;
 
     int helperWidth;
     int helperHeight;
@@ -150,14 +151,15 @@ public class PlayScreen extends GameScreen {
         batch.setProjectionMatrix(camera.combined);
         screenHelper.updateCameraPosition(currentStage, gameport, 5, helperWidth, helperHeight);
 
+
         /*
         if (player.getTilePosY() % 2 ==1) {
             screenHelper.forceZoom(gameport, helperWidth, helperHeight, -1);
 
         } else {
             screenHelper.forceUnzoom(gameport, helperWidth, helperHeight);
-        }*/
-
+        }
+        */
 
 
         clearScreen();
@@ -225,6 +227,8 @@ public class PlayScreen extends GameScreen {
             continueActionCountdown(Gdx.graphics.getDeltaTime(), buttons);
 
             System.out.println("this worked");
+            //screenHelper.forceUnzoom(gameport, helperWidth, helperHeight);
+
 
         }
 
@@ -330,6 +334,7 @@ public class PlayScreen extends GameScreen {
 
     @Override
     public void hide () {
+        camera.position.x=CAMERACENTER;
 
     }
 

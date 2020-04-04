@@ -291,6 +291,53 @@ public class ScreenHelper {
         return true;
 
     }
+
+    public boolean stretchedTap(float x, float y, int count, int button, GameScreen gameScreen) {
+
+        //float yModifier=0;
+
+
+
+        Rectangle pressedArea = gameScreen.pressedArea;
+
+        System.out.print("x: "+x);
+        System.out.println(", y: "+y);
+
+        float stretchAdjustedY=stretchAdjustedY(y);
+        float menuadjustedX=menuAdjustedX(x);
+
+        System.out.print("Menuadj x: "+menuadjustedX);
+        System.out.println(", Menuadj y: "+stretchAdjustedY);
+
+        pressedArea.setX(menuadjustedX+gameScreen.pressedAreaSize);
+        if (gameScreen.isThisTutorialScreen) {
+            pressedArea.setY(stretchAdjustedY-4f+player.getY());
+        } else {
+            pressedArea.setY(stretchAdjustedY-59f);
+        }
+
+
+        System.out.println(gameScreen.buttons.size());
+
+        for (int i=0; i<gameScreen.buttons.size(); i++) {
+            MenuButton menuButton = gameScreen.buttons.get(i);
+
+
+            if (pressedArea.overlaps(menuButton.getRectangle())) {
+                //menuButton.setPressed(true);
+                menuButton.setPressed(true);
+                gameScreen.activateAction(menuButton.getActionToPerform());
+
+                System.out.println("pitäisi olla nappi painettu!");
+
+                // activateAction(menuButton.getActionToPerform());
+            }
+        }
+
+
+        return true;
+    }
+
     public void updateCameraPosition(Stage currentStage, Viewport gameport, int basedOnThisManyTiles, int helperWidth, int helperHeight) {
         //if basedOnThisManyTiles is 1 or less, it will base it only on player position
         if (basedOnThisManyTiles < 1) {
