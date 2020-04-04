@@ -18,6 +18,9 @@ import static fi.tuni.tiko.digging.MainGame.UNDIGGABLE_MARGIN;
 
 public class ScreenHelper {
 
+    //if the camera is zoomed by playScreen
+    boolean isZoomed=false;
+
     public static float CAMERACENTER=4.5299997f;
 
     // will be used only in tutorialScreen
@@ -439,11 +442,17 @@ public class ScreenHelper {
 
     //makes 5tiles+margins width camera
     public void  useOnFour(Stage currentStage, Viewport gameport, int startingX, int endingX, int counter, int helperWidth, int helperHeight) {
+        //in this case there will be zoom
         if (counter <= 4) {
 
 
-
+            //TÄMÄ KORVATAAN TARGETILLA
             gameport.setWorldWidth(5+2*UNDIGGABLE_MARGIN);
+
+
+
+
+
             //gameport.setWorldHeight(12.8f/TILES_IN_ROWS_WITHOUT_EDGES*5);
 
             //gameport.setWorldHeight((float)helperHeight/TILES_IN_ROWS_WITHOUT_EDGES*5);
@@ -454,25 +463,35 @@ public class ScreenHelper {
 
 
 
-
+            //TÄMÄ KORVATAAN TARGETILLA
             gameport.setWorldHeight(((TILES_IN_ROWS_WITHOUT_EDGES+2*UNDIGGABLE_MARGIN)*multiplier)/TILES_IN_ROWS_WITHOUT_EDGES*5);
 
 
             //gameport.setWorldHeight()
 
             if(startingX == 1 || startingX == 2) {
+                //TÄMÄ KORVATAAN TARGETILLA
                 camera.position.x=CAMERACENTER-1f;
             } else if (startingX == 4 || startingX == 5) {
+                //TÄMÄ KORVATAAN TARGETILLA
                 camera.position.x=CAMERACENTER+1f;;
             } else {
+                //TÄMÄ KORVATAAN TARGETILLA
                 camera.position.x=CAMERACENTER;
             }
+            isZoomed=true;
 
         } else {
+            //TÄMÄ KORVATAAN TARGETILLA
             gameport.setWorldWidth(TILES_IN_ROWS_WITHOUT_EDGES+2*UNDIGGABLE_MARGIN);
+            //TÄMÄ KORVATAAN TARGETILLA
             gameport.setWorldHeight(12.8f);
+            //TÄMÄ KORVATAAN TARGETILLA
             camera.position.x=CAMERACENTER;
+            //TÄMÄ KORVATAAN TARGETILLA
             gameport.update(helperWidth, helperHeight);
+
+            isZoomed=false;
 
         }
         gameport.apply();
@@ -480,6 +499,47 @@ public class ScreenHelper {
 
 
 
+    }
+
+
+    //for testing purposes at least
+    public void forceZoom(Viewport gameport, int helperWidth, int helperHeight, int cameraModifier) {
+
+
+        gameport.setWorldWidth(5+2*UNDIGGABLE_MARGIN);
+
+
+
+
+
+        //gameport.setWorldHeight(12.8f/TILES_IN_ROWS_WITHOUT_EDGES*5);
+
+        //gameport.setWorldHeight((float)helperHeight/TILES_IN_ROWS_WITHOUT_EDGES*5);
+
+
+
+        float multiplier = (float)helperHeight / (float) helperWidth;
+
+        camera.position.x=CAMERACENTER+cameraModifier;
+
+        //TÄMÄ KORVATAAN TARGETILLA
+        gameport.setWorldHeight(((TILES_IN_ROWS_WITHOUT_EDGES+2*UNDIGGABLE_MARGIN)*multiplier)/TILES_IN_ROWS_WITHOUT_EDGES*5);
+        gameport.apply();
+
+        isZoomed=true;
+    }
+
+    public void forceUnzoom(Viewport gameport, int helperWidth, int helperHeight) {
+        //TÄMÄ KORVATAAN TARGETILLA
+        gameport.setWorldWidth(TILES_IN_ROWS_WITHOUT_EDGES+2*UNDIGGABLE_MARGIN);
+        //TÄMÄ KORVATAAN TARGETILLA
+        gameport.setWorldHeight(12.8f);
+        //TÄMÄ KORVATAAN TARGETILLA
+        camera.position.x=CAMERACENTER;
+        //TÄMÄ KORVATAAN TARGETILLA
+        gameport.update(helperWidth, helperHeight);
+
+        isZoomed=false;
     }
 
 

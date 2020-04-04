@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
 
+import static fi.tuni.tiko.digging.MainGame.TILES_IN_ROWS_INCLUDING_EDGES;
 import static fi.tuni.tiko.digging.MainGame.TILES_IN_ROWS_WITHOUT_EDGES;
 import static fi.tuni.tiko.digging.MainGame.UNDIGGABLE_MARGIN;
 import static fi.tuni.tiko.digging.Player.DIGGING;
@@ -28,6 +29,7 @@ import static fi.tuni.tiko.digging.PlayerControls.TRYRIGHT;
 import static fi.tuni.tiko.digging.PlayerControls.TRYUP;
 
 public class PlayScreen extends GameScreen {
+
 
     private GestureDetector playScreenDetector;
 
@@ -148,6 +150,15 @@ public class PlayScreen extends GameScreen {
         batch.setProjectionMatrix(camera.combined);
         screenHelper.updateCameraPosition(currentStage, gameport, 5, helperWidth, helperHeight);
 
+        /*
+        if (player.getTilePosY() % 2 ==1) {
+            screenHelper.forceZoom(gameport, helperWidth, helperHeight, -1);
+
+        } else {
+            screenHelper.forceUnzoom(gameport, helperWidth, helperHeight);
+        }*/
+
+
 
         clearScreen();
 
@@ -258,16 +269,33 @@ public class PlayScreen extends GameScreen {
 
     }
 
+    //horrible coding but this will have to do for now
     public void drawPlayScreenElements() {
 
             //pauseButton.setY(player.getY()-3.3f);
             //pauseButton.draw(batch);
 
-        if (!pauseButton.isPressed()) {
-            batch.draw(pauseButtonTexture, pauseButton.getX()-0f, camera.position.y-6.4f, pauseButton.getWidth(), pauseButton.getHeight());
-        } else {
 
-            batch.draw(pauseButtonPressedTexture, pauseButton.getX()-0f, camera.position.y-6.4f, pauseButton.getWidth(), pauseButton.getHeight());
+
+
+        if (!pauseButton.isPressed()) {
+
+            if(!screenHelper.isZoomed) {
+                batch.draw(pauseButtonTexture, pauseButton.getX()-0f, camera.position.y-6.4f, pauseButton.getWidth(), pauseButton.getHeight());
+
+            } else {
+                batch.draw(pauseButtonTexture, camera.position.x-2.55f, camera.position.y-4.58f, pauseButton.getWidth()/7.2f*5.2f, pauseButton.getHeight()/7.2f*5.2f);
+            }
+
+
+        } else {
+            if(!screenHelper.isZoomed) {
+
+                batch.draw(pauseButtonPressedTexture, pauseButton.getX() - 0f, camera.position.y - 6.4f, pauseButton.getWidth(), pauseButton.getHeight());
+            } else {
+                batch.draw(pauseButtonPressedTexture, camera.position.x-2.55f, camera.position.y-4.58f, pauseButton.getWidth()/7.2f*5.2f, pauseButton.getHeight()/7.2f*5.2f);
+            }
+
 
         }
 
