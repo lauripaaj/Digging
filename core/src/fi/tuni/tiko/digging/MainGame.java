@@ -931,12 +931,12 @@ while (it.hasNext()) {
 
 				boolean continues = true;
 
-				if (hazard instanceof Goblin) {
-					if (player.getStatus() == ATTACKING || player.getStatus() == WALKING) {
-						continues = false;
-					}
+				//if (hazard instanceof Goblin) {
+				//	if (player.getStatus() == ATTACKING || player.getStatus() == WALKING) {
+				//		continues = false;
+				//	}
 
-				}
+				//}
 
 
 				if (continues) {
@@ -1051,7 +1051,18 @@ while (it.hasNext()) {
 					if (hazard instanceof FallingTrap) {
 						zapPlayer();
 
-				}
+				} else if (hazard instanceof Goblin) {
+
+						if (player.getDirection() == LEFT && (hazard.getX() < player.getX()) ||
+						player.getDirection() == RIGHT && hazard.getX() > player.getX()) {
+							((Hazard) hazard).vanish();
+						} else {
+							zapPlayer();
+						}
+
+
+
+					}
 				}
 			}
 		}
