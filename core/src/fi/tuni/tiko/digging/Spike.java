@@ -26,7 +26,7 @@ public class Spike extends ImmobileHazard implements Poolable {
         setVanishAnimation(new SheetAnimation(spikeVanishingTexture, 1, 8, 5, 60));
 
 
-        rectangle=new Rectangle(1.00f,1.00f, 1.0f, 1.00f);
+        rectangle=new Rectangle(1.00f,1.00f, 0.8f, 1.00f);
         putInTilePos(tilePosY, tilePosX);
 
     }
@@ -48,6 +48,19 @@ public class Spike extends ImmobileHazard implements Poolable {
         super.putInTilePos(posY, posX);
         setY( (1.27f-getHeight() )+posY);
 
+    }
+
+    @Override
+    //spike needs to have getWidth() adjusted to 1.25f because it's 0.8f wide to help prevent bugs of colliding with player too easily
+    //apparently it also needs to be adjusted in x-location a bit because of the changed size
+    public void draw(SpriteBatch batch) {
+        if (!isVanishing()) {
+            batch.draw(gameTextureRegion, getX()-0.1f, getY(), getWidth() * 1.25f, getHeight());
+        } else if (!isStatusDead()) {
+
+            batch.draw(getVanishAnimation().getCurrentFrame(), getX()-0.1f, getY(), getWidth()*1.25f, getHeight());
+
+        }
     }
 
 

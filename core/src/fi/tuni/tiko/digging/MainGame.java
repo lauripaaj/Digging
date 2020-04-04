@@ -921,48 +921,141 @@ while (it.hasNext()) {
 	public void checkPlayerHazardCollision() {
 
 		//important: walking player set to be stronger than hazards (same as attacking)
-		if (player.getStatus()!=ATTACKING && player.getStatus()!=WALKING) {
+
+
+		if (player.getStatus() != ATTACKING && player.getStatus() != WALKING) {
+
 
 			for (int i = 0; i < currentStage.hazardList.size(); i++) {
 				TileBasedObject hazard = currentStage.hazardList.get(i);
-				//if (hazard.getTilePosX()==player.getTilePosX() && hazard.getTilePosY()==player.getTilePosY()) {
-				if (!(hazard.isVanishing()) && (hazard.getRectangle().overlaps(player.getRectangle()))) {
 
-					if (hazard instanceof Hazard && (hazard.isVanishing()==false)) {
-						//if (((Hazard) hazard).getGetsDestroyedByFallingPlayer() && (player.getStatus()==FALLING) ) {
-						if (((Hazard) hazard).getGetsDestroyedByFallingPlayer() && ( (player.getY() + player.getHeight()) < (hazard.getY() + hazard.getHeight())) ) {
-							System.out.println("playerY: "+player.getY());
-							System.out.println("hazardY: "+hazard.getY());
-							//&& (player.getY() > hazard.getY() )) {
-							((Hazard) hazard).vanish();
-							System.out.println("theyShouldVanish");
-						} else {
-							if (hazard.isVanishing()==true)
-								System.out.println("zapThing");
-							zapPlayer();
+				boolean continues = true;
+
+				if (hazard instanceof Goblin) {
+					if (player.getStatus() == ATTACKING || player.getStatus() == WALKING) {
+						continues = false;
+					}
+
+				}
+
+
+				if (continues) {
+
+
+					//if (hazard.getTilePosX()==player.getTilePosX() && hazard.getTilePosY()==player.getTilePosY()) {
+					if (!(hazard.isVanishing()) && (hazard.getRectangle().overlaps(player.getRectangle()))) {
+
+					/*
+					boolean continuesBugfix=true;
+
+					if (hazard instanceof Spike) {
+
+						if (player.getDirection()==RIGHT && player.getStatus()==WALKING) {
+
+							continuesBugfix=false;
+							System.out.println("walking bugfix happened");
+
+
+
+
+
+						}
+
+						Spike tempHazard = (Spike)hazard;
+						if (tempHazard.getX() > player.getX()) {
+							tempHazard.setX(tempHazard.getX()+1.6f);
+							if (!tempHazard.getRectangle().overlaps(player.getRectangle())) {
+								continuesBugfix=false;
+								System.out.println("temphazard spike bugfix happened");
+							}
+							tempHazard.setX(tempHazard.getX()-1.6f);
 						}
 
 					}
+
+					if (continuesBugfix) {
+
+					 */
+
+						if (hazard instanceof Hazard && (hazard.isVanishing() == false)) {
+
+							//modifier "mod" is used to solve problem of player dying to hazards unnecessary because of their different sizes/positions that were changed later
+						/*
+						float mod = 0;
+						if (hazard instanceof Spike) {
+							mod=2f;
+						} else if (hazard instanceof FallingTrap) {
+							mod=2f;
+						}*/
+
+							//if (((Hazard) hazard).getGetsDestroyedByFallingPlayer() && (player.getStatus()==FALLING) ) {
+							if (((Hazard) hazard).getGetsDestroyedByFallingPlayer() && ((player.getY() + player.getHeight()) < (hazard.getY() + hazard.getHeight()))
+
+							) {
+								System.out.println("playerY: " + player.getY());
+								System.out.println("hazardY: " + hazard.getY());
+								//&& (player.getY() > hazard.getY() )) {
+								((Hazard) hazard).vanish();
+								System.out.println("theyShouldVanish");
+							} else {
+								if (hazard.isVanishing() == true) {
+									System.out.println("zapThing");
+								} else {
+									zapPlayer();
+								}
+
+
+							}
+
+						}
+
+
+					}
 				}
 			}
 
-		//this is the case when player is attacking
-		} else {
+
+
+		}
+
+
+
+
+
+				//this is the case when player is attacking
+				if (player.getStatus() == ATTACKING) {
+					for (int i = 0; i < currentStage.hazardList.size(); i++) {
+						TileBasedObject hazard = currentStage.hazardList.get(i);
+						if ((hazard.isVanishing() == false) && (hazard.getRectangle().overlaps(player.getRectangle()))) {
+
+							if (player.getAttackDirection() == LEFT && (hazard.getX() < player.getX()) ||
+									player.getAttackDirection() == RIGHT && (hazard.getX() > player.getX())) {
+								((Hazard) hazard).vanish();
+								System.out.println(i);
+							} else {
+								zapPlayer();
+							}
+
+						}
+					}
+				}
+
+				//case when player is walking and hazard is fallingTrap.. this just had to be added because of all the bugs that were fixed and caused this new bug
+
+		if (player.getStatus() == WALKING ) {
+
 			for (int i = 0; i < currentStage.hazardList.size(); i++) {
 				TileBasedObject hazard = currentStage.hazardList.get(i);
-				if ((hazard.isVanishing()==false) && (hazard.getRectangle().overlaps(player.getRectangle()))) {
+				if ((hazard.isVanishing() == false) && (hazard.getRectangle().overlaps(player.getRectangle()))) {
 
-					if (player.getAttackDirection()==LEFT && (hazard.getX()<player.getX()) ||
-					    player.getAttackDirection()==RIGHT && (hazard.getX()>player.getX())) {
-						((Hazard) hazard).vanish();
-						System.out.println(i);
-					} else {
+					if (hazard instanceof FallingTrap) {
 						zapPlayer();
-					}
 
+				}
 				}
 			}
 		}
+
 
 
 	}

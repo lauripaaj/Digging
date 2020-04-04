@@ -45,7 +45,7 @@ public class FallingTrap extends HazardousWalker implements Poolable {
         setTriggerAnimation(new SheetAnimation(fallingTrapTrigger, 1, 8, 8, 60));
         setFallAnimation(new SheetAnimation(fallingTrapFalling, 1, 8, 8, 60));
 
-        rectangle=new Rectangle(1.00f,1.00f, 1.00f, 1.00f);
+        rectangle=new Rectangle(1.00f,1.00f, 0.9f, 1.00f);
         putInTilePos(tilePosY, tilePosX);
     }
 
@@ -186,24 +186,29 @@ public class FallingTrap extends HazardousWalker implements Poolable {
 
     public void draw(SpriteBatch batch) {
 
+        //to prevent bugs of colliding with player too easily
+
+        float xFix=-0.05f;
+        float widthMultiplier=1.1111111111f;
+
         //tää pitää tehdä uudestaan sitten kun falling ym muutenkin front oleellinen että sitä kyätetään?
         if (getStatus()==READY) {
 
             if (noticed) {
-                batch.draw(fallingTrapNoticed, getX(), getY(), getWidth(), getHeight());
+                batch.draw(fallingTrapNoticed, getX() + xFix, getY(), getWidth() * widthMultiplier, getHeight());
             } else {
-                batch.draw(standTexture, getX(), getY(), getWidth(), getHeight());
+                batch.draw(standTexture, getX()+xFix, getY(), getWidth() * widthMultiplier, getHeight());
             }
 
 
 
 
         } else if (getStatus()==FALLING) {
-            batch.draw(getFallAnimation().getCurrentFrame(), getX()    , getY(), getWidth(), getHeight()) ;
+            batch.draw(getFallAnimation().getCurrentFrame(), getX() +xFix   , getY(), getWidth()*widthMultiplier, getHeight()) ;
             //batch.draw(standTexture, getX(), getY(), getWidth(), getHeight());
         } else if (getStatus()==VANISHING) {
             if (getVanishAnimation().getCurrentFrame() != null) {
-                batch.draw(getVanishAnimation().getCurrentFrame(), getX(), getY(), getWidth(), getHeight());
+                batch.draw(getVanishAnimation().getCurrentFrame(), getX() +xFix, getY(), getWidth()*widthMultiplier, getHeight());
             }
 
 
@@ -211,9 +216,9 @@ public class FallingTrap extends HazardousWalker implements Poolable {
         } else if (getStatus()==TRIGGERED) {
 
             if (getTriggerAnimation().getCurrentFrame() != null) {
-                batch.draw(getTriggerAnimation().getCurrentFrame(), getX(), getY(), getWidth(), getHeight());
+                batch.draw(getTriggerAnimation().getCurrentFrame(), getX() + xFix, getY(), getWidth() * widthMultiplier, getHeight());
             } else {
-                batch.draw(standTexture, getX(), getY(), getWidth(), getHeight());
+                batch.draw(standTexture, getX()*xFix, getY(), getWidth()*widthMultiplier, getHeight());
 
 
             }

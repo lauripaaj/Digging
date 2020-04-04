@@ -407,7 +407,7 @@ public class ScreenHelper {
             }
 
 
-            System.out.println(finalStartingX);
+            //System.out.println(finalStartingX);
 
         }
 
