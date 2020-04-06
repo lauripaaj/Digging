@@ -45,7 +45,7 @@ public class FallingTrap extends HazardousWalker implements Poolable {
         setTriggerAnimation(new SheetAnimation(fallingTrapTrigger, 1, 8, 8, 60));
         setFallAnimation(new SheetAnimation(fallingTrapFalling, 1, 8, 8, 60));
 
-        rectangle=new Rectangle(1.00f,1.00f, 0.9f, 1.00f);
+        rectangle=new Rectangle(1.00f,1.00f, 0.85f, 1.00f);
         putInTilePos(tilePosY, tilePosX);
     }
 
@@ -188,8 +188,9 @@ public class FallingTrap extends HazardousWalker implements Poolable {
 
         //to prevent bugs of colliding with player too easily
 
-        float xFix=-0.05f;
-        float widthMultiplier=1.1111111111f;
+        float xFix=-0.075f;
+        //this multplied with width of rectangle must be as close to 1.00000f as possible
+        float widthMultiplier=1.1759999f;
 
         //tää pitää tehdä uudestaan sitten kun falling ym muutenkin front oleellinen että sitä kyätetään?
         if (getStatus()==READY) {

@@ -493,7 +493,7 @@ public class ScreenHelper {
         if (counter <= 4) {
 
 
-            //TÄMÄ KORVATAAN TARGETILLA
+
             gameport.setWorldWidth(5+2*UNDIGGABLE_MARGIN);
 
 
@@ -510,7 +510,7 @@ public class ScreenHelper {
 
 
 
-            //TÄMÄ KORVATAAN TARGETILLA
+
             gameport.setWorldHeight(((TILES_IN_ROWS_WITHOUT_EDGES+2*UNDIGGABLE_MARGIN)*multiplier)/TILES_IN_ROWS_WITHOUT_EDGES*5);
 
 
@@ -519,7 +519,7 @@ public class ScreenHelper {
             if(startingX == 1 || startingX == 2) {
                 //TÄMÄ KORVATAAN TARGETILLA
                 camera.position.x=CAMERACENTER-1f;
-            } else if (startingX == 4 || startingX == 5) {
+            } else if (startingX >= 4) {
                 //TÄMÄ KORVATAAN TARGETILLA
                 camera.position.x=CAMERACENTER+1f;;
             } else {
@@ -529,13 +529,13 @@ public class ScreenHelper {
             isZoomed=true;
 
         } else {
-            //TÄMÄ KORVATAAN TARGETILLA
+
             gameport.setWorldWidth(TILES_IN_ROWS_WITHOUT_EDGES+2*UNDIGGABLE_MARGIN);
-            //TÄMÄ KORVATAAN TARGETILLA
+
             gameport.setWorldHeight(12.8f);
-            //TÄMÄ KORVATAAN TARGETILLA
+
             camera.position.x=CAMERACENTER;
-            //TÄMÄ KORVATAAN TARGETILLA
+
             gameport.update(helperWidth, helperHeight);
 
             isZoomed=false;
