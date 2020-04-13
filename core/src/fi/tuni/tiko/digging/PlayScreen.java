@@ -261,7 +261,7 @@ public class PlayScreen extends GameScreen {
         if (actionActivated) {
             continueActionCountdown(Gdx.graphics.getDeltaTime(), buttons);
 
-            System.out.println("this worked");
+            //System.out.println("this worked");
             //screenHelper.forceUnzoom(gameport, helperWidth, helperHeight);
 
 
@@ -450,11 +450,11 @@ public class PlayScreen extends GameScreen {
 
         pressedArea.setPosition(screenHelper.menuAdjustedX(x), screenHelper.menuAdjustedY(y));
 
-        System.out.println("pressedAreaY: "+pressedArea.y);
-        System.out.println("pressedAreaX: "+pressedArea.x);
+        //System.out.println("pressedAreaY: "+pressedArea.y);
+        //System.out.println("pressedAreaX: "+pressedArea.x);
 
-        System.out.println("pauseButtonGetY: "+pauseButton.getY());
-        System.out.println("pauseButton.getX: "+pauseButton.getX());
+        //System.out.println("pauseButtonGetY: "+pauseButton.getY());
+        //System.out.println("pauseButton.getX: "+pauseButton.getX());
 
         for (int i=0; i<buttons.size(); i++) {
             MenuButton menuButton = buttons.get(i);

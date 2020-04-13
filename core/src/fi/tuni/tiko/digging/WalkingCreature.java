@@ -147,7 +147,7 @@ public abstract class WalkingCreature extends Creature {
         if (tiles[getTargetTilePosY()+1][getTilePosX()].isConcrete()==false) {
             setTargetTilePosY(getTargetTilePosY()+1);
             setTargetGameObjectPosY(getTargetGameObjectPosY()+1);
-            System.out.println("added one for falling");
+            //System.out.println("added one for falling");
         }
     }
 

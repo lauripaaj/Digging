@@ -98,7 +98,7 @@ public class MainMenu extends MenuScreen {
 
         screenHelper.switchCameraToMenu();
 
-        System.out.println("switched to main menu");
+        //System.out.println("switched to main menu");
 
     }
 

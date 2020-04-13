@@ -24,6 +24,8 @@ public class Stage {
 
     ArrayList <ResourceTile> resourceTileList = new ArrayList<>();
 
+    ArrayList <RootResourceTile> rootResourceTileList = new ArrayList<>();
+
     LevelStats levelStats;
 
     SingleSlide singleSlide;
@@ -308,7 +310,12 @@ public class Stage {
 
         //vanishingTileList.clear();
 
-        resourceTileList = hazardAndResourceRandomizer.addResourceTiles(resourceTileList, tiles, tilePools.getResourcePool(), tilePools.getDirtPool(), mainGame);
+        if (mainGame.episode <= 3) {
+            resourceTileList = hazardAndResourceRandomizer.addResourceTiles(resourceTileList, tiles, tilePools.getResourcePool(), tilePools.getDirtPool(), mainGame);
+
+        } else {
+            rootResourceTileList = hazardAndResourceRandomizer.addRootResourceTiles(rootResourceTileList, tiles, tilePools.getRootResourcePool(), tilePools.getDirtPool(), mainGame);
+        }
 
         //resourcesCollectedThisRun=0;
 
@@ -459,8 +466,8 @@ public class Stage {
         if (levelsPassed[mainGame.episode-1][mainGame.level-2]==false) {
             levelsPassed[mainGame.episode-1][mainGame.level-2]=true;
 
-            System.out.println(mainGame.episode);
-            System.out.println(mainGame.level);
+            //System.out.println(mainGame.episode);
+            //System.out.println(mainGame.level);
 
             setTotalResourcesCollected(getTotalResourcesCollected()+25*(mainGame.level-1));
 

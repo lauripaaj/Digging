@@ -135,7 +135,7 @@ public class FallingTrap extends HazardousWalker implements Poolable {
         if (tiles[getTargetTilePosY()+1][getTilePosX()].isConcrete()==false || tiles[getTargetTilePosY()+1][getTilePosX()].isVanishing()) {
             setTargetTilePosY(getTargetTilePosY()+1);
             setTargetGameObjectPosY(getTargetGameObjectPosY()+1);
-            System.out.println("added one for falling");
+            //System.out.println("added one for falling");
         }
     }
 
@@ -151,7 +151,7 @@ public class FallingTrap extends HazardousWalker implements Poolable {
             }
         }
         startFalling(amountOfTilesToFall);
-        System.out.println("Trap started to FALL " + amountOfTilesToFall + " tiles.");
+        //System.out.println("Trap started to FALL " + amountOfTilesToFall + " tiles.");
     }
 
     @Override

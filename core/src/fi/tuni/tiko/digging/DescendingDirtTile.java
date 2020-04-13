@@ -78,13 +78,13 @@ public class DescendingDirtTile extends GameTile implements Poolable {
         updateTiles(locationY, locationX, currentStage);
 
 
-        System.out.println("vanished sescending");
+        //System.out.println("vanished sescending");
     }
 
     public void startDescending(float delta) {
         descending=true;
 
-        System.out.println("started descending");
+        //System.out.println("started descending");
         //not the best way to implement this making it continue right away and needing delta as parameter here already
         continueDescending(delta);
 

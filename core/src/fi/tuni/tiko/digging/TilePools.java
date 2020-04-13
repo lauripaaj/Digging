@@ -11,8 +11,9 @@ public class TilePools {
     private FarmPool farmPool;
     private ResourcePool resourcePool;
     private RootPool rootPool;
+    private RootResourcePool rootResourcePool;
 
-    public TilePools(DirtPool dirtPool, StonePool stonePool, BlankPool blankPool, DescendingPool descendingPool, PermanentPool permanentPool, FarmPool farmPool, ResourcePool resourcePool, RootPool rootPool) {
+    public TilePools(DirtPool dirtPool, StonePool stonePool, BlankPool blankPool, DescendingPool descendingPool, PermanentPool permanentPool, FarmPool farmPool, ResourcePool resourcePool, RootPool rootPool, RootResourcePool rootResourcePool) {
         this.dirtPool = dirtPool;
         this.stonePool = stonePool;
         this.blankPool = blankPool;
@@ -21,6 +22,7 @@ public class TilePools {
         this.farmPool = farmPool;
         this.resourcePool = resourcePool;
         this.rootPool = rootPool;
+        this.rootResourcePool = rootResourcePool;
     }
 
     public DirtPool getDirtPool () {
@@ -87,6 +89,14 @@ public class TilePools {
         this.resourcePool = resourcePool;
     }
 
+    public RootResourcePool getRootResourcePool () {
+        return rootResourcePool;
+    }
+
+    public void setRootResourcePool (RootResourcePool rootResourcePool) {
+        this.rootResourcePool = rootResourcePool;
+    }
+
     //all GameTiles are being put back to their pools. It is very important to do this when the
     //stage is reset or finished, since LibGDX Pools do not do this automatically and it would cause
     //pools filling, memory problems or crahses either right away or later
@@ -132,6 +142,8 @@ public class TilePools {
 
                     } else if (tiles[y][x] instanceof ResourceTile) {
                         resourcePool.free((ResourceTile)tiles[y][x]);
+                    } else if (tiles[y][x] instanceof RootResourceTile) {
+                        rootResourcePool.free((RootResourceTile)tiles[y][x]);
                     }
 
                 }

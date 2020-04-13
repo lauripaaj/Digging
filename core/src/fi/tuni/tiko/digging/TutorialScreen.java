@@ -99,7 +99,7 @@ public class TutorialScreen extends GameScreen {
 
         if (actionActivated) {
             continueActionCountdown(Gdx.graphics.getDeltaTime(), buttons);
-            System.out.println("tutorial screen action activated");
+            //System.out.println("tutorial screen action activated");
 
         }
 

@@ -116,6 +116,7 @@ public class MainGame extends Game  {
 	private HazardPools hazardPools;
 
 	private ResourcePool resourcePool;
+	private RootResourcePool rootResourcePool;
 
 	private ResourceAnimationPool resourceAnimationPool;
 	private ArrayList<ResourceGainedAnimation> resourceAnimationList;
@@ -208,8 +209,8 @@ public class MainGame extends Game  {
 
 
 		batch = new SpriteBatch();
-		episode = 3;
-		level = 1;
+		episode = 4;
+		level = 10;
 
 		//just for testing purposes, this could only be in StageRandomizers method just as well
 		//passages = new int[1][];
@@ -293,13 +294,14 @@ public class MainGame extends Game  {
 		farmPool = new FarmPool(7,16);
 
 		resourcePool = new ResourcePool(12,48);
+		rootResourcePool = new RootResourcePool(9, 48);
 
 		rootPool = new RootPool(100, 400);
 
 
 
 
-		tilePools=new TilePools(dirtPool, stonePool, blankPool, descendingPool, permanentPool, farmPool, resourcePool, rootPool);
+		tilePools=new TilePools(dirtPool, stonePool, blankPool, descendingPool, permanentPool, farmPool, resourcePool, rootPool, rootResourcePool);
 
 		resourceAnimationPool = new ResourceAnimationPool(3, 6);
 
@@ -595,7 +597,7 @@ public class MainGame extends Game  {
 		//TÄRKEÄÄ TÄYTYY LAITTAA METODI PALYERIIN
 		//player.setX(player.getX()-player.getWidth()/2);
 
-		System.out.println(player.getY());
+		//System.out.println(player.getY());
 
 
 		//player.setGravityPull(currentStage.getGravity());
@@ -812,7 +814,7 @@ public class MainGame extends Game  {
 					if (player.getTilePosY()==fallingTrap.getTilePosY()+amountOfTilesToCheck) {
 						fallingTrap.startTriggering();
 
-						System.out.println("TRIGGERED ;-(");
+						//System.out.println("TRIGGERED ;-(");
 					}
 				}
 
@@ -947,7 +949,7 @@ while (it.hasNext()) {
 				} else {
 
 					it.remove();
-					System.out.println("removed");
+					//System.out.println("removed");
 				}
 			}
 
@@ -979,7 +981,7 @@ while (it.hasNext()) {
 				}
 
 				player.startFalling(amountOfTilesToFall);
-				System.out.println("started to FALL " +amountOfTilesToFall+" tiles.");
+				//System.out.println("started to FALL " +amountOfTilesToFall+" tiles.");
 			}
 
 		}
@@ -1060,14 +1062,14 @@ while (it.hasNext()) {
 							if (((Hazard) hazard).getGetsDestroyedByFallingPlayer() && ((player.getY() + player.getHeight()) < (hazard.getY() + hazard.getHeight()))
 
 							) {
-								System.out.println("playerY: " + player.getY());
-								System.out.println("hazardY: " + hazard.getY());
+								//System.out.println("playerY: " + player.getY());
+								//System.out.println("hazardY: " + hazard.getY());
 								//&& (player.getY() > hazard.getY() )) {
 								((Hazard) hazard).vanish();
-								System.out.println("theyShouldVanish");
+								//System.out.println("theyShouldVanish");
 							} else {
 								if (hazard.isVanishing() == true) {
-									System.out.println("zapThing");
+									//System.out.println("zapThing");
 								} else {
 									zapPlayer();
 									farmLevel=true;
@@ -1167,7 +1169,7 @@ while (it.hasNext()) {
 
 		playerControls.setQueu(NOQUEU);
 
-		System.out.println("Zap");
+		//System.out.println("Zap");
 		player.getZapped();
 		//currentStage.dispose();
 

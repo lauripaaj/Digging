@@ -117,7 +117,7 @@ public abstract class GameTile extends TileBasedObject {
     }
 
     public void vanish() {
-        System.out.println("vanished");
+        //System.out.println("vanished");
         setConcrete(false);
 
 
@@ -218,7 +218,7 @@ public abstract class GameTile extends TileBasedObject {
             default: updateTo = 47;
         }
         updateTexture(updateTo);
-        System.out.println("called tile update");
+        //System.out.println("called tile update");
     }
     public void updateTiles(int fromY, int fromX, Stage currentStage) {
         for (int i = -2; i < 2; i++) {
@@ -233,7 +233,7 @@ public abstract class GameTile extends TileBasedObject {
 
             }
         }
-        System.out.println("should update tiles");
+        //System.out.println("should update tiles");
     }
     public void updateTexture(int tileNumber) {System.out.println("failed tile update");}
 

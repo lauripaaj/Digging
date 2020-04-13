@@ -7,6 +7,8 @@ import com.badlogic.gdx.utils.Pool.Poolable;
 
 import fi.tuni.tiko.digging.util.AnimTools;
 
+import static fi.tuni.tiko.digging.MainGame.TILES_IN_ROWS_INCLUDING_EDGES;
+
 public class Goblin extends HazardousWalker implements Poolable {
 
     boolean getsDestroyedByFallingPlayer = true;
@@ -101,6 +103,8 @@ public class Goblin extends HazardousWalker implements Poolable {
     @Override
     public void updateMovement (GameTile[][] tiles, float delta) {
 
+
+
         if (getStatus() == VANISHING) {
             boolean actionContinues=true;
             if (getVanishTimeLeft() > 0) {
@@ -114,6 +118,8 @@ public class Goblin extends HazardousWalker implements Poolable {
         }
 
         if (getStatus() == READY) {
+
+
             //TÄRKEÄÄ tää vaatii tarkemman checkin!
             if (tiles[getTilePosY() + 1][getTilePosX()].isConcrete() == false) {
                 putInTilePos(getTilePosY(), getTilePosX());
@@ -127,11 +133,14 @@ public class Goblin extends HazardousWalker implements Poolable {
                     }
                 }
                 startFalling(amountOfTilesToFall);
-                System.out.println("Goblin started to FALL " + amountOfTilesToFall + " tiles.");
+                //System.out.println("Goblin started to FALL " + amountOfTilesToFall + " tiles.");
             }
             //getStatus might have changed so this must be in a new loop even though it's the same condition
             if (getStatus() == READY) {
-                if ((tiles[getTilePosY()][getTilePosX()-1].isConcrete() == false) && (tiles[getTilePosY()][getTilePosX()-1].isOccupied() == false) && tiles[getTilePosY()+1][getTilePosX()-1].isConcrete() == true) {
+
+                if(getTilePosX()==0 || getTilePosX()==TILES_IN_ROWS_INCLUDING_EDGES) {
+                    setStatus(VANISHING);
+                } else if ((tiles[getTilePosY()][getTilePosX()-1].isConcrete() == false) && (tiles[getTilePosY()][getTilePosX()-1].isOccupied() == false) && tiles[getTilePosY()+1][getTilePosX()-1].isConcrete() == true) {
                     int randomResult = MathUtils.random(1,160);
                     if (randomResult <= 1) {
                         startWalking(LEFT);
@@ -141,11 +150,14 @@ public class Goblin extends HazardousWalker implements Poolable {
 
             }
             if (getStatus() == READY) {
+
+                //to fight some bugs, still not sure how they end up inside stone tile in the first place
                 if ((tiles[getTilePosY()][getTilePosX()+1].isConcrete() == false) && (tiles[getTilePosY()][getTilePosX()+1].isOccupied() == false) && tiles[getTilePosY()+1][getTilePosX()+1].isConcrete() == true) {
                     int randomResult = MathUtils.random(1,160);
                     if (randomResult <= 1) {
                         startWalking(RIGHT);
                     }
+
                 }
 
 

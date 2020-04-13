@@ -31,7 +31,7 @@ public class PlayerControls {
     public void checkQueu(Player player, Stage currentStage) {
         if (queu==TRYRIGHT) {
             tryRight(player, currentStage);
-            System.out.println("tryingtosetrightque");
+            //System.out.println("tryingtosetrightque");
         } else if (queu==TRYLEFT) {
             tryLeft(player, currentStage);
         } else if (queu==TRYDOWN) {
@@ -41,7 +41,7 @@ public class PlayerControls {
         }
 
         queu=NOQUEU;
-        System.out.println("setQueuTo0");
+        //System.out.println("setQueuTo0");
 
     }
 
@@ -88,10 +88,15 @@ public void controlPlayer(Player player, Stage stage) {
             player.startBreaking(RIGHT);
             //currentStage.getTile(targetY, targetX).vanish();
             currentStage.getTile(targetY, targetX).startVanishing(currentStage);
-            System.out.println("VANISHED RIGHT");
+            //System.out.println("VANISHED RIGHT");
             if (currentStage.getTile(targetY, targetX) instanceof ResourceTile) {
                 doResourceGainedThings((ResourceTile)currentStage.getTile(targetY, targetX), currentStage.tileAnimationPools, currentStage);
             }
+        } else if (currentStage.getTile(targetY, targetX) instanceof RootResourceTile) {
+            if (((RootResourceTile)(currentStage.getTile(targetY, targetX))).available) {
+                doResourceGainedThings(currentStage.getTile(targetY, targetX), currentStage.tileAnimationPools, currentStage);
+            }
+
         }
 
     }
@@ -122,11 +127,16 @@ public void controlPlayer(Player player, Stage stage) {
         } else if (currentStage.getTile(targetY, targetX).isDiggable() ) {
             player.startBreaking(LEFT);
             currentStage.getTile(targetY, targetX).startVanishing(currentStage);
-            System.out.println("VANISHEDLEFT");
+            //System.out.println("VANISHEDLEFT");
             if (currentStage.getTile(targetY, targetX) instanceof ResourceTile) {
                 doResourceGainedThings((ResourceTile)currentStage.getTile(targetY, targetX), currentStage.tileAnimationPools, currentStage);
             }
 
+
+        } else if (currentStage.getTile(targetY, targetX) instanceof RootResourceTile) {
+            if (((RootResourceTile)(currentStage.getTile(targetY, targetX))).available) {
+                doResourceGainedThings(currentStage.getTile(targetY, targetX), currentStage.tileAnimationPools, currentStage);
+            }
 
         }
 
@@ -138,11 +148,16 @@ public void controlPlayer(Player player, Stage stage) {
 
         if (currentStage.getTile(targetY, targetX).isDiggable() ) {
             player.startDigging();
-            System.out.println("started to dig");
+            //System.out.println("started to dig");
             //currentStage.getTile(targetY, targetX).vanish();
             currentStage.getTile(targetY, targetX).startVanishing(currentStage);
             if (currentStage.getTile(targetY, targetX) instanceof ResourceTile) {
                 doResourceGainedThings((ResourceTile)currentStage.getTile(targetY, targetX), currentStage.tileAnimationPools, currentStage);
+            }
+
+        } else if (currentStage.getTile(targetY, targetX) instanceof RootResourceTile) {
+            if (((RootResourceTile)(currentStage.getTile(targetY, targetX))).available) {
+                doResourceGainedThings(currentStage.getTile(targetY, targetX), currentStage.tileAnimationPools, currentStage);
             }
 
         }
@@ -156,10 +171,15 @@ public void controlPlayer(Player player, Stage stage) {
             if (currentStage.getTile(targetY, targetX).isDiggable() &&
                     currentStage.getTile( targetY, targetX).isConcrete() ) {
                 player.startBreakingRoof();
-                System.out.println("breaking roof");
+                //System.out.println("breaking roof");
                 currentStage.getTile(targetY, targetX).startVanishing(currentStage);
                 if (currentStage.getTile(targetY, targetX) instanceof ResourceTile) {
                     doResourceGainedThings((ResourceTile)currentStage.getTile(targetY, targetX), currentStage.tileAnimationPools, currentStage);
+                }
+
+            } else if (currentStage.getTile(targetY, targetX) instanceof RootResourceTile) {
+                if (((RootResourceTile)(currentStage.getTile(targetY, targetX))).available) {
+                    doResourceGainedThings(currentStage.getTile(targetY, targetX), currentStage.tileAnimationPools, currentStage);
                 }
 
             }
@@ -173,7 +193,7 @@ public void controlPlayer(Player player, Stage stage) {
         }
     }
 
-    public void doResourceGainedThings(ResourceTile resourceTile, TileAnimationPools tileAnimationPools, Stage currentStage) {
+    public void doResourceGainedThings(GameTile resourceTile, TileAnimationPools tileAnimationPools, Stage currentStage) {
         ResourceGainedAnimation resourceGainedAnimation = tileAnimationPools.getResourceAnimationPool().obtain();
         resourceGainedAnimation.setX(resourceTile.getX());
         resourceGainedAnimation.setY(resourceTile.getY());
@@ -182,10 +202,17 @@ public void controlPlayer(Player player, Stage stage) {
         tileAnimationPools.getResourceAnimationList().add(resourceGainedAnimation);
 
         //currentStage.setResourcesCollectedThisRun(currentStage.getResourcesCollectedThisRun()+resourceTile.getResourceScore());
-        currentStage.setTotalResourcesCollected(currentStage.getTotalResourcesCollected()+resourceTile.getResourceScore());
+
+        if (resourceTile instanceof ResourceTile) {
+            currentStage.setTotalResourcesCollected(currentStage.getTotalResourcesCollected()+((ResourceTile)resourceTile).getResourceScore());
+        } else if (resourceTile instanceof RootResourceTile) {
+            currentStage.setTotalResourcesCollected(currentStage.getTotalResourcesCollected()+((RootResourceTile)resourceTile).getResourceScore());
+            ((RootResourceTile)resourceTile).takeCare();
+        }
+
 
         //System.out.println("Resources collected during current run: "+currentStage.getResourcesCollectedThisRun());
-        System.out.println("Resources collected in total: "+currentStage.getTotalResourcesCollected());
+        //System.out.println("Resources collected in total: "+currentStage.getTotalResourcesCollected());
 
 
     }

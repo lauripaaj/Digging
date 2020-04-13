@@ -143,7 +143,7 @@ public class ScreenHelper {
     }
 
     public float adjustToYPosition (float y) {
-        System.out.println(resoY);
+        //System.out.println(resoY);
         //return y-3.3f;
         return y-0.2578f*resoY;
     }
@@ -207,11 +207,11 @@ public class ScreenHelper {
         Rectangle pressedArea = gameScreen.pressedArea;
         ArrayList <MenuButton> buttons = gameScreen.buttons;
 
-        System.out.print("x: "+x);
-        System.out.println(", y: "+y);
+        //System.out.print("x: "+x);
+        //System.out.println(", y: "+y);
 
-        System.out.println(menuAdjustedX(x));
-        System.out.println(menuAdjustedY(y));
+        //System.out.println(menuAdjustedX(x));
+        //System.out.println(menuAdjustedY(y));
 
 
 
@@ -304,14 +304,14 @@ public class ScreenHelper {
 
         Rectangle pressedArea = gameScreen.pressedArea;
 
-        System.out.print("x: "+x);
-        System.out.println(", y: "+y);
+        //System.out.print("x: "+x);
+        //System.out.println(", y: "+y);
 
         float stretchAdjustedY=stretchAdjustedY(y);
         float menuadjustedX=menuAdjustedX(x);
 
-        System.out.print("Menuadj x: "+menuadjustedX);
-        System.out.println(", Menuadj y: "+stretchAdjustedY);
+        //System.out.print("Menuadj x: "+menuadjustedX);
+        //System.out.println(", Menuadj y: "+stretchAdjustedY);
 
         pressedArea.setX(menuadjustedX+gameScreen.pressedAreaSize);
         if (gameScreen.isThisTutorialScreen) {
@@ -321,7 +321,7 @@ public class ScreenHelper {
         }
 
 
-        System.out.println(gameScreen.buttons.size());
+        //System.out.println(gameScreen.buttons.size());
 
         for (int i=0; i<gameScreen.buttons.size(); i++) {
             MenuButton menuButton = gameScreen.buttons.get(i);
@@ -332,7 +332,7 @@ public class ScreenHelper {
                 menuButton.setPressed(true);
                 gameScreen.activateAction(menuButton.getActionToPerform());
 
-                System.out.println("pitäisi olla nappi painettu!");
+                //System.out.println("pitäisi olla nappi painettu!");
 
                 // activateAction(menuButton.getActionToPerform());
             }
@@ -460,7 +460,7 @@ public class ScreenHelper {
         }
 
         counter = endingX-startingX+1;
-        System.out.println(counter);
+        //System.out.println(counter);
 
         //useAllTheTime(currentStage, gameport, startingX, endingX, counter);
         //useOnFour(currentStage, gameport, startingX, endingX, counter);

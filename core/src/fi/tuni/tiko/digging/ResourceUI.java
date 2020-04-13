@@ -20,7 +20,7 @@ public class ResourceUI {
 
 
     public void updateLinesToDraw(int totalCollected, int episode) {
-        System.out.println("HUUHUHUUHDUHUDFHDUAFHDF");
+        //System.out.println("HUUHUHUUHDUHUDFHDUAFHDF");
 
         linesToDraw = totalCollected / 37;
 

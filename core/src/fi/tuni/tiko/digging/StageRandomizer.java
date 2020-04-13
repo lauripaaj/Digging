@@ -113,9 +113,9 @@ public class StageRandomizer {
                     //System.out.println("found dirtTile");
 
                     int randomResult=MathUtils.random(1, 100);
-                    System.out.println(randomResult);
+                    //System.out.println(randomResult);
                     if (randomResult<=chanceOfBlankTile) {
-                        System.out.println("blank chance happened");
+                        //System.out.println("blank chance happened");
 
                         tilePools.getDirtPool().free((DirtTile)tiles[y][x]);
 
@@ -125,7 +125,7 @@ public class StageRandomizer {
 
 
                     } else if ( (randomResult>chanceOfBlankTile) && (randomResult <= (chanceOfBlankTile+chanceOfStoneTile)) ) {
-                        System.out.println("stone chance happened");
+                        //System.out.println("stone chance happened");
 
                         tilePools.getDirtPool().free((DirtTile)tiles[y][x]);
 
@@ -134,7 +134,7 @@ public class StageRandomizer {
                         stone.setInPlace(y,x);
                         
                     } else if ( (randomResult> (chanceOfBlankTile+chanceOfStoneTile) ) && (randomResult <= (chanceOfBlankTile+chanceOfStoneTile+chanceOfDescendingTile)) ) {
-                        System.out.println("descending chance happened");
+                        //System.out.println("descending chance happened");
 
                         tilePools.getDirtPool().free((DirtTile)tiles[y][x]);
 
@@ -232,7 +232,7 @@ public class StageRandomizer {
 
         while ( (lastAreasExit < posXstart) || (lastAreasExit > posXstart+howManyTilesInArow) ) {
             posXstart = MathUtils.random(1, (1+TILES_IN_ROWS_WITHOUT_EDGES-howManyTilesInArow) );
-            System.out.println("posXstart: "+posXstart+", lastAreasExit: "+lastAreasExit);
+            //System.out.println("posXstart: "+posXstart+", lastAreasExit: "+lastAreasExit);
         }
 
         //will hold the info of one dirt-tiled x-position, that will be the guaranteed entrance x-position in the next  area
@@ -451,7 +451,7 @@ public class StageRandomizer {
     public void forceLevelToBePassable(Stage currentStage, MainGame mainGame) {
 
         GameTile[][] tiles = currentStage.tiles;
-        System.out.println(mainGame.entranceTile.getRawTileX());
+        //System.out.println(mainGame.entranceTile.getRawTileX());
         //passages = mainGame.passages;
 
         //passages[][] = new int[tiles.length][tiles[0].length]
