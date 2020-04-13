@@ -52,7 +52,21 @@ public class TerrainTemplate {
             setChanceOfDirtTileBeingStone(25);
             setChanceOfDirtTileBeingDescending(8);
 
+        } else if (customNumber==10) {
+            setChanceOfDirtTileBeingBlank(36);
+            setChanceOfDirtTileBeingStone(11);
+            setChanceOfDirtTileBeingDescending(20);
         }
+        else if (customNumber==11) {
+            setChanceOfDirtTileBeingBlank(37);
+            setChanceOfDirtTileBeingStone(7);
+            setChanceOfDirtTileBeingDescending(45);
+        } else if (customNumber==12) {
+            setChanceOfDirtTileBeingBlank(39);
+            setChanceOfDirtTileBeingStone(23);
+            setChanceOfDirtTileBeingDescending(15);
+        }
+
 
     }
 }

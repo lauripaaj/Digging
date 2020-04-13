@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Pool.Poolable;
 
+import static fi.tuni.tiko.digging.EntranceTile.entrance;
+
 public class BlankTile extends GameTile implements Poolable {
 
     static GameTexture blankTexture = new GameTexture(new Texture("blankTile.png"));
@@ -46,6 +48,10 @@ public class BlankTile extends GameTile implements Poolable {
         setX(locX);
         setY(locY);
 
+    }
+
+    public void setEntranceTexture() {
+        setTexture(entrance);
     }
 
     @Override

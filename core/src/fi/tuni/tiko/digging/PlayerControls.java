@@ -181,10 +181,10 @@ public void controlPlayer(Player player, Stage stage) {
 
         tileAnimationPools.getResourceAnimationList().add(resourceGainedAnimation);
 
-        currentStage.setResourcesCollectedThisRun(currentStage.getResourcesCollectedThisRun()+resourceTile.getResourceScore());
+        //currentStage.setResourcesCollectedThisRun(currentStage.getResourcesCollectedThisRun()+resourceTile.getResourceScore());
         currentStage.setTotalResourcesCollected(currentStage.getTotalResourcesCollected()+resourceTile.getResourceScore());
 
-        System.out.println("Resources collected during current run: "+currentStage.getResourcesCollectedThisRun());
+        //System.out.println("Resources collected during current run: "+currentStage.getResourcesCollectedThisRun());
         System.out.println("Resources collected in total: "+currentStage.getTotalResourcesCollected());
 
 

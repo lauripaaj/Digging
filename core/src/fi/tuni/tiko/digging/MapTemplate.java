@@ -44,10 +44,6 @@ public class MapTemplate {
         int chanceOfStone = 0;
         int number = 0;
 
-        if (level >= 12) {
-            level = level - 10;
-        }
-
         if (level >= 2 && level <= 4) {
             number = 2;
         } else if (level == 5) {
@@ -61,36 +57,46 @@ public class MapTemplate {
 
         if (number == 2) {
 
-            chanceOfDesc = 10;
-            chanceOfStone = 5;
+            chanceOfDesc = 15;
+            chanceOfStone = 9;
 
         } else if (number == 3) {
             chanceOfDesc = 80;
             chanceOfStone = 0;
         } else if (number == 4) {
             chanceOfDesc = 28;
-            chanceOfStone = 6;
+            chanceOfStone = 9;
         } else if (number == 10) {
             chanceOfStone = 100;
         } else throw new IllegalArgumentException("invalid mapTemplate number");
 
         int randomRoll = MathUtils.random(1, 100);
         if (randomRoll <= chanceOfDesc) {
+            if (episode >= 4) {
+                terrainTemplate=new TerrainTemplate(11);
+            } else
             terrainTemplate = new TerrainTemplate(1);
         } else if (randomRoll <= chanceOfStone + chanceOfDesc) {
-            terrainTemplate = new TerrainTemplate(2);
+            if (episode >= 4) {
+                terrainTemplate = new TerrainTemplate(12);
+            } else {
+                terrainTemplate = new TerrainTemplate(2);
+            }
 
+
+        } else if (episode >= 4) {
+            terrainTemplate=new TerrainTemplate(10);
         } else {
             terrainTemplate = new TerrainTemplate();
         }
 
         if (number == 10) {
             //it would be fun to have more areas but the phone starts to slow down easier
-            generateAreaTemplates(5,7);
+            generateAreaTemplates(6,8);
 
         } else {
 
-            generateAreaTemplates(5,7);
+            generateAreaTemplates(6,8);
         }
 
         hazardTemplate = new HazardTemplate(episode, level);
@@ -109,7 +115,7 @@ public class MapTemplate {
 
         // laitoin vaan 3,6 testin vuoksi, myöhemmin vähän enemmän
 
-        generateAreaTemplates(5,7);
+        generateAreaTemplates(6,8);
 
 
     }

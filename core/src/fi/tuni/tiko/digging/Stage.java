@@ -5,6 +5,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.ArrayList;
 
 import static fi.tuni.tiko.digging.MainGame.TILES_IN_ROWS_INCLUDING_EDGES;
+import static fi.tuni.tiko.digging.SingleSlideScreen.LEVEL10COMPLETE;
+import static fi.tuni.tiko.digging.SingleSlideScreen.LEVEL10_AND_EPISODE_COMPLETE;
+import static fi.tuni.tiko.digging.SingleSlideScreen.LEVELCOMPLETE;
 
 public class Stage {
 
@@ -22,6 +25,15 @@ public class Stage {
     ArrayList <ResourceTile> resourceTileList = new ArrayList<>();
 
     LevelStats levelStats;
+
+    SingleSlide singleSlide;
+
+    MainGame mainGame;
+
+    boolean episodeComplete = false;
+
+    int[][] passages;
+
 
     /*
     DirtPool dirtPool;
@@ -52,6 +64,8 @@ public class Stage {
     private final int MIN_CONDITION = 1;
     private final int MAX_CONDITION = 10;
 
+    ResourceUI resourceUI;
+
     //many areas are narrower but they cant be wider than this
     //private final int LEVELWIDTH = 7;
 
@@ -67,13 +81,17 @@ public class Stage {
     private final int MINRESOURCELEVEL = 20;
     private final int MAXRESOURCELEVEL = 10000;
 
+    EntranceTile entranceTile;
+
 
     private int resourceLevel;
 
-    private int resourcesCollectedThisRun;
+    //private int resourcesCollectedThisRun;
     private int totalResourcesCollected;
 
     private GameTexture backGroundTexture;
+
+    boolean[][] levelsPassed;
 
 
     GameTile[][] tiles;
@@ -99,16 +117,36 @@ public class Stage {
     }
 
     public void setTotalResourcesCollected (int totalResourcesCollected) {
-        this.totalResourcesCollected = totalResourcesCollected;
-    }
 
+
+        this.totalResourcesCollected = totalResourcesCollected;
+        if (totalResourcesCollected >= 2550) {
+            totalResourcesCollected = 2550;
+
+            if (episodeComplete == false) {
+                episodeComplete=true;
+            }
+
+        }
+
+
+
+
+
+        resourceUI.updateLinesToDraw(totalResourcesCollected, 1);
+
+
+
+
+    }
+    /*
     public int getResourcesCollectedThisRun () {
         return resourcesCollectedThisRun;
     }
 
     public void setResourcesCollectedThisRun (int resourcesCollectedThisRun) {
         this.resourcesCollectedThisRun = resourcesCollectedThisRun;
-    }
+    }*/
 
     //not to be used except in start of game
     public Stage() {
@@ -117,24 +155,31 @@ public class Stage {
         //generateNewMap();
     }
 
-    public Stage (TilePools tilePools, HazardPools hazardPools, LevelStats levelStats, TileAnimationPools tileAnimationPools, int totalResourcesCollected, GameTexture backGroundTexture) {
-        this.tilePools = tilePools;
-        this.hazardPools = hazardPools;
-        this.levelStats=levelStats;
-        this.tileAnimationPools=tileAnimationPools;
+    public Stage (MainGame mainGame) {
+        this.tilePools = mainGame.getTilePools();
+        this.hazardPools = mainGame.getHazardPools();
+        this.levelStats=mainGame.getAllLevelsStats().get(0);
+        this.tileAnimationPools=mainGame.getTileAnimationPools();
+        this.singleSlide=mainGame.singleSlide;
+        this.totalResourcesCollected=mainGame.totalResourcesCollected;
+        this.resourceUI = mainGame.resourceUI;
+        this.entranceTile = mainGame.entranceTile;
 
-        this.totalResourcesCollected=totalResourcesCollected;
-
+        this.mainGame = mainGame;
 
         firstTimeVisit = true;
 
         tiles = new GameTile[0][0];
 
-        this.backGroundTexture=backGroundTexture;
+
+        this.levelsPassed=mainGame.levelsPassed;
+
+
+        this.backGroundTexture=mainGame.backGroundTexture;
     }
 
-
-    public Stage(int id, int noOfAreas, int condition, int resourceTemplate, TilePools tilePools, HazardPools hazardPools, LevelStats levelStats, TileAnimationPools tileAnimationPools, int totalResourcesCollected, GameTexture backGroundTexture) {
+    /*
+    public Stage(int id, int noOfAreas, int condition, int resourceTemplate, TilePools tilePools, HazardPools hazardPools, LevelStats levelStats, TileAnimationPools tileAnimationPools, int totalResourcesCollected, GameTexture backGroundTexture, boolean[][] levelsPassed) {
 
         this.tilePools = tilePools;
         this.hazardPools = hazardPools;
@@ -143,7 +188,7 @@ public class Stage {
 
         this.totalResourcesCollected=totalResourcesCollected;
 
-
+        this.levelsPassed=levelsPassed;
         firstTimeVisit = true;
 
         tiles = new GameTile[0][0];
@@ -156,7 +201,7 @@ public class Stage {
 
         //gravity = 0.01f;
 
-    }
+    }*/
 /*
     public float getGravity () {
         return gravity;
@@ -165,6 +210,8 @@ public class Stage {
     public void setGravity (float gravity) {
         this.gravity = gravity;
     }
+
+
 */
     public int getId() {
         return id;
@@ -212,10 +259,15 @@ public class Stage {
             doFirstTimeVisitStuff();
         }
 
+        stageSettings = new StageSettings(mainGame.episode, mainGame.level);
+
         //this will be later made better now just for testing
 
         // IMPORTANT: NOT SURE IF THIS SHOULD BE CREATED AGAIN EVERY TIME
         StageRandomizer stageRandomizer = new StageRandomizer(tilePools);
+        HazardAndResourceRandomizer hazardAndResourceRandomizer = new HazardAndResourceRandomizer(hazardPools);
+
+
 
 
 
@@ -225,17 +277,15 @@ public class Stage {
 
         fillEdgeTiles();
 
+
+
         //randomizeTiles(1, 1, 55, 7);
         //randomizeTiles()
 
         //toistaiseksi ainakin FarmTilet tulee nyt aina uusiksi
         fillFarmTiles();
 
-        tiles = stageRandomizer.addRoots(tiles);
-
-
-        HazardAndResourceRandomizer hazardAndResourceRandomizer = new HazardAndResourceRandomizer(hazardPools);
-
+        stageRandomizer.addEnding(tiles, tilePools, entranceTile);
 
 
 
@@ -243,14 +293,24 @@ public class Stage {
         hazardList = hazardAndResourceRandomizer.addHazards(hazardList, tiles, stageSettings.getMapTemplate().getHazardTemplate() );
 
 
+
+        //tähän väliin check
+        stageRandomizer.forceLevelToBePassable(this, mainGame);
+
+
+
+        tiles = stageRandomizer.addRoots(tiles);
+
+
+
         //specialTileList.clear();
         addSpecialTilesInList();
 
         //vanishingTileList.clear();
 
-        resourceTileList = hazardAndResourceRandomizer.addResourceTiles(resourceTileList, tiles, tilePools.getResourcePool(), levelStats, tilePools.getDirtPool());
+        resourceTileList = hazardAndResourceRandomizer.addResourceTiles(resourceTileList, tiles, tilePools.getResourcePool(), tilePools.getDirtPool(), mainGame);
 
-        resourcesCollectedThisRun=0;
+        //resourcesCollectedThisRun=0;
 
 
 
@@ -262,6 +322,15 @@ public class Stage {
             }
         }
 
+
+
+        mainGame.player.setTilePosY(0);
+        mainGame.player.setTilePosX(4);
+
+        mainGame.player.setTargetTilePosY(0);
+        mainGame.player.setTargetTilePosX(4);
+
+        mainGame.player.confirmChangeInTilePosition();
 
         //spike = new Spike(3,3);
 
@@ -292,7 +361,18 @@ public class Stage {
         for (int x=0; x < TILES_IN_ROWS_INCLUDING_EDGES; x++) {
             FarmTile farm = tilePools.getFarmPool().obtain();
             tiles[0][x] = farm;
-            farm.setInPlace(0,x);
+            /*
+            if (mainGame.level==1) {
+                farm.setInPlace(0,x);
+            } else {
+                farm.setStoneFarmInPlace(0,x);
+            }*/
+            if (mainGame.farmLevel=true) {
+                farm.setInPlace(0,x);
+            } else {
+                farm.setStoneFarmInPlace(0,x);
+            }
+
 
         }
 
@@ -366,6 +446,76 @@ public class Stage {
         return tiles[y][x];
     }
 
+    public void proceedToNextLevel(PlayScreen playScreen) {
+
+
+
+
+
+            mainGame.level++;
+            mainGame.farmLevel=false;
+
+
+        if (levelsPassed[mainGame.episode-1][mainGame.level-2]==false) {
+            levelsPassed[mainGame.episode-1][mainGame.level-2]=true;
+
+            System.out.println(mainGame.episode);
+            System.out.println(mainGame.level);
+
+            setTotalResourcesCollected(getTotalResourcesCollected()+25*(mainGame.level-1));
+
+            //mainGame.screenHelper.playScreenContinues=false;
+            singleSlide.updateSlide(mainGame.episode, mainGame.level-1);
+            mainGame.singleSlideScreen.setInfoToShow(LEVELCOMPLETE);
+            mainGame.setScreen(mainGame.singleSlideScreen);
+
+
+        }
+
+
+        if (mainGame.level==11) {
+
+            mainGame.farmLevel=true;
+
+            if (totalResourcesCollected < 2550) {
+                mainGame.singleSlideScreen.setInfoToShow(LEVEL10COMPLETE);
+            } else {
+                mainGame.singleSlideScreen.setInfoToShow(LEVEL10_AND_EPISODE_COMPLETE);
+                mainGame.episode++;
+            }
+
+            mainGame.setScreen(mainGame.singleSlideScreen);
+            mainGame.level=1;
+        }
+
+        startNextLevel();
+
+
+
+
+    }
+
+    public void startNextLevel() {
+        mainGame.putAllBackIntoPools();
+        generateNewMap();
+
+        if (mainGame.level != 1) {
+            mainGame.player.setTargetTilePosY(3);
+            mainGame.player.setTargetTilePosX(4);
+            mainGame.player.confirmChangeInTilePosition();
+
+
+            tilePools.getDirtPool().free((DirtTile)tiles[3][4]);
+            tiles[3][4]=tilePools.getBlankPool().obtain();
+            ((BlankTile)tiles[3][4]).setInPlace(3,4);
+            ((BlankTile)tiles[3][4]).setEntranceTexture();
+
+
+        }
+
+
+    }
+
 
 
     /*
@@ -387,14 +537,18 @@ public class Stage {
 
     public void draw(SpriteBatch batch) {
 
-        for (int y=1; y<tiles.length+8; y=y+8) {
-            for (int x=-2; x < 10; x=x+4)
-            batch.draw(backGroundTexture, (float)x, (float)y, 4f, 8f);
+        for (int y = 1; y < tiles.length + 8; y = y + 8) {
+            for (int x = -2; x < 10; x = x + 4)
+                batch.draw(backGroundTexture, (float) x, (float) y, 4f, 8f);
         }
 
-        for (int i=0; i<hazardList.size(); i++) {
+
+        for (int i = 0; i < hazardList.size(); i++) {
             TileBasedObject hazard = hazardList.get(i);
-            hazard.draw(batch);
+            if (hazard instanceof Spike) {
+                hazard.draw(batch);
+            }
+
         }
 
         for (int y = 0; y < tiles.length; y++) {
@@ -410,8 +564,30 @@ public class Stage {
             }
         }
 
+        for (int i = 0; i < hazardList.size(); i++) {
+            TileBasedObject hazard = hazardList.get(i);
+            if (!(hazard instanceof Spike)) {
+                hazard.draw(batch);
+            }
 
 
+        }
+
+        //for testing purposes
+        /*
+        for (int y=0; y<tiles.length-1; y++) {
+            for (int x=0; x<9; x++) {
+                if (passages[y][x]==1) {
+                    batch.draw(mainGame.numbers[1], x, y, 0.5f, 0.5f);
+                } else if (passages[y][x]==2) {
+                    batch.draw(mainGame.numbers[2], x, y, 0.5f, 0.5f);
+                } else if (passages[y][x]==3) {
+                    batch.draw(mainGame.numbers[3], x, y, 0.5f, 0.5f);
+                } else if (passages[y][x]==4) {
+                    batch.draw(mainGame.numbers[4], x, y, 0.5f, 0.5f);
+                }
+            }
+        }*/
     }
 
     public void dispose() {

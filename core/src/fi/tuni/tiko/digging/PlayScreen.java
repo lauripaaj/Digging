@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Rectangle;
@@ -44,6 +45,8 @@ public class PlayScreen extends GameScreen {
     private ArrayList<Stage> allStages;
     private ArrayList<LevelStats> allLevelStats;
 
+    ResourceUI resourceUI;
+
     //private SpriteBatch hudBatch;
 
     TilePools tilePools;
@@ -54,13 +57,22 @@ public class PlayScreen extends GameScreen {
     MenuButton pauseButton;
     //MenuButton pauseButton2;
 
+
+
     GameTexture pauseButtonTexture = new GameTexture(new Texture("menus/buttonPause.png"));
     GameTexture pauseButtonPressedTexture = new GameTexture(new Texture("menus/buttonPausePressed.png"));
+
+    GameTexture levelText = new GameTexture(new Texture("numbers/level.png"));
 
     //Viewport gameport;
 
     int helperWidth;
     int helperHeight;
+
+    //private BitmapFont font;
+
+
+
 
 
 
@@ -70,13 +82,19 @@ public class PlayScreen extends GameScreen {
 
         //hudBatch = new SpriteBatch();
 
+        //font=mainGame.getFont();
+
         buttons = new ArrayList<>();
 
+
+
+
+        this.resourceUI = mainGame.resourceUI;
         player = screenHelper.player;
         playerControls=playScreenHelper.playerControls;
         allStages = playScreenHelper.allStages;
         allLevelStats = playScreenHelper.allLevelStats;
-        currentStage=allStages.get(0);
+        this.currentStage=mainGame.currentStage;
 
         tilePools = currentStage.tilePools;
         hazardPools = currentStage.hazardPools;
@@ -137,6 +155,8 @@ public class PlayScreen extends GameScreen {
     @Override
     public void render (float delta) {
 
+        //System.out.println(currentStage.entranceTile.getTilePosY()+", "+currentStage.entranceTile.getTilePosX());
+
         //float delta = Gdx.graphics.getDeltaTime();
 
         //System.out.println(helperHeight);
@@ -149,7 +169,20 @@ public class PlayScreen extends GameScreen {
         //cameraplacer.updateCameraPosition(camera, delta, currentStage, player);
 
         batch.setProjectionMatrix(camera.combined);
-        screenHelper.updateCameraPosition(currentStage, gameport, 5, helperWidth, helperHeight);
+        clearScreen();
+
+        if(player.getTilePosY() != currentStage.tiles.length-2) {
+            screenHelper.updateCameraPosition(currentStage, gameport, 5, helperWidth, helperHeight);
+        } else {
+
+            screenHelper.forceUnzoom(gameport, helperWidth, helperHeight);
+            System.out.println("alin kerros");
+            if(currentStage.tiles[currentStage.tiles.length-2][player.getTilePosX()] instanceof EntranceTile) {
+                currentStage.proceedToNextLevel(this);
+            }
+
+        }
+
 
 
         /*
@@ -158,11 +191,11 @@ public class PlayScreen extends GameScreen {
 
         } else {
             screenHelper.forceUnzoom(gameport, helperWidth, helperHeight);
-        }
-        */
+        }*/
 
 
-        clearScreen();
+
+
 
         mainGame.checkSpecialTiles(delta);
         mainGame.checkVanishingTiles(delta);
@@ -185,6 +218,8 @@ public class PlayScreen extends GameScreen {
         mainGame.checkHazardMovement(delta);
 
         mainGame.checkPlayersUnwantedMovement();
+
+
 
 
 
@@ -279,9 +314,58 @@ public class PlayScreen extends GameScreen {
             //pauseButton.setY(player.getY()-3.3f);
             //pauseButton.draw(batch);
 
+        if (!screenHelper.isZoomed) {
+            if (!pauseButton.isPressed()) {
+                batch.draw(pauseButtonTexture, pauseButton.getX()-0f, camera.position.y-6.4f, pauseButton.getWidth(), pauseButton.getHeight());
+            } else {
+                batch.draw(pauseButtonPressedTexture, pauseButton.getX() - 0f, camera.position.y - 6.4f, pauseButton.getWidth(), pauseButton.getHeight());
+            }
+
+            batch.draw(resourceUI.meter, 6.62f, camera.position.y-6.243f, 1.4f, 0.5f);
+            for(int i=0; i< resourceUI.getLinesToDraw(); i++) {
+                batch.draw(resourceUI.greenResource, 6.64f+i*0.02f, camera.position.y-6.22f, 0.02f, 0.455f);
+            }
+
+            batch.draw(levelText, camera.position.x-1.0f, camera.position.y-6.1f, 1.2f, 0.6f);
+            batch.draw(mainGame.numbers[mainGame.episode], camera.position.x+0.3f, camera.position.y-6.05f, 0.25f, 0.5f);
+            batch.draw(mainGame.numbers[11], camera.position.x+0.55f, camera.position.y-6.05f, 0.25f, 0.5f);
+            if (mainGame.level<10) {
+                batch.draw(mainGame.numbers[mainGame.level], camera.position.x+0.8f, camera.position.y-6.05f, 0.25f, 0.5f);
+            } else {
+                batch.draw(mainGame.numbers[mainGame.level], camera.position.x+0.8f, camera.position.y-6.05f, 0.5f, 0.5f);
+            }
+
+
+        //case when the zoom is on
+        } else {
+
+
+            float zDivider = 7.2f;
+            float zMultiplier = 5.2f;
+
+            if (!pauseButton.isPressed()) {
+                batch.draw(pauseButtonTexture, camera.position.x - 2.55f, camera.position.y - 4.58f, pauseButton.getWidth() / zDivider * zMultiplier, pauseButton.getHeight() / zDivider * zMultiplier);
+            } else {
+                batch.draw(pauseButtonPressedTexture, camera.position.x - 2.55f, camera.position.y - 4.58f, pauseButton.getWidth() / zDivider * zMultiplier, pauseButton.getHeight() / zDivider * zMultiplier);
+            }
+
+            batch.draw(resourceUI.meter, camera.position.x + 1.51f, camera.position.y - 4.46f, 1.4f / zDivider * zMultiplier, 0.5f / zDivider * zMultiplier);
+            for (int i = 0; i < resourceUI.getLinesToDraw(); i++) {
+                batch.draw(resourceUI.greenResource, camera.position.x + 1.51f +(0.02f/zDivider*zMultiplier) + i * (0.02f/zDivider*zMultiplier), camera.position.y - 4.45f, 0.02f/ zDivider * zMultiplier, 0.47f / zDivider * zMultiplier);
+            }
+
+            batch.draw(levelText, camera.position.x-0.72f, camera.position.y-4.36f, 1.2f/zDivider*zMultiplier, 0.6f/zDivider*zMultiplier);
+            batch.draw(mainGame.numbers[mainGame.episode], camera.position.x+0.22f, camera.position.y-4.34f, 0.25f/zDivider*zMultiplier, 0.5f/zDivider*zMultiplier);
+            batch.draw(mainGame.numbers[11], camera.position.x+0.22f+0.25f/zDivider*zMultiplier, camera.position.y-4.34f, 0.25f/zDivider*zMultiplier, 0.5f/zDivider*zMultiplier);
+            if (mainGame.level<10) {
+                batch.draw(mainGame.numbers[mainGame.level], camera.position.x+0.22f+0.5f/zDivider*zMultiplier, camera.position.y-4.34f, 0.25f/zDivider*zMultiplier, 0.5f/zDivider*zMultiplier);
+            } else {
+                batch.draw(mainGame.numbers[mainGame.level], camera.position.x+0.22f+0.5f/zDivider*zMultiplier, camera.position.y-4.34f, 0.5f/zDivider*zMultiplier, 0.5f/zDivider*zMultiplier);
+            }
 
 
 
+        /*
         if (!pauseButton.isPressed()) {
 
             if(!screenHelper.isZoomed) {
@@ -301,9 +385,19 @@ public class PlayScreen extends GameScreen {
             }
 
 
+        }*/
+
+            batch.draw(resourceUI.meter, 6.62f, camera.position.y - 6.23f, 1.4f, 0.5f);
+            for (int i = 0; i < resourceUI.getLinesToDraw(); i++) {
+                batch.draw(resourceUI.greenResource, 6.64f + i * 0.02f, camera.position.y - 6.22f, 0.02f, 0.48f);
+            }
         }
 
 
+
+
+
+        //font.draw(batch, "Phosphorus: "+currentStage.getResourcesCollectedThisRun(), 0.1f, 7.1f, 0.0001f, 1, false);
 
             //pauseButton.setY(player.getY()-3.2f);
             //if (player.getStatus()==READY) {
@@ -312,6 +406,8 @@ public class PlayScreen extends GameScreen {
 
 
     }
+
+
 
     @Override
     public void resize (int width, int height) {

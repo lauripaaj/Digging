@@ -17,10 +17,12 @@ import static fi.tuni.tiko.digging.MainGame.UNDIGGABLE_MARGIN;
 
 public class TutorialScreen extends GameScreen {
 
-
+    static GameTexture buttonNextTexture = new GameTexture(new Texture("menus/buttonNext.png"));
+    static GameTexture buttonNextPressedTexture = new GameTexture(new Texture("menus/buttonNextPressed.png"));
 
     private GestureDetector tutorialDetector;
     private InfoMessageBox infoMessageBox;
+
 
 
     public static final int TUTORIALBACK = 24;
@@ -51,8 +53,8 @@ public class TutorialScreen extends GameScreen {
 
         this.infoMessageBox = infoMessageBox;
 
-        buttonNext = new MenuButton(new GameTexture(new Texture("menus/buttonNext.png")),
-                new GameTexture(new Texture("menus/buttonNextPressed.png")),
+        buttonNext = new MenuButton(buttonNextTexture,
+                buttonNextPressedTexture,
                         1.0f, 1.0f, TUTORIALNEXT);
 
         buttonNext.setX(5.2f);

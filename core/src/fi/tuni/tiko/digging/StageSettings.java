@@ -14,12 +14,15 @@ public class StageSettings {
         if (level < 1 || level > 10) {
             throw new IllegalArgumentException("level must be between 1-10");
         }
-        this.episode=episode;
-        if (episode >= 1 && episode <= 3) {
-            this.level=level;
-        } else if (episode >= 4 && episode <= 6) {
-            this.level=level+10;
-        } else throw new IllegalArgumentException("wrong must be 1-6 episode");
+
+        if (episode < 1 || episode > 6) {
+            throw new IllegalArgumentException("episode should be 1-6");
+        }
+            this.episode = episode;
+            this.level = level;
+
+
+
     //createMapTemplate(episode, level);
 
         createMapTemplate(episode, level);

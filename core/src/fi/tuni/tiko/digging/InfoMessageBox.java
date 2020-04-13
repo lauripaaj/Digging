@@ -27,7 +27,7 @@ public class InfoMessageBox {
     GameTexture background;
 
     OrthographicCamera camera;
-    SpriteBatch batch;
+
 
     float background_y;
     float background_x;
@@ -48,14 +48,14 @@ public class InfoMessageBox {
     int currentSlide=0;
 
 
-    public InfoMessageBox(OrthographicCamera camera, SpriteBatch batch) {
+    public InfoMessageBox(OrthographicCamera camera) {
 
         fillEarlyGameInfo();
 
         bottomBox.add(info_swipe);
 
         this.camera=camera;
-        this.batch=batch;
+
 
 
 

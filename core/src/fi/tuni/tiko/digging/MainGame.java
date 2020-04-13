@@ -4,10 +4,13 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -75,16 +78,25 @@ public class MainGame extends Game  {
 	//GestureDetector gestureDetector;
 
 
-
+	boolean farmLevel=true;
 			//myöhemmin joku oma luokkansa farmi tietysti
 
-	private GameTexture backGroundTexture;
+	GameTexture backGroundTexture;
 
 	private GameTexture farm;
+	GameTexture[] farms = new GameTexture[7];
 
 	private SpriteBatch batch;
 
 	private PlayerControls playerControls;
+
+	//private FreeTypeFontGenerator fontGenerator;
+	//private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
+	//private BitmapFont font;
+
+	ResourceUI resourceUI;
+
+
 
 	private DirtPool dirtPool;
 	private StonePool stonePool;
@@ -93,6 +105,7 @@ public class MainGame extends Game  {
 	private PermanentPool permanentPool;
 	private FarmPool farmPool;
 	private RootPool rootPool;
+	EntranceTile entranceTile;
 
 	private TilePools tilePools;
 
@@ -113,11 +126,14 @@ public class MainGame extends Game  {
 	// This could probably be replaced with asset manager if needed
 	public static GameTexture[] dirtTextureTileset = new GameTexture[48];
 
+	//int[][] passages;
+
 
 	InfoMessageBox infoMessageBox;
+	SingleSlide singleSlide;
 
 
-	private int totalResourcesCollected;
+	int totalResourcesCollected = 0;
 
 	private OrthographicCamera camera;
 	//private Cameraplacer cameraplacer;
@@ -135,9 +151,14 @@ public class MainGame extends Game  {
 	MainMenu mainMenu;
 	SettingsMenu settingsMenu;
 	TutorialScreen tutorialScreen;
+	SingleSlideScreen singleSlideScreen;
 
+	boolean [][] levelsPassed;
 
+	Stage currentStage;
 
+	int episode;
+	int level;
 
 	//Settings settings
 
@@ -146,7 +167,7 @@ public class MainGame extends Game  {
 	private ArrayList<LevelStats> allLevelsStats;
 
 
-	Stage currentStage;
+
 
 	boolean didThisAlready = false;
 
@@ -157,11 +178,17 @@ public class MainGame extends Game  {
 	PlayScreen playScreen;
 	PlayScreenHelper playScreenHelper;
 
+	GameTexture[] numbers = new GameTexture[12];
+
 	@Override
 	public void create () {
 
 
+		for (int i=0; i<11; i++) {
+			numbers[i]=new GameTexture(new Texture("numbers/"+i+".png"));
 
+		}
+		numbers[11]=new GameTexture(new Texture("numbers/line.png"));
 
 		//UNDIGGABLE_MARGIN_WIDTH = (Gdx.graphics.getWidth() % 7) / 2;
 
@@ -172,8 +199,33 @@ public class MainGame extends Game  {
 		}
 
 
-		batch = new SpriteBatch();
+		for (int i=1; i < farms.length; i++) {
+			farms[i] = new GameTexture(new Texture("farm"+i+".jpg"));
+		}
+		farms[0] = new GameTexture(new Texture("farmDungeon.png"));
 
+		farm = farms[1];
+
+
+		batch = new SpriteBatch();
+		episode = 3;
+		level = 1;
+
+		//just for testing purposes, this could only be in StageRandomizers method just as well
+		//passages = new int[1][];
+
+
+		//fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/NovaCut-Regular.ttf"));
+		//fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+		//fontParameter.size = 14;
+		//fontParameter.borderWidth = 2;
+		//fontParameter.borderColor = Color.BLACK;
+		//fontParameter.color = Color.WHITE;
+		//font = fontGenerator.generateFont(fontParameter);
+
+
+
+		entranceTile = new EntranceTile(2, 2);
 
 
 
@@ -191,6 +243,7 @@ public class MainGame extends Game  {
 
 				float aspectRatio = Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
 				System.out.println("Resolution: " + aspectRatio);
+
 
 
 
@@ -217,7 +270,7 @@ public class MainGame extends Game  {
 				break;
 		}
 
-		farm = new GameTexture(new Texture ("farm.jpg"));
+
 
 
 		player = new Player();
@@ -232,7 +285,7 @@ public class MainGame extends Game  {
 
 
 		//nämä voisi laittaa tulemaan jo valikkojen aikana/niitä ennen, jolloin itse pelin generoiminen ei vie niin paljoa aikaa
-		dirtPool = new DirtPool(200, 500);
+		dirtPool = new DirtPool(200, 550);
 		stonePool = new StonePool(670, 900);
 		blankPool = new BlankPool(50,500);
 		descendingPool = new DescendingPool(50, 500);
@@ -265,15 +318,22 @@ public class MainGame extends Game  {
 		allLevelsStats = new ArrayList<LevelStats>();
 		allLevelsStats.add(new LevelStats(0, 3, 1000, 0.1f));
 
+		resourceUI=new ResourceUI(totalResourcesCollected);
+
+		levelsPassed= new boolean[6][10];
+
+
 		//pitää muuttaa tätä kaikilla ei voi olla omaa tiles arrayta
-		allStages = new ArrayList<Stage>();
+		//allStages = new ArrayList<Stage>();
 
 		//allStages.add(new Stage(allStages.size(), 2,3,4, tilePools, hazardPools, allLevelsStats.get(0), tileAnimationPools, totalResourcesCollected, backGroundTexture )); // id 0 farm?
 
+		singleSlide = new SingleSlide(camera, numbers);
 
-		Stage currentStage = new Stage(tilePools, hazardPools, allLevelsStats.get(0), tileAnimationPools, totalResourcesCollected, backGroundTexture);
-		currentStage.stageSettings = new StageSettings(3,7);
-		allStages.add(currentStage);
+
+		currentStage = new Stage(this);
+		//currentStage.stageSettings = new StageSettings(episode,level);
+		//allStages.add(currentStage);
 
 
 
@@ -282,7 +342,7 @@ public class MainGame extends Game  {
 		//allStages.add(new Stage(allStages.size(), 2,3,4)); // id 1? stage1
 
 		//oikeasti myöhemmin saatetaan aloittaa 0:sta tms.
-		startStage(0);
+		startStage();
 
 		//camera = new OrthographicCamera();
 		//camera= new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -336,9 +396,15 @@ public class MainGame extends Game  {
 
 		camera.position.y=player.getY()+3.0f;
 
+
+
+
 		//cameraplacer=new Cameraplacer();
 
-		infoMessageBox = new InfoMessageBox(camera, getBatch());
+		infoMessageBox = new InfoMessageBox(camera);
+
+
+
 
 		playScreenHelper= new PlayScreenHelper(playerControls, allStages, allLevelsStats);
 
@@ -347,6 +413,7 @@ public class MainGame extends Game  {
 		settingsMenu = new SettingsMenu(this, screenHelper);
 		playScreen = new PlayScreen(this, screenHelper, playScreenHelper);
 		tutorialScreen = new TutorialScreen(this, screenHelper, infoMessageBox);
+		singleSlideScreen = new SingleSlideScreen(this, screenHelper, singleSlide);
 
 		setScreen(mainMenu);
 
@@ -354,6 +421,10 @@ public class MainGame extends Game  {
 
 
 	}
+
+	/*public BitmapFont getFont () {
+		return font;
+	}*/
 
 	public PlayScreen getPlayScreen () {
 		return playScreen;
@@ -509,16 +580,11 @@ public class MainGame extends Game  {
 	//}
 
 	//starts and generates a level.
-	public void startStage(int idOfStage) {
+	public void startStage() {
 
-		if (idOfStage > allStages.size() || idOfStage < 0)
-		{
-			throw new IllegalArgumentException("id you provided wasn't in range of [ from 0 to allStages.size() ]. parameter idOfStage must be between 0 and "+allStages.size());
-		} else {
-			currentStage = allStages.get(idOfStage);
-		}
 
-		player.setStageCurrentlyIn(idOfStage);
+
+		//player.setStageCurrentlyIn(idOfStage);
 
 		currentStage.generateNewMap();
 
@@ -598,6 +664,8 @@ public class MainGame extends Game  {
 
 
 	}
+
+
 
  */
     //IMPORTANT ABOUT PERFORMANCE
@@ -1002,6 +1070,7 @@ while (it.hasNext()) {
 									System.out.println("zapThing");
 								} else {
 									zapPlayer();
+									farmLevel=true;
 								}
 
 
@@ -1078,15 +1147,10 @@ while (it.hasNext()) {
 
 
 
+
 	}
-	//player "dies" and starts from the beginning of the stage
-	public void zapPlayer() {
 
-		playerControls.setQueu(NOQUEU);
-
-		System.out.println("Zap");
-		player.getZapped();
-		//currentStage.dispose();
+	public void putAllBackIntoPools() {
 		tilePools.putAllTilesIntoPools(currentStage.tiles);
 		hazardPools.putAllHazardsIntoPool(currentStage.hazardList);
 
@@ -1097,14 +1161,37 @@ while (it.hasNext()) {
 		currentStage.resourceTileList.clear();
 		resourceAnimationPool.putAllBackToPool(resourceAnimationList);
 
-		startStage(player.getStageCurrentlyIn());
+	}
+	//player "dies" and starts from the beginning of the stage
+	public void zapPlayer() {
+
+		playerControls.setQueu(NOQUEU);
+
+		System.out.println("Zap");
+		player.getZapped();
+		//currentStage.dispose();
+
+		putAllBackIntoPools();
+
+
+		if (level>1) {
+			level--;
+		}
+
+		startStage();
 	}
 
 	public void tryPlayerRight() {
 
 	}
 
+	public TilePools getTilePools () {
+		return tilePools;
+	}
 
+	public HazardPools getHazardPools () {
+		return hazardPools;
+	}
 
 	public void controlPlayer() {
 
@@ -1239,7 +1326,11 @@ while (it.hasNext()) {
 */
 
 
-
-
-
+	public ArrayList<LevelStats> getAllLevelsStats () {
+		return allLevelsStats;
 	}
+
+	public TileAnimationPools getTileAnimationPools () {
+		return tileAnimationPools;
+	}
+}

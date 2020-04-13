@@ -9,6 +9,8 @@ public class FarmTile extends GameTile implements Poolable {
 
     static GameTexture farmTexture = new GameTexture(new Texture("farmTile.png"));
 
+    static GameTexture stoneTexture = new GameTexture(new Texture("permanentTile.png"));
+
 
 
 
@@ -51,6 +53,16 @@ public class FarmTile extends GameTile implements Poolable {
         setX(locX);
         setY(locY);
 
+    }
+
+    public void setStoneFarmInPlace(int locY, int locX) {
+        setTexture(stoneTexture);
+
+        setLocationX(locX);
+        setLocationY(locY);
+
+        setX(locX);
+        setY(locY);
     }
 
     //pitää miettiä pitääkö tuohon myöhemmin lisätä muuta

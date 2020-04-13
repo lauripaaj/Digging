@@ -14,9 +14,9 @@ public class ResourceTile extends GameTile implements Poolable {
 
     static Texture resourceTileVanish = new Texture("dirtTileVanish.png");
 
-    public static final int RESOURCE_SCORE_TIER1=10;
-    public static final int RESOURCE_SCORE_TIER2=20;
-    public static final int RESOURCE_SCORE_TIER3=30;
+    public static final int RESOURCE_SCORE_TIER1=15;
+    public static final int RESOURCE_SCORE_TIER2=28;
+    public static final int RESOURCE_SCORE_TIER3=40;
 
     private int resourceScore;
 

@@ -3,6 +3,7 @@ package fi.tuni.tiko.digging;
 import com.badlogic.gdx.math.MathUtils;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import static fi.tuni.tiko.digging.MainGame.TILES_IN_ROWS_INCLUDING_EDGES;
 import static fi.tuni.tiko.digging.MainGame.TILES_IN_ROWS_WITHOUT_EDGES;
@@ -26,6 +27,19 @@ public class StageRandomizer {
 
     private static final boolean LEFTROOT = false;
     private static final boolean RIGHTROOT = true;
+
+    private static final int STARTING_TILE = 1;
+
+    private static final int HORIZONTAL_HAZARD_NOT_ALLOWED = 2;
+
+    private static final int KEYTILE = 3;
+
+    private static final int HAZARDFREETILE = 4;
+
+    private static final int PASSAGERIGHT=1;
+    private static final int PASSAGELEFT=-1;
+
+    int[][] passages;
 
 
 
@@ -240,7 +254,8 @@ public class StageRandomizer {
         int leftRootChance=15;
         int rightRootChance=15;
 
-        for (int y=1; y<tiles.length-1; y++) {
+        //entrance row won't have a root
+        for (int y=1; y<tiles.length-2; y++) {
             int leftRandomResult=MathUtils.random(1, 100);
             int rightRandomResult=MathUtils.random(1,100);
 
@@ -363,6 +378,382 @@ public class StageRandomizer {
 
         return tiles;
     }
+    //this method should be called before special tiles have been put to their list or hazards have been added
+    public void addEnding(GameTile[][] tiles, TilePools tilePools, EntranceTile entranceTile) {
+        int possiblePlace = 0;
+        for (int x=1; x<tiles[0].length-1; x++) {
+            if (!(tiles[tiles.length-2][x] instanceof StoneTile)) {
+                possiblePlace++;
+            }
+
+        }
+
+
+        int randomResult = -1;
+
+        if (possiblePlace > 0) {
+            randomResult=         MathUtils.random(1,possiblePlace);
+        }
+
+
+
+        //just a precaution to put it in middle in case there will be no possible place for entrance and randomResult is still -1
+        //it shouldn't be possible for them all to be stone tiles at this point but it's a precaution if something
+        //changes it
+
+        int placeToBe=0;
+
+        boolean continues=true;
+        int entrancePlace;
+
+        if (randomResult != -1) {
+
+            for (int x=1; continues; x++) {
+                GameTile currentTile = tiles[tiles.length-2][x];
+                if (!(currentTile instanceof StoneTile)) {
+                    placeToBe++;
+                    if (randomResult == placeToBe) {
+                        if (currentTile instanceof DirtTile) {
+                            tilePools.getDirtPool().free((DirtTile)(currentTile));
+                        } else if (currentTile instanceof DescendingDirtTile) {
+                            tilePools.getDescendingPool().free((DescendingDirtTile)(currentTile));
+                        } else if (currentTile instanceof BlankTile) {
+                            tilePools.getBlankPool().free((BlankTile)(currentTile));
+                        } else throw new IllegalArgumentException("Entrance tried to replace a tile that was not dirtTile, descendingTile or BlankTile");
+
+                        tiles[tiles.length-2][x]=entranceTile;
+                        entranceTile.setInPlace(tiles.length-2, x);
+                        if (tiles[tiles.length-2][x] instanceof EntranceTile) {
+                            continues=false;
+                        }
+
+                    }
+
+
+
+
+                }
+
+        }
+
+
+        }
+
+
+
+
+
+    }
+
+
+
+
+    public void forceLevelToBePassable(Stage currentStage, MainGame mainGame) {
+
+        GameTile[][] tiles = currentStage.tiles;
+        System.out.println(mainGame.entranceTile.getRawTileX());
+        //passages = mainGame.passages;
+
+        //passages[][] = new int[tiles.length][tiles[0].length]
+
+        //we will define a "keyTile" in each row, which is the base of our checks for that row
+        passages = new int[tiles.length][tiles[0].length];
+
+        //    private static final int STARTING_TILE = 1;
+        //    private static final int HORIZONTAL_HAZARD_NOT_ALLOWED = 2;
+        //    private static final int KEYTILE = 3;
+
+        //this will force first passage to start from entranceTile, that is always located on bottom of the level
+        checkRow(tiles.length-2, mainGame.entranceTile.getRawTileX(), passages, currentStage, mainGame);
+        //then it's possible to go all the way to top repeating this method
+        for (int y=tiles.length-3; y>3; y--) {
+            boolean foundStart=false;
+            for (int x=1; !foundStart; x++) {
+                //added hazardfreetile there as well to fight arrayIndexOutOfBound after creating hazardfreetile later
+                if (passages[y][x] == STARTING_TILE || passages[y][x] == HAZARDFREETILE) {
+                    checkRow(y, x, passages, currentStage, mainGame);
+                    foundStart=true;
+                }
+            }
+        }
+
+
+
+
+
+    currentStage.passages=passages;
+
+
+    }
+
+    public void checkRow(int y, int startingX, int[][] passages, Stage currentStage, MainGame mainGame) {
+
+
+
+
+
+        GameTile[][] tiles = currentStage.tiles;
+        passages[y][startingX]=STARTING_TILE;
+
+        //this is the case where the tile in top of STARTING_TILE is unpassable
+        if (tiles[y-1][startingX].isConcrete() && !(tiles[y-1][startingX].isDiggable()) ) {
+
+            //we'll check tiles in each direction, starting towards center so there won't so easily become
+            // these long hallways that are apart from the other things in the map,
+            // We have to make sure they don't have unproceedable pits below them.
+
+            boolean turnMade=false;
+            int modifier;
+
+
+
+            if (startingX>3) {
+                modifier=-1;
+
+
+
+            } else {
+                modifier=1;
+
+
+            }
+
+
+
+            boolean found = false;
+
+            for (int x = startingX; !found; x = x +modifier) {
+
+                //if we have reached the end in right edge, it's time to check the left passage
+                if (x==TILES_IN_ROWS_WITHOUT_EDGES+1 && startingX > 1) {
+                    if (turnMade==false) {
+                        x=startingX;
+                        modifier=-1;
+                        turnMade=true;
+                    //if we had already made the turn before, we must force the passage
+                    } else {
+                        forcePassage(y, startingX, passages, currentStage, mainGame);
+                        found=true;
+                    }
+
+                //if we have reached the end of left direction , we have to check the right passage
+
+                } else if (x==0 && startingX < TILES_IN_ROWS_WITHOUT_EDGES) {
+
+                    if (turnMade==false) {
+                        x=startingX;
+                        modifier=1;
+                        turnMade=true;
+                    //if we had already made the turn before, we must force the passage
+                    } else {
+                        forcePassage(y, startingX, passages, currentStage, mainGame);
+                        found=true;
+                    }
+
+
+
+
+
+                }
+                //if the tile in horizontal line is unpassable, there is no need to check anymore, it's useless route
+                else if (
+                        (tiles[y][x].isConcrete() && ( !(tiles[y][x].isDiggable()) ) )
+                        ||
+                        //if there is no solid ground underneath, it is considered unpassable route as well. (descending dirt tile is still fine, since it's
+                        //player's own fault if he stays there too long. There's enough time to even destroy a hazard and proceed
+                        !tiles[y+1][x].isConcrete()
+                )
+
+
+                {
+
+                    if(turnMade == false) {
+                        x=startingX;
+                        if (modifier ==1) {
+                            modifier=-1;
+                        } else {
+                            modifier=1;
+                        }
+                        turnMade=true;
+                    } else {
+                        forcePassage(y, startingX, passages, currentStage, mainGame);
+                        found=true;
+                    }
+
+                    //continues = false;
+
+
+
+
+
+
+                //if we have passed this far, and the tile on top of the tile in check is passable, we have found a passage without forcing it
+                } else if ( !tiles[y-1][x].isConcrete() || tiles[y-1][x].isDiggable() ) {
+                    passages[y][x]=KEYTILE;
+                    passages[y-1][x]=STARTING_TILE;
+
+                    //there cant be horizontal shooting hazard in this row, since it might be impossible to pass with that in game in addition
+
+                    passages[y][0]=HORIZONTAL_HAZARD_NOT_ALLOWED;
+                    found=true;
+
+                }
+            }
+
+
+        //this is the case when tile is top of starting X is actually passable, so there's no need to check anything else
+        } else {
+            passages[y - 1][startingX] = STARTING_TILE;
+            passages[y][startingX] = KEYTILE;
+        }
+
+        //we will get rid of possible spike hazard on KEYTILE, since in case that it is the only passage, it would make the level unpassable
+        Iterator<TileBasedObject> it = currentStage.hazardList.iterator();
+        while (it.hasNext()) {
+            TileBasedObject hazard = it.next();
+            if ((passages[hazard.getTilePosY()][hazard.getTilePosX()] == KEYTILE) && (hazard instanceof Spike)) {
+                currentStage.hazardPools.spikePool.free((Spike) hazard);
+                it.remove();
+            }
+
+            //more added for the forcepassaged to right and left
+            if ((passages[hazard.getTilePosY()][hazard.getTilePosX()] == HAZARDFREETILE)) {
+                if (hazard instanceof Spike) {
+                    currentStage.hazardPools.spikePool.free((Spike) hazard);
+                } else if (hazard instanceof Goblin) {
+                    currentStage.hazardPools.goblinPool.free((Goblin) hazard);
+                } else if (hazard instanceof FallingTrap) {
+                    currentStage.hazardPools.fallingTrapPool.free((FallingTrap) hazard);
+                }
+                it.remove();
+            }
+
+        }
+
+    }
+
+    public void forcePassage(int y, int startingX, int[][] passages, Stage currentStage, MainGame mainGame) {
+
+        GameTile[][] tiles = currentStage.tiles;
+
+        //we will actually make a one more check to prevent very long boring 1 tile wide tunnels on sides
+        boolean threeStonesInARow = true;
+
+        for (int yy = y-2; yy >= y-4; yy--) {
+            if (!(tiles[yy][startingX] instanceof StoneTile)) {
+                threeStonesInARow = false;
+            }
+        }
+
+        if (!threeStonesInARow) {
+
+            if (tiles[y-1][startingX] instanceof StoneTile) {
+                mainGame.getTilePools().getStonePool().free( (StoneTile) tiles[y-1][startingX]);
+
+                DirtTile dirtTile = mainGame.getTilePools().getDirtPool().obtain();
+
+                tiles[y-1][startingX]=dirtTile;
+                dirtTile.setInPlace(y-1, startingX);
+
+                //tiles[y-1][startingX]=mainGame.getTilePools().getDirtPool().obtain();
+                //tiles[y-1][startingX].putInTilePos(y-1, startingX);
+            }
+
+            passages[y - 1][startingX] = STARTING_TILE;
+            passages[y][startingX] = KEYTILE;
+
+        } else {
+            //plan B to prevent those long hallways
+            if (startingX == 1) {
+                forcePassageTo(PASSAGERIGHT, y, startingX, passages, currentStage, mainGame);
+            } else if (startingX == TILES_IN_ROWS_WITHOUT_EDGES) {
+                forcePassageTo(PASSAGELEFT, y, startingX, passages, currentStage, mainGame);
+            } else {
+                //checking which route would have less stoneTiles, and starting to go towards that
+                int stonesRight=0;
+                int stonesLeft=0;
+                for (int yy=y-1; (yy >= y-6) && (yy >= 2); yy--) {
+                    if (tiles[yy][startingX+1] instanceof StoneTile) {
+                        stonesRight++;
+                    }
+                    if (tiles[yy][startingX-1] instanceof StoneTile) {
+                        stonesLeft++;
+                    }
+                }
+                if (stonesRight > stonesLeft) {
+                    forcePassageTo(PASSAGERIGHT, y, startingX, passages, currentStage, mainGame);
+                } else if (stonesLeft > stonesRight) {
+                    forcePassageTo(PASSAGELEFT, y, startingX, passages, currentStage, mainGame);
+                //if they're still equal, going towards middle
+                } else if (startingX >= 5) {
+                    forcePassageTo(PASSAGELEFT, y, startingX, passages, currentStage, mainGame);
+                } else if (startingX <= 4) {
+                    forcePassageTo(PASSAGERIGHT, y, startingX, passages, currentStage, mainGame);
+                }
+
+            }
+        }
+    }
+
+    public void forcePassageTo(int direction, int y, int startingX, int[][] passages, Stage currentStage, MainGame mainGame) {
+
+        GameTile[][] tiles = currentStage.tiles;
+
+        if (tiles[y-1][startingX] instanceof StoneTile) {
+            mainGame.getTilePools().getStonePool().free( (StoneTile) tiles[y-1][startingX]);
+
+            DirtTile dirtTile = mainGame.getTilePools().getDirtPool().obtain();
+
+            tiles[y-1][startingX]=dirtTile;
+            dirtTile.setInPlace(y-1, startingX);
+
+        }
+
+        if (tiles[y-1][startingX+direction] instanceof StoneTile) {
+
+            mainGame.getTilePools().getStonePool().free( (StoneTile) tiles[y-1][startingX+direction]);
+
+            DirtTile dirtTile = mainGame.getTilePools().getDirtPool().obtain();
+
+            tiles[y-1][startingX+direction]=dirtTile;
+            dirtTile.setInPlace(y-1, startingX+direction);
+
+            passages[y-1][startingX+direction]=STARTING_TILE;
+
+        /*POSSIBLE BUG PLACE*/
+            // can be leaved as it is if it doesnt cause bugs
+        } else {
+            passages[y-1][startingX+direction]=STARTING_TILE;
+        }
+        if (tiles[y][startingX+direction] instanceof BlankTile) {
+
+            mainGame.getTilePools().getBlankPool().free( (BlankTile) tiles[y][startingX+direction]);
+            DirtTile dirtTile = mainGame.getTilePools().getDirtPool().obtain();
+
+            tiles[y][startingX+direction]=dirtTile;
+            dirtTile.setInPlace(y, startingX+direction);
+
+            //hazards could be put to pool from this position
+        }
+
+        //doing this so there can be no spike in there
+        passages[y][startingX]=KEYTILE;
+
+
+        passages[y-1][startingX+direction]=HAZARDFREETILE;
+        passages[y][startingX+direction]=HAZARDFREETILE;
+
+
+
+    }
+
+
+
+
+
+
+
+
     /*
     public void randomizeTiles(int startingY, int startingX, int yAmount, int xAmount, GameTile[][] tiles) {
 

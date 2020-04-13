@@ -26,6 +26,8 @@ public class ScreenHelper {
     // will be used only in tutorialScreen
     private boolean fullTutorial=true;
 
+    boolean playScreenContinues=true;
+
     private OrthographicCamera camera;
     Player player;
 
@@ -41,6 +43,8 @@ public class ScreenHelper {
 
     GameTexture helpButtonTexture = new GameTexture(new Texture("menus/buttonHelp.png"));
     GameTexture helpButtonTexturePressed = new GameTexture(new Texture("menus/buttonHelpPressed.png"));
+
+
 
 
 
@@ -382,13 +386,18 @@ public class ScreenHelper {
                 continues = true;
 
                 for (int x=TILES_IN_ROWS_WITHOUT_EDGES; continues; x--) {
-                    if (!(tiles[yToCheck][x] instanceof StoneTile || tiles[yToCheck][x] instanceof PermanentTile) ) {
-                        if (x > finalEndingX) {
-                            finalEndingX=x;
+
+                    if (tiles[yToCheck][x] != null) {
+                        if (!(tiles[yToCheck][x] instanceof StoneTile || tiles[yToCheck][x] instanceof PermanentTile) ) {
+                            if (x > finalEndingX) {
+                                finalEndingX=x;
+                            }
+                            continues=false;
+                            //endingX = x;
+
+
                         }
-                        continues=false;
-                        //endingX = x;
-                        //System.out.println(endingX);
+                    //System.out.println(endingX);
                     }
                 }
 
