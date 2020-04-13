@@ -139,7 +139,7 @@ public class Goblin extends HazardousWalker implements Poolable {
             if (getStatus() == READY) {
 
                 if(getTilePosX()==0 || getTilePosX()==TILES_IN_ROWS_INCLUDING_EDGES) {
-                    setStatus(VANISHING);
+                    setStatus(DEAD);
                 } else if ((tiles[getTilePosY()][getTilePosX()-1].isConcrete() == false) && (tiles[getTilePosY()][getTilePosX()-1].isOccupied() == false) && tiles[getTilePosY()+1][getTilePosX()-1].isConcrete() == true) {
                     int randomResult = MathUtils.random(1,160);
                     if (randomResult <= 1) {
@@ -150,8 +150,11 @@ public class Goblin extends HazardousWalker implements Poolable {
 
             }
             if (getStatus() == READY) {
-
                 //to fight some bugs, still not sure how they end up inside stone tile in the first place
+                if(getTilePosX()==0 || getTilePosX()==TILES_IN_ROWS_INCLUDING_EDGES) {
+                    setStatus(DEAD);
+                } else
+
                 if ((tiles[getTilePosY()][getTilePosX()+1].isConcrete() == false) && (tiles[getTilePosY()][getTilePosX()+1].isOccupied() == false) && tiles[getTilePosY()+1][getTilePosX()+1].isConcrete() == true) {
                     int randomResult = MathUtils.random(1,160);
                     if (randomResult <= 1) {

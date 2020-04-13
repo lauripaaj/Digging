@@ -251,8 +251,8 @@ public class StageRandomizer {
     public GameTile[][] addRoots (GameTile[][] tiles) {
 
         //these can be measured later according to stage/area that is played (early game=more roots, middle game=least roots)
-        int leftRootChance=15;
-        int rightRootChance=15;
+        int leftRootChance=18;
+        int rightRootChance=23;
 
         //entrance row won't have a root
         for (int y=1; y<tiles.length-2; y++) {
@@ -262,7 +262,9 @@ public class StageRandomizer {
             if (leftRandomResult <= leftRootChance) {
                 tiles = addRoot(tiles, LEFTROOT, y);
             }
-            if (rightRandomResult <= rightRootChance) {
+            //making this else if instead of just if, so the bugged roots wont appear. dont know how they started to become even though
+            //I didnt touch anything here and I had fixed it. I made some mistake in RootResourceTile maybe
+            else if (rightRandomResult <= rightRootChance) {
                 tiles = addRoot(tiles, RIGHTROOT, y);
             }
         }
