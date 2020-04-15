@@ -2,6 +2,7 @@ package fi.tuni.tiko.digging;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -17,8 +18,20 @@ public class SettingsMenu extends MenuScreen {
     GameTexture controlsButtonTexture = new GameTexture(new Texture("menus/buttonControls.png"));
     GameTexture controlsButtonPressedTexture = new GameTexture(new Texture("menus/buttonControlsPressed.png"));
 
-    //ArrayList<MenuButton> buttons;
+    GameTexture languagesText = new GameTexture(new Texture("menus/language.png"));
+    GameTexture musicText = new GameTexture(new Texture("menus/music.png"));
+    GameTexture soundsText = new GameTexture(new Texture("menus/sounds.png"));
 
+    GameTexture languageToggleEn = new GameTexture(new Texture("menus/toggledEn.png"));
+    GameTexture languageToggleFin = new GameTexture(new Texture("menus/toggledFin.png"));
+    GameTexture toggledOn = new GameTexture(new Texture("menus/toggleOn.png"));
+    GameTexture toggledOff = new GameTexture(new Texture("menus/toggleOff.png"));
+
+    //ArrayList<MenuButton> buttons;
+    MenuButton langButton;
+    MenuButton soundToggle;
+    MenuButton musicToggle;
+    MenuButton buttonControls;
 
 
     GestureDetector settingsMenuDetector;
@@ -37,15 +50,35 @@ public class SettingsMenu extends MenuScreen {
 
         buttons.add(backButton);
 
-        MenuButton buttonControls = new MenuButton(controlsButtonTexture, controlsButtonPressedTexture, 1.34f, 1.34f, HELP_CONTROLS);
-        buttonControls.setX(5.2f);
+        buttonControls = new MenuButton(controlsButtonTexture, controlsButtonPressedTexture, 1.5f, 1.5f, HELP_CONTROLS);
+        buttonControls.setX(5.3f);
         buttonControls.setY(-49.4f);
 
         buttons.add(buttonControls);
 
-        pressedArea = new Rectangle(-1f, -1f, pressedAreaSize, pressedAreaSize);
+        langButton = new MenuButton(languageToggleEn, languageToggleFin, 2f, 1.1f, SET_ENGLISH_ON, SET_FINNISH_ON);
+        langButton.setX(4.8f);
+        langButton.setY(-54.5f);
 
-        pressedArea.setX(2f);
+        buttons.add(langButton);
+
+        musicToggle = new MenuButton(toggledOn, toggledOff, 1.1f, 0.6f, SET_MUSIC_ON, SET_MUSIC_OFF);
+        musicToggle.setX(4.8f);
+        musicToggle.setY(-53.25f);
+
+        buttons.add(musicToggle);
+
+        soundToggle = new MenuButton(toggledOn, toggledOff, 1.1f, 0.6f, SET_SOUNDS_ON, SET_SOUNDS_OFF);
+        soundToggle.setX(4.8f);
+        soundToggle.setY(-52.25f);
+
+        buttons.add(soundToggle);
+
+
+
+        pressedArea = new Rectangle(-1f, -1f, pressedAreaSize/5, pressedAreaSize/7);
+
+        pressedArea.setX(-1.15f);
         pressedArea.setY(-15f);
 
         //pressedArea.setHeight(1.0f);
@@ -87,6 +120,8 @@ public class SettingsMenu extends MenuScreen {
 
         drawBackgroundAssets();
 
+        drawTextTextures(batch);
+
         screenHelper.drawButtons(buttons, batch);
 
 
@@ -96,6 +131,15 @@ public class SettingsMenu extends MenuScreen {
         screenHelper.switchCameraToMenu();
         //camera.update();
 
+    }
+
+    public void drawTextTextures(SpriteBatch batch) {
+        float x = 2.35f;
+
+
+        batch.draw(languagesText, x, -54.35f, 2.25f, 0.75f);
+        batch.draw(musicText, x, -53.35f, 2.25f, 0.75f);
+        batch.draw(soundsText, x, -52.35f, 2.25f, 0.75f);
     }
 
     @Override

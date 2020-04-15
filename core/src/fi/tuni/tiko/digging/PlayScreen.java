@@ -161,7 +161,7 @@ public class PlayScreen extends GameScreen {
 
         //System.out.println(helperHeight);
         //System.out.println(helperWidth);
-
+        System.out.println(mainGame.farmLevel);
 
         //System.out.println(camera.position.x);
 

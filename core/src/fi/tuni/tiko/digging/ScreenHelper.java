@@ -317,7 +317,8 @@ public class ScreenHelper {
         if (gameScreen.isThisTutorialScreen) {
             pressedArea.setY(stretchAdjustedY-4f+player.getY());
         } else {
-            pressedArea.setY(stretchAdjustedY-59f);
+            pressedArea.setY(stretchAdjustedY-58.5f);
+            pressedArea.setX(pressedArea.getX()+0.4f);
         }
 
 

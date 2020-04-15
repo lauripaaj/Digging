@@ -10,6 +10,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
 
+import static fi.tuni.tiko.digging.PlayerControls.NOQUEU;
+
 public abstract class GameScreen implements Screen, GestureDetector.GestureListener {
 
     public GameScreen(MainGame mainGame, ScreenHelper screenHelper) {
@@ -47,6 +49,26 @@ public abstract class GameScreen implements Screen, GestureDetector.GestureListe
     public static final int SETTINGS_MENU = 3;
     public static final int HELP_TUTORIAL = 4;
     public static final int HELP_CONTROLS = 5;
+    public static final int QUITGAME = -1;
+    public static final int HIGHSCORE = -2;
+    public static final int START_NEW_GAME=-3;
+
+    //public static final int DISABLED=-3;
+
+    public static final int START_NEW_GAME_CONFIRM = 291;
+    public static final int RESTART_LEVEL_CONFIRM = 292;
+    public static final int ABORT_LEVEL_CONFIRM = 293;
+    public static final int QUITGAME_CONFIRM = 294;
+
+    public static final int ABORT_LEVEL=393;
+    public static final int RESTART_LEVEL = 392;
+
+    public static final int SET_ENGLISH_ON=551;
+    public static final int SET_FINNISH_ON=552;
+    public static final int SET_MUSIC_ON=553;
+    public static final int SET_MUSIC_OFF=554;
+    public static final int SET_SOUNDS_ON=555;
+    public static final int SET_SOUNDS_OFF=556;
 
 
 
@@ -88,6 +110,61 @@ public abstract class GameScreen implements Screen, GestureDetector.GestureListe
         } else if (actionToPerform == HELP_CONTROLS) {
             screenHelper.setFullTutorial(false);
             mainGame.setScreen(mainGame.getTutorialScreen());
+        } else if (actionToPerform == ABORT_LEVEL_CONFIRM) {
+            mainGame.questionMenuScreen.setQuestionToAsk(ABORT_LEVEL_CONFIRM);
+            mainGame.setScreen(mainGame.questionMenuScreen);
+        } else if (actionToPerform == ABORT_LEVEL) {
+            if (mainGame.level>1) {
+                mainGame.level=mainGame.level-1;
+            }
+            mainGame.farmLevel=true;
+            mainGame.putAllBackIntoPools();
+            mainGame.startStage();
+            mainGame.setScreen(mainGame.playScreen);
+        } else if (actionToPerform == RESTART_LEVEL_CONFIRM) {
+            mainGame.questionMenuScreen.setQuestionToAsk(RESTART_LEVEL_CONFIRM);
+            mainGame.setScreen(mainGame.questionMenuScreen);
+        } else if (actionToPerform == RESTART_LEVEL) {
+
+            for(int i=0; i<15; i++) {
+                System.out.println("Level that should start is "+mainGame.level);
+            }
+
+            mainGame.putAllBackIntoPools();
+            mainGame.startStage();
+            mainGame.setScreen(mainGame.playScreen);
+            if (!mainGame.farmLevel) {
+                mainGame.currentStage.makePlayerStartFromEntrance();
+            }
+
+            mainGame.restartLevelAvailable=false;
+        } else if (actionToPerform == QUITGAME_CONFIRM) {
+            mainGame.questionMenuScreen.setQuestionToAsk(QUITGAME_CONFIRM);
+            mainGame.setScreen(mainGame.questionMenuScreen);
+        } else if (actionToPerform == QUITGAME) {
+            mainGame.dispose();
+            Gdx.app.exit();
+            System.exit(0);
+        } else if (actionToPerform == SET_ENGLISH_ON) {
+            mainGame.languageEnglish=true;
+            mainGame.getSettingsMenu().langButton.toggleOn();
+            System.out.println("english on");
+        } else if (actionToPerform == SET_FINNISH_ON) {
+            mainGame.languageEnglish=false;
+            mainGame.getSettingsMenu().langButton.toggleOff();
+            System.out.println("english off");
+        } else if (actionToPerform == SET_MUSIC_ON) {
+            mainGame.musicOn=true;
+            mainGame.getSettingsMenu().musicToggle.toggleOn();
+        } else if (actionToPerform == SET_MUSIC_OFF) {
+            mainGame.musicOn=false;
+            mainGame.getSettingsMenu().musicToggle.toggleOff();
+        } else if (actionToPerform == SET_SOUNDS_ON) {
+            mainGame.soundsOn=true;
+            mainGame.getSettingsMenu().soundToggle.toggleOn();
+        } else if (actionToPerform == SET_SOUNDS_OFF) {
+            mainGame.soundsOn=false;
+            mainGame.getSettingsMenu().soundToggle.toggleOff();
         }
 
         actionToPerform=NONE;

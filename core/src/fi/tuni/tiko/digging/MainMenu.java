@@ -23,7 +23,21 @@ public class MainMenu extends MenuScreen {
     //this should probably be removed later, not sure yet what I'm doing :D
     //GameTexture menuBackTexture = new GameTexture(new Texture("menus/testiPohja.png"));
 
+    GameTexture startNewGame = new GameTexture(new Texture("menus/startNewGame.png"));
+    GameTexture startNewGamePressed = new GameTexture(new Texture("menus/startNewGamePressed.png"));
 
+    GameTexture restartLevel = new GameTexture(new Texture("menus/tryAgain.png"));
+    GameTexture restartLevelPressed = new GameTexture(new Texture("menus/tryAgainPressed.png"));
+    GameTexture restartLevelDisabled = new GameTexture(new Texture("menus/tryAgainDisabled.png"));
+
+    GameTexture abortLevel = new GameTexture(new Texture("menus/abortLevel.png"));
+    GameTexture abortLevelPressed = new GameTexture(new Texture("menus/abortLevelPressed.png"));
+
+    GameTexture quitGame = new GameTexture(new Texture("menus/quit.png"));
+    GameTexture quitGamePressed = new GameTexture(new Texture("menus/quitPressed.png"));
+
+    GameTexture highScore = new GameTexture(new Texture("menus/buttonHighscore.png"));
+    GameTexture highScorePressed = new GameTexture(new Texture("menus/buttonHighscorePressed.png"));
 
 
     private GestureDetector mainMenuDetector;
@@ -38,8 +52,14 @@ public class MainMenu extends MenuScreen {
 
 
 
-    private MenuButton settingsButton;
-    private MenuButton helpButton;
+    MenuButton settingsButton;
+    MenuButton helpButton;
+    private MenuButton startNewGameButton;
+    private MenuButton restartLevelButton;
+    private MenuButton abortLevelButton;
+    MenuButton quitGameButton;
+    MenuButton highScoreButton;
+
 
 
 
@@ -68,22 +88,49 @@ public class MainMenu extends MenuScreen {
 
 
         settingsButton = new MenuButton(screenHelper.getSettingsButtonTexture(), screenHelper.getSettingsButtonTexturePressed(), 4.0f, 1.0f, SETTINGS_MENU);
-
-
-        settingsButton.setX(2.45f);
+        settingsButton.setX(2.35f);
         settingsButton.setY(-50.8f);
 
+        startNewGameButton = new MenuButton(startNewGame, startNewGamePressed, 4.0f, 1.0f, START_NEW_GAME_CONFIRM);
+        startNewGameButton.setX(2.35f);
+        startNewGameButton.setY(-51.9f);
+
+        restartLevelButton = new MenuButton(restartLevel, restartLevelPressed, restartLevelDisabled, 4.0f, 1.0f, RESTART_LEVEL_CONFIRM);
+        restartLevelButton.setX(2.35f);
+        restartLevelButton.setY(-53.0f);
+
+        abortLevelButton = new MenuButton(abortLevel, abortLevelPressed, 4.0f, 1.0f, ABORT_LEVEL_CONFIRM);
+        abortLevelButton.setX(2.35f);
+        abortLevelButton.setY(-54.1f);
+
+        quitGameButton = new MenuButton(quitGame, quitGamePressed, 1.5f, 1.5f, QUITGAME_CONFIRM);
+        quitGameButton.setX(2.15f);
+        quitGameButton.setY(-49.4f);
+
+        highScoreButton = new MenuButton(highScore, highScorePressed, 1.5f, 1.5f, HIGHSCORE);
+        highScoreButton.setX(3.725f);
+        highScoreButton.setY(-49.4f);
+
+
+
+
+
         buttons.add(settingsButton);
+        buttons.add(startNewGameButton);
+        buttons.add(restartLevelButton);
+        buttons.add(abortLevelButton);
+        buttons.add(quitGameButton);
+        buttons.add(highScoreButton);
 
-        helpButton = new MenuButton(screenHelper.getHelpButtonTexture(), screenHelper.getHelpButtonTexturePressed(), 1.65f, 1.65f, HELP_TUTORIAL);
+        helpButton = new MenuButton(screenHelper.getHelpButtonTexture(), screenHelper.getHelpButtonTexturePressed(), 1.5f, 1.5f, HELP_TUTORIAL);
 
-        helpButton.setX(5.2f);
+        helpButton.setX(5.3f);
         helpButton.setY(-49.4f);
         buttons.add(helpButton);
 
 
 
-        pressedArea = new Rectangle(-24f, -0.5f, pressedAreaSize, pressedAreaSize);
+        pressedArea = new Rectangle(-24f, -0.5f, pressedAreaSize/7, pressedAreaSize/5);
 
 
     }
@@ -97,6 +144,12 @@ public class MainMenu extends MenuScreen {
         //playButton.setY(screenHelper.player.getY()+3.8f);
 
         screenHelper.switchCameraToMenu();
+
+        if (mainGame.restartLevelAvailable) {
+           restartLevelButton.enable();
+        } else {
+            restartLevelButton.disable();
+        }
 
         //System.out.println("switched to main menu");
 

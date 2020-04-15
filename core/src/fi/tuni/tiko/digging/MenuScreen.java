@@ -30,9 +30,9 @@ public abstract class MenuScreen extends GameScreen {
         playButton.setX(6.17f);
         playButton.setY(-56f);
 
-        backButton = new MenuButton(backButtonTexture, backButtonTexturePressed, 1.8f, 1.8f, MAIN_MENU);
-        backButton.setX(2.0f);
-        backButton.setY(-49.6f);
+        backButton = new MenuButton(backButtonTexture, backButtonTexturePressed, 1.5f, 1.5f, MAIN_MENU);
+        backButton.setX(2.15f);
+        backButton.setY(-49.4f);
 
 
 

@@ -124,10 +124,11 @@ public abstract class WalkingCreature extends Creature {
         }
     }
 
-    public void startTriggering() {
+    public void startTriggering(int episode) {
         setStatus(TRIGGERED);
         getTriggerAnimation().resetAnimation();
         setTriggerTimeLeft(4f);
+        setTriggerTimeLeft(getTriggerTimeLeft()-episode*0.31f);
     }
 
 

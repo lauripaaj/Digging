@@ -256,6 +256,8 @@ public class Stage {
     //after this method.
     public void generateNewMap() {
 
+        mainGame.restartLevelAvailable=true;
+
         if (firstTimeVisit) {
             firstTimeVisit = false;
             doFirstTimeVisitStuff();
@@ -374,7 +376,7 @@ public class Stage {
             } else {
                 farm.setStoneFarmInPlace(0,x);
             }*/
-            if (mainGame.farmLevel=true) {
+            if (mainGame.farmLevel==true) {
                 farm.setInPlace(0,x);
             } else {
                 farm.setStoneFarmInPlace(0,x);
@@ -507,19 +509,25 @@ public class Stage {
         generateNewMap();
 
         if (mainGame.level != 1) {
-            mainGame.player.setTargetTilePosY(3);
-            mainGame.player.setTargetTilePosX(4);
-            mainGame.player.confirmChangeInTilePosition();
 
-
-            tilePools.getDirtPool().free((DirtTile)tiles[3][4]);
-            tiles[3][4]=tilePools.getBlankPool().obtain();
-            ((BlankTile)tiles[3][4]).setInPlace(3,4);
-            ((BlankTile)tiles[3][4]).setEntranceTexture();
-
+            makePlayerStartFromEntrance();
 
         }
 
+
+    }
+
+    public void makePlayerStartFromEntrance() {
+
+        mainGame.player.setTargetTilePosY(3);
+        mainGame.player.setTargetTilePosX(4);
+        mainGame.player.confirmChangeInTilePosition();
+
+
+        tilePools.getDirtPool().free((DirtTile)tiles[3][4]);
+        tiles[3][4]=tilePools.getBlankPool().obtain();
+        ((BlankTile)tiles[3][4]).setInPlace(3,4);
+        ((BlankTile)tiles[3][4]).setEntranceTexture();
 
     }
 

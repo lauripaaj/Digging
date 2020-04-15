@@ -27,7 +27,7 @@ public class Player extends Creature {
     private int stageCurrentlyIn;
 
 
-
+    MainGame mainGame;
 
     private SheetAnimation walkAnimation;
     private SheetAnimation digAnimation;
@@ -192,9 +192,12 @@ public class Player extends Creature {
 
 
 
-    public Player() {
+    public Player(MainGame mainGame) {
 
         //texture =
+
+        //needed for soundControls
+        this.mainGame=mainGame;
 
         texture = new GameTexture((new Texture("playerStand.png")));
 
@@ -314,6 +317,9 @@ public class Player extends Creature {
     public void startDigging() {
         setStatus(DIGGING);
         digAnimation.resetAnimation();
+        if (mainGame.soundsOn) {
+            mainGame.audio.tileDigged.play();
+        }
 
         setTargetGameObjectPosY(getY()+1);
         setTargetTilePosY(getTilePosY()+1);
@@ -346,6 +352,10 @@ public class Player extends Creature {
         breakRoofAnimation.resetAnimation();
 
         breakingRemaining=1.0f;
+
+        if (mainGame.soundsOn) {
+            mainGame.audio.tileDigged.play();
+        }
     }
 
     //if some tiles will take longer to break than others(pettävä tile? vähemmän), they should
@@ -361,6 +371,10 @@ public class Player extends Creature {
 
             setStatus(BREAKING);
             breakAnimation.resetAnimation();
+
+        if (mainGame.soundsOn) {
+            mainGame.audio.tileDigged.play();
+        }
 
 
 
@@ -399,6 +413,10 @@ public class Player extends Creature {
     }
     //delta ei nyt sittenkään vielä käytössä?
     public void startWalking(boolean direction) {
+
+        if (mainGame.soundsOn) {
+            mainGame.audio.walk.play();
+        }
 
         testXandY();
 

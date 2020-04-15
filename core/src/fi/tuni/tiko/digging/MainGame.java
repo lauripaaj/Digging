@@ -77,6 +77,10 @@ public class MainGame extends Game  {
 
 	//GestureDetector gestureDetector;
 
+	//dying during episodes 3-6 will affect the highscore result
+	int deathsPastEpisode2 = 0;
+	int tryAgainsSinceEpisode2 = 0;
+
 
 	boolean farmLevel=true;
 			//myöhemmin joku oma luokkansa farmi tietysti
@@ -95,6 +99,8 @@ public class MainGame extends Game  {
 	//private BitmapFont font;
 
 	ResourceUI resourceUI;
+
+	boolean restartLevelAvailable;
 
 
 
@@ -156,6 +162,10 @@ public class MainGame extends Game  {
 
 	boolean [][] levelsPassed;
 
+	boolean soundsOn;
+	boolean musicOn;
+	boolean languageEnglish;
+
 	Stage currentStage;
 
 	int episode;
@@ -179,10 +189,20 @@ public class MainGame extends Game  {
 	PlayScreen playScreen;
 	PlayScreenHelper playScreenHelper;
 
+	QuestionMenuScreen questionMenuScreen;
+
 	GameTexture[] numbers = new GameTexture[12];
+
+	Audio audio;
 
 	@Override
 	public void create () {
+
+		soundsOn = true;
+		musicOn = true;
+		languageEnglish=true;
+
+		audio=new Audio();
 
 
 		for (int i=0; i<11; i++) {
@@ -209,8 +229,8 @@ public class MainGame extends Game  {
 
 
 		batch = new SpriteBatch();
-		episode = 4;
-		level = 10;
+		episode = 3;
+		level = 5;
 
 		//just for testing purposes, this could only be in StageRandomizers method just as well
 		//passages = new int[1][];
@@ -274,7 +294,7 @@ public class MainGame extends Game  {
 
 
 
-		player = new Player();
+		player = new Player(this);
 
 		backGroundTexture = new GameTexture(new Texture("Background.png"));
 
@@ -416,6 +436,7 @@ public class MainGame extends Game  {
 		playScreen = new PlayScreen(this, screenHelper, playScreenHelper);
 		tutorialScreen = new TutorialScreen(this, screenHelper, infoMessageBox);
 		singleSlideScreen = new SingleSlideScreen(this, screenHelper, singleSlide);
+		questionMenuScreen = new QuestionMenuScreen(this, screenHelper);
 
 		setScreen(mainMenu);
 
@@ -442,6 +463,10 @@ public class MainGame extends Game  {
 
 	public SettingsMenu getSettingsMenu () {
 		return settingsMenu;
+	}
+
+	public PlayerControls getPlayerControls () {
+		return playerControls;
 	}
 
 	@Override
@@ -812,7 +837,7 @@ public class MainGame extends Game  {
 					}
 
 					if (player.getTilePosY()==fallingTrap.getTilePosY()+amountOfTilesToCheck) {
-						fallingTrap.startTriggering();
+						fallingTrap.startTriggering(episode);
 
 						//System.out.println("TRIGGERED ;-(");
 					}
@@ -1072,7 +1097,7 @@ while (it.hasNext()) {
 									//System.out.println("zapThing");
 								} else {
 									zapPlayer();
-									farmLevel=true;
+
 								}
 
 
@@ -1163,11 +1188,13 @@ while (it.hasNext()) {
 		currentStage.resourceTileList.clear();
 		resourceAnimationPool.putAllBackToPool(resourceAnimationList);
 
+		playerControls.setQueu(NOQUEU);
+
 	}
 	//player "dies" and starts from the beginning of the stage
 	public void zapPlayer() {
 
-		playerControls.setQueu(NOQUEU);
+
 
 		//System.out.println("Zap");
 		player.getZapped();
@@ -1179,9 +1206,15 @@ while (it.hasNext()) {
 		if (level>1) {
 			level--;
 		}
-
+		if (episode >= 3) {
+			deathsPastEpisode2++;
+		}
+		farmLevel=true;
 		startStage();
 	}
+
+
+
 
 	public void tryPlayerRight() {
 
