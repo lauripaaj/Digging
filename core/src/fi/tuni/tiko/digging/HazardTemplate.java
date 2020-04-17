@@ -46,9 +46,9 @@ public class HazardTemplate {
             levelMultiplier=levelMultiplier+0.17f;
         }
 
-        setChanceOfSpike((int) (14 * (levelMultiplier*episodeMultiplier)));
-        setChanceOfGoblin((int) (14 * (levelMultiplier*episodeMultiplier)));
-        setChanceOfFallingTrapOnRoof((int) (28 * levelMultiplier*episodeMultiplier));
+        setChanceOfSpike((int) (12 * (levelMultiplier*episodeMultiplier)));
+        setChanceOfGoblin((int) (13 * (levelMultiplier*episodeMultiplier)));
+        setChanceOfFallingTrapOnRoof((int) (25 * levelMultiplier*episodeMultiplier));
 
 
 

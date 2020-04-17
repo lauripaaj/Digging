@@ -94,9 +94,9 @@ public class MainGame extends Game  {
 
 	private PlayerControls playerControls;
 
-	//private FreeTypeFontGenerator fontGenerator;
-	//private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
-	//private BitmapFont font;
+	private FreeTypeFontGenerator fontGenerator;
+	private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
+	private BitmapFont font;
 
 	ResourceUI resourceUI;
 
@@ -159,6 +159,7 @@ public class MainGame extends Game  {
 	SettingsMenu settingsMenu;
 	TutorialScreen tutorialScreen;
 	SingleSlideScreen singleSlideScreen;
+	HighScoreScreen highScoreScreen;
 
 	boolean [][] levelsPassed;
 
@@ -229,20 +230,22 @@ public class MainGame extends Game  {
 
 
 		batch = new SpriteBatch();
-		episode = 3;
-		level = 5;
+		episode = 6;
+		level = 1;
 
 		//just for testing purposes, this could only be in StageRandomizers method just as well
 		//passages = new int[1][];
 
 
-		//fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/NovaCut-Regular.ttf"));
-		//fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-		//fontParameter.size = 14;
-		//fontParameter.borderWidth = 2;
-		//fontParameter.borderColor = Color.BLACK;
-		//fontParameter.color = Color.WHITE;
-		//font = fontGenerator.generateFont(fontParameter);
+		fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/NovaCut-Regular.ttf"));
+		fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+		fontParameter.size = 24;
+		fontParameter.borderWidth = 1;
+		fontParameter.borderColor = Color.BLACK;
+		fontParameter.color = Color.WHITE;
+		fontParameter.flip=true;
+		font = fontGenerator.generateFont(fontParameter);
+
 
 
 
@@ -437,6 +440,7 @@ public class MainGame extends Game  {
 		tutorialScreen = new TutorialScreen(this, screenHelper, infoMessageBox);
 		singleSlideScreen = new SingleSlideScreen(this, screenHelper, singleSlide);
 		questionMenuScreen = new QuestionMenuScreen(this, screenHelper);
+		highScoreScreen=new HighScoreScreen(this, screenHelper);
 
 		setScreen(mainMenu);
 
@@ -445,9 +449,9 @@ public class MainGame extends Game  {
 
 	}
 
-	/*public BitmapFont getFont () {
+	public BitmapFont getFont () {
 		return font;
-	}*/
+	}
 
 	public PlayScreen getPlayScreen () {
 		return playScreen;
@@ -945,7 +949,7 @@ while (it.hasNext()) {
 			if (currentStage.hazardList.get(i) instanceof HazardousWalker) {
 				HazardousWalker hazard = (HazardousWalker)currentStage.hazardList.get(i);
 				//if (hazard.getTargetTilePosX() != hazard.getTilePosX() || hazard.getTargetTilePosY() != hazard.getTilePosY() ) {
-				hazard.updateMovement(currentStage.tiles, delta);
+				hazard.updateMovement(currentStage.tiles, delta, episode, player);
 
 				//}
 
@@ -985,7 +989,7 @@ while (it.hasNext()) {
 	public void checkPlayersUnwantedMovement() {
 		//this could be done the other way but let's try doing it by allowing every action like breaking, walking etc to be finished
 		//before they start falling etc against players will
-		//In order for this to work, this method should be called before controlPlayer() -method, so player shouldnt be able to avoid falling any way
+		//In order for this to work, this method should be called before controlPlayer() -method, so player shouldn't be able to avoid falling any way
 
 		if (player.getStatus()==READY) {
 			//checks if the tile right under player isn't concrete

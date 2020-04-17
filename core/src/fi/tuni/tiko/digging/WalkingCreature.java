@@ -13,6 +13,10 @@ public abstract class WalkingCreature extends Creature {
     //for FallingTrap, maybe some others too
     public static final int TRIGGERED = 20;
 
+    //for Goblin AI
+    public static final int PREPARING_TO_CHASE_LEFT=4;
+    public static final int PREPARING_TO_CHASE_RIGHT=5;
+
 
     public static final boolean LEFT = false;
     public static final boolean RIGHT = true;
@@ -192,7 +196,7 @@ public abstract class WalkingCreature extends Creature {
     public void draw(SpriteBatch batch) {
 
         //tää pitää tehdä uudestaan sitten kun falling ym muutenkin front oleellinen että sitä kyätetään?
-        if (status==READY) {
+        if (status==READY || status == PREPARING_TO_CHASE_LEFT || status == PREPARING_TO_CHASE_RIGHT) {
 
             batch.draw(standTexture, getX(), getY(), getWidth(), getHeight());
         } else if (status==WALKING) {

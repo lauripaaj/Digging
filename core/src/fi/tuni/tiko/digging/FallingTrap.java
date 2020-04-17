@@ -68,7 +68,7 @@ public class FallingTrap extends HazardousWalker implements Poolable {
     }
 
     @Override
-    public void updateMovement (GameTile[][] tiles, float delta) {
+    public void updateMovement (GameTile[][] tiles, float delta, int episode, Player player) {
         if (getStatus() == VANISHING) {
             boolean actionContinues=true;
             if (getVanishTimeLeft() > 0) {

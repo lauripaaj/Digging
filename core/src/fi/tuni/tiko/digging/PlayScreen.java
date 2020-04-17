@@ -149,6 +149,10 @@ public class PlayScreen extends GameScreen {
         //gameport.update(466,12, true);
         //gameport.update(233, 245);
 
+        if (mainGame.musicOn) {
+            mainGame.audio.music.play();
+        }
+
 
     }
 
@@ -161,7 +165,7 @@ public class PlayScreen extends GameScreen {
 
         //System.out.println(helperHeight);
         //System.out.println(helperWidth);
-        System.out.println(mainGame.farmLevel);
+        //System.out.println(mainGame.farmLevel);
 
         //System.out.println(camera.position.x);
 
@@ -397,7 +401,7 @@ public class PlayScreen extends GameScreen {
 
 
 
-        //font.draw(batch, "Phosphorus: "+currentStage.getResourcesCollectedThisRun(), 0.1f, 7.1f, 0.0001f, 1, false);
+        //font.draw(batch, "Phosphorus: ", 0.1f, 7.1f, 0.0001f, 1, false);
 
             //pauseButton.setY(player.getY()-3.2f);
             //if (player.getStatus()==READY) {

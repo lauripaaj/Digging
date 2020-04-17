@@ -154,10 +154,12 @@ public abstract class GameScreen implements Screen, GestureDetector.GestureListe
             mainGame.getSettingsMenu().langButton.toggleOff();
             System.out.println("english off");
         } else if (actionToPerform == SET_MUSIC_ON) {
+            mainGame.audio.music.play();
             mainGame.musicOn=true;
             mainGame.getSettingsMenu().musicToggle.toggleOn();
         } else if (actionToPerform == SET_MUSIC_OFF) {
             mainGame.musicOn=false;
+            mainGame.audio.music.stop();
             mainGame.getSettingsMenu().musicToggle.toggleOff();
         } else if (actionToPerform == SET_SOUNDS_ON) {
             mainGame.soundsOn=true;
@@ -165,6 +167,8 @@ public abstract class GameScreen implements Screen, GestureDetector.GestureListe
         } else if (actionToPerform == SET_SOUNDS_OFF) {
             mainGame.soundsOn=false;
             mainGame.getSettingsMenu().soundToggle.toggleOff();
+        } else if (actionToPerform == HIGHSCORE) {
+            mainGame.setScreen(mainGame.highScoreScreen);
         }
 
         actionToPerform=NONE;

@@ -43,6 +43,8 @@ public class MenuButton extends GameObject {
         this.gameTextureDisabled = gameTextureDisabled;
         setRectangle(new Rectangle(-3.0f, -3.0f, width, height));
         this.actionToPerform=actionToPerform;
+        //used for disabled buttons that will be enabled again, as well as toggleButtons
+        this.actionToPerformToggleOn=actionToPerform;
 
     }
 
@@ -75,6 +77,7 @@ public class MenuButton extends GameObject {
 
     public void enable() {
         enabled=true;
+        actionToPerform=actionToPerformToggleOn;
     }
 
     public void disable() {

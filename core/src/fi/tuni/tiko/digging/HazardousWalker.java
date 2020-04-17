@@ -2,7 +2,8 @@ package fi.tuni.tiko.digging;
 
 public abstract class HazardousWalker extends WalkingCreature implements Hazard {
 
-    public abstract void updateMovement(GameTile[][] tiles, float delta);
+    //added episode and player just to have Goblin have extra difficulty based on episode
+    public abstract void updateMovement(GameTile[][] tiles, float delta, int episode, Player player);
 
     @Override
     public void occupyTile (Stage currentStage) {
