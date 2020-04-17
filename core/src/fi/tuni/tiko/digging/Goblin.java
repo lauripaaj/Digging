@@ -146,11 +146,12 @@ public class Goblin extends HazardousWalker implements Poolable {
                         if (checkerEpisode5 == 0) {
                             boolean continues = true;
                             checkerEpisode5 = 120;
+                            System.out.println("THIS Checker thing starts");
                             for (int yy=getTilePosY()+2, originalY=yy; continues || (yy != tiles.length); yy++) {
                                 if ( (player.getTargetTilePosY()==yy) && (player.getTargetTilePosX() == getTilePosX()) ) {
                                     startsDescending = true;
                                     continues = false;
-                                } else if (originalY+13==yy) {
+                                } else if (yy>player.getTilePosY() || (originalY+8==yy) ){
                                     continues=false;
                                 }
                             }
@@ -214,14 +215,14 @@ public class Goblin extends HazardousWalker implements Poolable {
                 if (timeUntilChase <= 0) {
                     startWalking(LEFT);
                     for (int i = 0; i < 15; i++) {
-                        System.out.println("CHASED LEFT");
+                        //System.out.println("CHASED LEFT");
                     }
                 }
             } else {
                 timeUntilChaseEnds=timeUntilChaseEnds-delta;
                 if (timeUntilChaseEnds <= 0) {
                     setStatus(READY);
-                    System.out.println("giving up the chase left");
+                    //System.out.println("giving up the chase left");
                 }
             }
 
@@ -231,7 +232,7 @@ public class Goblin extends HazardousWalker implements Poolable {
                 if (timeUntilChase <= 0) {
                     startWalking(RIGHT);
                     for(int i=0; i < 15; i++) {
-                        System.out.println("CHASED RIGHT");
+                        //System.out.println("CHASED RIGHT");
                     }
                 }
 
@@ -239,7 +240,7 @@ public class Goblin extends HazardousWalker implements Poolable {
                 timeUntilChaseEnds=timeUntilChaseEnds-delta;
                 if (timeUntilChaseEnds <= 0) {
                     setStatus(READY);
-                    System.out.println("giving up the chase right");
+                    //System.out.println("giving up the chase right");
                 }
             }
 
@@ -253,12 +254,12 @@ public class Goblin extends HazardousWalker implements Poolable {
                 timeUntilChase = 4f / episode;
                 timeUntilChaseEnds = 2f;
                 setStatus(PREPARING_TO_CHASE_LEFT);
-                System.out.println("preparing chase left");
+                //System.out.println("preparing chase left");
             } else if (player.getTilePosX() == getTilePosX() + 1 && player.getTilePosY() == getTilePosY()) {
                 timeUntilChase = 4f / episode;
                 timeUntilChaseEnds = 2f;
                 setStatus(PREPARING_TO_CHASE_RIGHT);
-                System.out.println("preparing chase right");
+                //System.out.println("preparing chase right");
             } else if (((tiles[getTilePosY()][getTilePosX() - 1].isConcrete() == false) && (tiles[getTilePosY()][getTilePosX() - 1].isOccupied() == false) &&
                     (tiles[getTilePosY() + 1][getTilePosX() - 1].isConcrete() == true || (episode >= 5 && player.getTilePosY() > getTilePosY())))) {
                 int randomResult = MathUtils.random(1, (170 - (10 * episode)));
