@@ -83,15 +83,32 @@ public class HazardAndResourceRandomizer {
                     int randomResult = MathUtils.random(1, 100);
                     if (randomResult <= chanceOfSpike) {
 
-                        Spike spike = hazardPools.getSpikePool().obtain();
-                        spike.putInTilePos(y, x);
-                        hazardList.add(spike);
+                        if (tiles[y+1][x].isConcrete()) {
+                            Spike spike = hazardPools.getSpikePool().obtain();
+                            spike.putInTilePos(y, x);
+                            hazardList.add(spike);
+                        }
+
+
 
                     } else if ((randomResult > chanceOfSpike) && (randomResult <= (chanceOfSpike + chanceOfGoblin))) {
 
-                        Goblin goblin = hazardPools.getGoblinPool().obtain();
-                        goblin.putInTilePos(y, x);
-                        hazardList.add(goblin);
+                        boolean thereWasOneAlready = false;
+                        for (int i=0; i<hazardList.size() && !thereWasOneAlready; i++) {
+                            TileBasedObject haz = hazardList.get(i);
+                            if (haz.getTilePosY()==y && haz.getTilePosX()==x) {
+                                thereWasOneAlready=true;
+                            }
+                        }
+
+                        if (!thereWasOneAlready) {
+                            Goblin goblin = hazardPools.getGoblinPool().obtain();
+                            goblin.putInTilePos(y, x);
+                            hazardList.add(goblin);
+
+                        }
+
+
 
                     }
 

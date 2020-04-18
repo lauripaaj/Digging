@@ -13,7 +13,7 @@ public class Audio {
 
     public Audio() {
         tileDigged = Gdx.audio.newSound(Gdx.files.internal("sounds/rock_impact_medium_26.mp3"));
-        walk = Gdx.audio.newSound(Gdx.files.internal("sounds/Walk.mp3"));
+        walk = Gdx.audio.newSound(Gdx.files.internal("sounds/Walk2.mp3"));
 
         music = Gdx.audio.newMusic(Gdx.files.internal("sounds/Loop.mp3"));
         music.setLooping(true);

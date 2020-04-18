@@ -230,8 +230,8 @@ public class MainGame extends Game  {
 
 
 		batch = new SpriteBatch();
-		episode = 5;
-		level = 4;
+		episode = 6;
+		level = 7;
 
 		//just for testing purposes, this could only be in StageRandomizers method just as well
 		//passages = new int[1][];

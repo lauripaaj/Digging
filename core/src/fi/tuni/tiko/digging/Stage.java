@@ -3,6 +3,7 @@ package fi.tuni.tiko.digging;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import static fi.tuni.tiko.digging.MainGame.TILES_IN_ROWS_INCLUDING_EDGES;
 import static fi.tuni.tiko.digging.SingleSlideScreen.LEVEL10COMPLETE;
@@ -304,6 +305,7 @@ public class Stage {
 
         //set all spikes and falling Traps occupied
         setSpikesOccupied();
+        //checkHazardsForInstantVanishing();
 
 
 
@@ -353,6 +355,28 @@ public class Stage {
 
 
     }
+    /*
+    public void checkHazardsForInstantVanishing() {
+        Iterator<TileBasedObject> it = hazardList.iterator();
+        while (it.hasNext()) {
+            TileBasedObject hazard = it.next();
+            if (hazard instanceof Goblin) {
+
+
+                for (int a = 0; a < hazardList.size() - 1; a++) {
+                    TileBasedObject hazard2 = hazardList.get(a);
+                    if (!(hazard2 instanceof Goblin)) {
+                        if (hazard.getTilePosY() == hazard2.getTilePosY() && hazard.getTilePosX() == hazard2.getTilePosX()) {
+                            hazardPools.getGoblinPool().free((Goblin) hazard);
+                            it.remove();
+                        }
+
+                    }
+                }
+            }
+        }
+
+    }*/
 
     public void doFirstTimeVisitStuff() {
 
