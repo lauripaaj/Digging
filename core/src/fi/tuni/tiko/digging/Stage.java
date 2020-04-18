@@ -302,6 +302,10 @@ public class Stage {
         stageRandomizer.forceLevelToBePassable(this, mainGame);
 
 
+        //set all spikes and falling Traps occupied
+        setSpikesOccupied();
+
+
 
         tiles = stageRandomizer.addRoots(tiles);
 
@@ -409,6 +413,16 @@ public class Stage {
             }
         }
     }
+
+    public void setSpikesOccupied() {
+        for (int i=0; i<hazardList.size(); i++) {
+            TileBasedObject hazard = hazardList.get(i);
+            if (hazard instanceof Spike) {
+                tiles[hazard.getTilePosY()][hazard.getTilePosX()].setOccupied(true);
+            }
+
+        }
+    }
     /*
     public void fillAreaEdges(int leftMargin, int rightMargin) {
 
@@ -491,6 +505,8 @@ public class Stage {
             } else {
                 mainGame.singleSlideScreen.setInfoToShow(LEVEL10_AND_EPISODE_COMPLETE);
                 mainGame.episode++;
+                totalResourcesCollected=0;
+
             }
 
             mainGame.setScreen(mainGame.singleSlideScreen);

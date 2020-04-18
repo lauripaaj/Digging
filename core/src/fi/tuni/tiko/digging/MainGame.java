@@ -770,9 +770,9 @@ public class MainGame extends Game  {
 								if (hazard1 instanceof Goblin && hazard2 instanceof Goblin) {
 
 									if (hazard1.getY() > hazard2.getY()) {
-										vanishThisHazard(hazard2);
-									} else if (hazard2.getY() > hazard1.getY()) {
 										vanishThisHazard(hazard1);
+									} else if (hazard2.getY() > hazard1.getY()) {
+										vanishThisHazard(hazard2);
 										//2 goblins walking into each other (y-position same in both)
 									} else {
 										Goblin goblin1 = (Goblin) hazard1;
@@ -907,12 +907,16 @@ public class MainGame extends Game  {
 			if (hazard instanceof HazardousWalker) {
 
 				if (((HazardousWalker) hazard).getStatus() == DEAD) {
+
 					it.remove();
+
 				}
 
 
 			} else if (hazard instanceof ImmobileHazard) {
 				if (((ImmobileHazard)hazard).isStatusDead() ) {
+
+					currentStage.tiles[hazard.getTilePosY()][hazard.getTilePosX()].setOccupied(false);
 					it.remove();
 				}
 			}
