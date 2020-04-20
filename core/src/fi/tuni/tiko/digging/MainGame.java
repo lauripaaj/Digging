@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -24,6 +25,7 @@ import java.util.Iterator;
 
 
 import static com.badlogic.gdx.Application.ApplicationType.Android;
+import static fi.tuni.tiko.digging.GameScreen.MAIN_MENU;
 import static fi.tuni.tiko.digging.Player.ATTACKING;
 import static fi.tuni.tiko.digging.Player.LEFT;
 import static fi.tuni.tiko.digging.Player.READY;
@@ -79,7 +81,7 @@ public class MainGame extends Game  {
 
 	//dying during episodes 3-6 will affect the highscore result
 	int deathsPastEpisode2 = 0;
-	int tryAgainsSinceEpisode2 = 0;
+	int abortsSinceEpisode2 = 0;
 
 
 	boolean farmLevel=true;
@@ -171,6 +173,8 @@ public class MainGame extends Game  {
 
 	int episode;
 	int level;
+
+	boolean episodeComplete = false;
 
 	//Settings settings
 
@@ -354,11 +358,13 @@ public class MainGame extends Game  {
 		//allStages.add(new Stage(allStages.size(), 2,3,4, tilePools, hazardPools, allLevelsStats.get(0), tileAnimationPools, totalResourcesCollected, backGroundTexture )); // id 0 farm?
 
 		singleSlide = new SingleSlide(camera, numbers);
-
+		getPrefs();
 
 		currentStage = new Stage(this);
 		//currentStage.stageSettings = new StageSettings(episode,level);
 		//allStages.add(currentStage);
+
+
 
 
 
@@ -420,6 +426,8 @@ public class MainGame extends Game  {
 
 
 		camera.position.y=player.getY()+3.0f;
+
+
 
 
 
@@ -584,6 +592,8 @@ public class MainGame extends Game  {
 		this.tutorialScreen = tutorialScreen;
 	}
 
+
+
 	public SpriteBatch getBatch () {
 		return batch;
 	}
@@ -596,7 +606,84 @@ public class MainGame extends Game  {
 		
 	}
 
+	public void getPrefs() {
+		Preferences prefs = Gdx.app.getPreferences("FarmersJ");
 
+		episode = prefs.getInteger("ep", 1);
+		level = prefs.getInteger("lvl", 1);
+		totalResourcesCollected = prefs.getInteger("resources", 0);
+		deathsPastEpisode2 = prefs.getInteger("zaps", 0);
+		abortsSinceEpisode2 = prefs.getInteger("abortLevels", 0);
+		restartLevelAvailable = prefs.getBoolean("restartLevel", true);
+
+
+		musicOn = prefs.getBoolean("musicOn", true);
+		soundsOn = prefs.getBoolean("soundOn", true);
+		languageEnglish = prefs.getBoolean("IsEnglish", true);
+	}
+
+
+	public void savePref() {
+		Preferences prefs = Gdx.app.getPreferences("FarmersJ");
+		prefs.putInteger("ep", episode);
+		prefs.putInteger("lvl", level);
+		prefs.putInteger("resources", totalResourcesCollected);
+		prefs.putInteger("zaps", deathsPastEpisode2);
+		prefs.putInteger("abortLevels", abortsSinceEpisode2);
+		prefs.putBoolean("restartLevel", restartLevelAvailable);
+
+		prefs.putBoolean("soundOn", soundsOn);
+		prefs.putBoolean("musicOn", musicOn);
+		prefs.putBoolean("IsEnglish", languageEnglish);
+
+		prefs.flush();
+	}
+
+	public void startNextEpisode() {
+		if (episode < 6) {
+			episode++;
+			level=1;
+			totalResourcesCollected=0;
+
+			putAllBackIntoPools();
+			farmLevel=true;
+			restartLevelAvailable=true;
+			episodeComplete=false;
+			if (playScreen.buttons.size() > 1) {
+				playScreen.buttons.remove(playScreen.proceedButton);
+			}
+
+			questionMenuScreen.noButton.setActionToPerform(MAIN_MENU);
+			savePref();
+			startStage();
+
+
+
+			screenHelper.setFullTutorial(true);
+			setScreen(getTutorialScreen());
+
+
+		}
+	}
+
+	public void startNewGame (int episode) {
+		if (episode==1) {
+			this.episode=1;
+		} else if (episode ==3) {
+			this.episode=3;
+		}
+		level=1;
+		totalResourcesCollected=0;
+		deathsPastEpisode2=0;
+		abortsSinceEpisode2=0;
+
+		putAllBackIntoPools();
+		farmLevel=true;
+		restartLevelAvailable=true;
+		savePref();
+		startStage();
+
+	}
 
 
 	//camera will follow player's y-position
