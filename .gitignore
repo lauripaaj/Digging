@@ -1,5 +1,7 @@
 ## Java
 
+
+
 *.class
 *.war
 *.ear
@@ -30,6 +32,9 @@ www-test/
 *.iml
 /android/out/
 com_crashlytics_export_strings.xml
+
+/android/assets/highscore.config
+/android/assets/highscore2.config
 
 ## Eclipse
 
